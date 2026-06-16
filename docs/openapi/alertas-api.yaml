@@ -1,0 +1,32 @@
+openapi: 3.0.3
+info:
+  title: Royal Alertas API Migrada
+  version: 1.0.0
+paths:
+  /api/alertas/{entityName}:
+    get:
+      summary: Listar registros de entidad Alertas
+    post:
+      summary: Crear registro de entidad Alertas
+    put:
+      summary: Actualizar registro de entidad Alertas
+    delete:
+      summary: Eliminar registro de entidad Alertas
+  /api/alertas/{entityName}/obtener:
+    post:
+      summary: Obtener registro por PK
+  /api/alertas/{entityName}/anular:
+    put:
+      summary: Anular registro por PK
+  /api/alertas/sql/{queryName}:
+    post:
+      summary: Ejecutar named query legacy SQL HBM XML
+  /spring/alertas/{resource}/**:
+    get:
+      summary: Compatibilidad legacy GET
+    post:
+      summary: Compatibilidad legacy POST
+    put:
+      summary: Compatibilidad legacy PUT
+    delete:
+      summary: Compatibilidad legacy DELETE

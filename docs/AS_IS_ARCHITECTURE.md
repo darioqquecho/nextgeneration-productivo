@@ -1,0 +1,3 @@
+# AS_IS_ARCHITECTURE.md
+
+Ver documento fuente codificado. Códigos usados: ASIS-007, ASIS-016, ASIS-020, ASIS-023, ASIS-024, ASIS-027, ASIS-028, ASIS-029, ASIS-031, ASIS-033.

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .ReglaNegocio
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <sql-query name="reglanegocio.estavivobd">
+         select cast(getdate() as varchar(400)) as "nombre"
+    </sql-query>
+    <sql-query name="reglanegocio.obtenerFechaHoraServidor">
+		select GETDATE() as "fechaHoraActual"
+	</sql-query>
+    <sql-query name="reglanegocio.extraerDataFuente">
+		EXEC SGALERTASSYS.SP_EXTRAER_DATA_FUENTE :p_usuario,:p_terminal
+    </sql-query>
+    <sql-query name="reglanegocio.obtenerUsuarioActual">
+		 <![CDATA[
+		SELECT
+          'TERMINAL' as "direccionIp", 
+          'MODULE' as "aplicacionNombre", 
+          'OS_USER' as "usuario" 
+     	  ]]>
+    </sql-query>
+    
+     <sql-query name="reglanegocio.LogGenerarAlerta">
+		EXEC SGALERTASSYS.SP_LOG_GENERAR_ALERTA :p_id_regla_negocio,:p_usuario,:p_terminal
+    </sql-query>
+
+	<sql-query name="reglanegocio.contar">
+		SELECT
+		COUNT(*)
+		FROM
+		SGALERTASSYS.REGLA_NEGOCIO RN with (nolock)
+		WHERE
+		RN.ID_REGLA_NEGOCIO = ISNULL(:p_regla, RN.ID_REGLA_NEGOCIO)
+		AND RN.ID_AREA_NEGOCIO = ISNULL(:p_idarea, RN.ID_AREA_NEGOCIO)
+		AND RN.ID_COMPANIA = ISNULL(:p_compania, RN.ID_COMPANIA)
+		AND RN.ESTADO = ISNULL(:p_estado, RN.ESTADO)
+	</sql-query>
+	<sql-query name="reglanegocio.listar">
+SELECT RN.ID_REGLA_NEGOCIO AS "idReglaNegocio" ,
+       RN.NOMBRE AS "nombre",
+       RN.ID_COMPANIA AS "descripcion",
+       RN.FECHA_ULTIMA_EJECUCION AS "fechaUltimaEjecucion",
+       RN.FECHA_ULTIMO_ENVIO AS "fechaUltimoEnvio",
+       AN.NOMBRE AS "nombreAreaNegocio",
+       RN.CREACION_FECHA AS "creacionFecha",
+       RN.CREACION_USUARIO AS "creacionUsuario",
+       RN.MODIFICACION_FECHA AS "modificacionFecha",
+       RN.MODIFICACION_USUARIO AS "modificacionUsuario",
+       CASE RN.ESTADO
+           WHEN 'A' THEN 'Activo'
+           WHEN 'I' THEN 'Inactivo'
+           WHEN 'E' THEN 'Error'
+       END AS "estadoaux",
+       RN.ESTADO AS "estado",
+       RN.FLG_LOG_GENERAR_ALERTA as "flgLogGenerarAlerta",
+       (SELECT TOP 1 
+                CASE
+                    WHEN PRG.ID_FRECUENCIA_PROGRAMACION='DIA' AND DIA_ID_FRECUENCIA='UNI' 
+                        THEN 'DIA - CADA ' + CAST(ISNULL(PRG.DIA_CADA_N_DIAS,0) AS VARCHAR(50)) + ' DIA ' +' ( UNICO HORA - '+FORMAT(ISNULL(PRG.DIA_FREC_UNICA_HORAEJECUCION,GETDATE()), 'hh:mm tt') + ' )'
+                    WHEN PRG.ID_FRECUENCIA_PROGRAMACION='DIA' AND DIA_ID_FRECUENCIA='RAM' 
+                        THEN 'DIA - CADA ' + CAST(ISNULL(PRG.DIA_CADA_N_DIAS,0) AS VARCHAR(50)) + ' DIA ' +' ( RANGO CADA '+CAST(ISNULL(PRG.DIA_FREC_RANGO_CADAN,0) AS VARCHAR(20))+'-'+ISNULL(PRG.DIA_FREC_RANGO_ID_FRECU_TIEMPO,'')+' '+FORMAT(ISNULL(PRG.DIA_FREC_RANGO_HORAINICIO,GETDATE()), 'hh:mm tt')+'-'+FORMAT(ISNULL(PRG.DIA_FREC_RANGO_HORAFIN,GETDATE()), 'hh:mm tt')+' )'
+                    WHEN PRG.ID_FRECUENCIA_PROGRAMACION='MEN' AND MES_ID_FRECUENCIA_MENSUAL='DIA' 
+                        THEN 'MES - EL DIA '+CAST(ISNULL(PRG.MES_FREC_DIA_DIA,0) AS VARCHAR(50))+' ( HORA '+FORMAT(ISNULL(PRG.MES_FREC_UNICA_HORAEJECUCION,GETDATE()), 'hh:mm tt') + ' )'
+                    ELSE 'DESCONOCIDO'
+                END
+            FROM [SGALERTASSYS].[REGLA_NEGOCIO_PROGRAMACION] PRG WITH (NOLOCK) 
+            WHERE RN.ID_REGLA_NEGOCIO = PRG.ID_REGLA_NEGOCIO
+              AND PRG.ESTADO='A'
+       ) as "auxProgramacionTexto"
+FROM SGALERTASSYS.REGLA_NEGOCIO RN WITH (NOLOCK)
+    LEFT JOIN SGALERTASSYS.AREA_NEGOCIO AN WITH (NOLOCK) 
+        ON RN.ID_AREA_NEGOCIO = AN.ID_AREA_NEGOCIO
+WHERE RN.ID_REGLA_NEGOCIO = ISNULL(:p_regla, RN.ID_REGLA_NEGOCIO)
+  AND RN.ID_AREA_NEGOCIO = ISNULL(:p_idarea, RN.ID_AREA_NEGOCIO)
+  AND RN.ID_COMPANIA = ISNULL(:p_compania, RN.ID_COMPANIA)
+  AND RN.ESTADO = ISNULL(:p_estado, RN.ESTADO)
+ORDER BY RN.ID_REGLA_NEGOCIO;
+
+</sql-query>
+
+
+	<sql-query name="reglanegocio.comboareanegocio">
+		SELECT
+		ID_AREA_NEGOCIO AS "codigo",
+		NOMBRE AS "descripcion"
+		FROM
+		SGALERTASSYS.AREA_NEGOCIO with (nolock)
+		WHERE
+		ESTADO = 'A'
+	</sql-query>
+
+	<sql-query name="reglanegocio.combocompania">
+		SELECT
+		COMPANIACODIGO AS "idcadena",
+		DESCRIPCIONCORTA AS "descripcion"
+		FROM
+		VW_REMOTO_CompaniaMast with (nolock)
+		WHERE
+		ESTADO = 'A'
+	</sql-query>
+	
+	<sql-query name="reglanegocio.listarParaTask">
+		SELECT DET.ID_REGLA_NEGOCIO AS "idReglaNegocio"
+            ,DET.CANTIDAD_CORREOS_ENVIAR AS "cantidadCorreosEnviar"
+            ,DET.CORREOS_PENDIENTES AS "correosPendientes"
+            ,DET.ERRORES_CANTIDAD AS "erroresCantidad"
+            ,DET.FLG_CORREO_PRUEBA AS "flgCorreoPrueba"
+            ,DET.CANTIDAD_ERRORES_ENVIO AS "cantidadErroresEnvio"
+	    FROM    
+	    (SELECT RN.ID_REGLA_NEGOCIO
+	            ,RN.CANTIDAD_CORREOS_ENVIAR
+	            ,RN.FLG_CORREO_PRUEBA
+	            ,RN.CANTIDAD_ERRORES_ENVIO
+	            ,(SELECT COUNT(1) FROM SGALERTASSYS.CORREO C with (nolock) WHERE C.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO AND C.ESTADO='PEN' ) CORREOS_PENDIENTES
+	            ,(SELECT COUNT(1) FROM SGALERTASSYS.ERROR E with (nolock) WHERE E.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO AND E.ESTADO='ACT' ) ERRORES_CANTIDAD
+	    FROM SGALERTASSYS.REGLA_NEGOCIO RN with (nolock)
+	    WHERE RN.ESTADO='A' )
+	    DET
+	    WHERE ISNULL(DET.CORREOS_PENDIENTES,0)>0
+	    ORDER BY DET.ID_REGLA_NEGOCIO
+	</sql-query>
+    
+    <sql-query name="reglanegocio.listarPorReglaParaTask">
+		SELECT DET.ID_REGLA_NEGOCIO AS "idReglaNegocio"
+            ,DET.CANTIDAD_CORREOS_ENVIAR AS "cantidadCorreosEnviar"
+            ,DET.CORREOS_PENDIENTES AS "correosPendientes"
+            ,DET.ERRORES_CANTIDAD AS "erroresCantidad"
+            ,DET.FLG_CORREO_PRUEBA AS "flgCorreoPrueba"
+            ,DET.CANTIDAD_ERRORES_ENVIO AS "cantidadErroresEnvio"
+	    FROM    
+	    (SELECT RN.ID_REGLA_NEGOCIO
+	            ,RN.CANTIDAD_CORREOS_ENVIAR
+	            ,RN.FLG_CORREO_PRUEBA
+	            ,RN.CANTIDAD_ERRORES_ENVIO
+	            ,(SELECT COUNT(1) FROM SGALERTASSYS.CORREO C with (nolock) WHERE C.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO AND C.ESTADO='PEN' ) CORREOS_PENDIENTES
+	            ,(SELECT COUNT(1) FROM SGALERTASSYS.ERROR E with (nolock) WHERE E.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO AND E.ESTADO='ACT' ) ERRORES_CANTIDAD
+	    FROM SGALERTASSYS.REGLA_NEGOCIO RN with (nolock)
+	    WHERE RN.ID_REGLA_NEGOCIO = :p_idrn )
+	    DET
+	    ORDER BY DET.ID_REGLA_NEGOCIO
+	</sql-query>
+	
+	<sql-query name="reglanegocio.registrarLog">
+		DECLARE @V_JAVA_LOG VARCHAR(1000)
+		DECLARE @V_SP_LOG VARCHAR(1000)
+		DECLARE @V_RESUMEN_LOG VARCHAR(4000)
+		DECLARE @V_EJECUTARLOG VARCHAR(1)
+		DECLARE @V_RN_ID INT
+		DECLARE @V_REG_EXITO INT
+		DECLARE @V_REG_ERROR INT
+		
+		set @V_JAVA_LOG = :p_javalog
+		set @V_SP_LOG = :p_splog
+		set @V_RESUMEN_LOG = :p_resumenlog
+		set @V_RN_ID = :p_rn_id
+		
+		set @V_REG_EXITO = :p_reg_exito
+		set @V_REG_ERROR = :p_reg_error
+		
+		BEGIN TRY  
+			SELECT @V_EJECUTARLOG = Texto FROM VW_REMOTO_ParametrosMast WITH (NOLOCK) where AplicacionCodigo = 'MA' AND ParametroClave='EJECUCILOG' AND ESTADO='A'
+		END TRY  
+		BEGIN CATCH  
+			set @V_JAVA_LOG = isnull(@V_JAVA_LOG,'') + ' - SIN ACCESO A PARAMETROSMAST';
+			INSERT INTO [SGALERTASSYS].[EJECUCION_LOG]
+				(JAVA_LOG,SP_LOG,RESUMEN_LOG,REGLA_NEGOCIO_ID,
+					REGISTROS_EXITO, REGISTROS_ERROR) 
+				VALUES(@V_JAVA_LOG, @V_SP_LOG, @V_RESUMEN_LOG,@V_RN_ID,
+					@V_REG_EXITO,@V_REG_ERROR)
+		END CATCH;
+
+		
+		
+		IF @V_EJECUTARLOG IS NULL
+			SET @V_EJECUTARLOG = 'N'
+		
+		IF @V_EJECUTARLOG = 'S'
+			BEGIN
+				INSERT INTO [SGALERTASSYS].[EJECUCION_LOG]
+				(JAVA_LOG,SP_LOG,RESUMEN_LOG,REGLA_NEGOCIO_ID,
+					REGISTROS_EXITO, REGISTROS_ERROR) 
+				VALUES(@V_JAVA_LOG, @V_SP_LOG, @V_RESUMEN_LOG,@V_RN_ID,
+					@V_REG_EXITO,@V_REG_ERROR)
+			END
+
+	</sql-query>
+	
+	
+	<sql-query name="reglanegocio.contarlogs">
+		SELECT
+			COUNT(*)
+		from SGALERTASSYS.EJECUCION_LOG   with (nolock)
+		where REGLA_NEGOCIO_ID = :p_regla
+	</sql-query>
+	<sql-query name="reglanegocio.listarlogs">
+		select 
+			CREACION_FECHA as "fechaLog",
+			JAVA_LOG as "javaLog",
+			SP_LOG as "spLog",
+			RESUMEN_LOG as "resumenLog",
+			REGISTROS_EXITO as "cantidadExito",
+			REGISTROS_ERROR as "cantidadError"
+		from SGALERTASSYS.EJECUCION_LOG with (nolock)
+		where REGLA_NEGOCIO_ID = :p_regla
+</sql-query>
+
+
+	<sql-query name="reglanegocio.obtenerDtoPorId">
+		SELECT RN.id_regla_negocio        AS "idReglaNegocio",
+	       RN.object_Bd                  AS "objectBd"
+	FROM   sgalertassys.regla_negocio RN WITH (nolock)
+	WHERE  RN.id_regla_negocio = :p_reglanegocioid
+	</sql-query>
+	
+		
+</hibernate-mapping>

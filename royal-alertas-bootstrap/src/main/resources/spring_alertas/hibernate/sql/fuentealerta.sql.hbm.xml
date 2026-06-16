@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .FuenteAlerta
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <sql-query name="fuentealerta.listar">
+       select  	FA.ID_FUENTE_ALERTA AS "idFuenteAlertaPk",
+				RN.NOMBRE AS "nombre",
+				FA.CREACION_FECHA as "creacionFecha",
+				(SELECT count(*) "TOTAL" FROM SGALERTASSYS.FUENTE_ALERTA_DETALLE FAD with (nolock) WHERE FAD.ID_FUENTE_ALERTA = FA.ID_FUENTE_ALERTA) as "cantidadRegistros"
+		FROM
+			SGALERTASSYS.FUENTE_ALERTA FA with (nolock), SGALERTASSYS.REGLA_NEGOCIO RN with (nolock)
+		where
+ 			FA.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO
+			AND FA.ID_REGLA_NEGOCIO	= ISNULL(:idreglanegocio,FA.ID_REGLA_NEGOCIO)
+			AND FA.CREACION_FECHA BETWEEN :fechaPreparacionInicio AND :fechaPreparacionFin
+    </sql-query>
+
+        <sql-query name="fuentealerta.contar">
+       select count(*) 
+       FROM
+			SGALERTASSYS.FUENTE_ALERTA FA with (nolock), SGALERTASSYS.REGLA_NEGOCIO RN with (nolock)
+		where
+ 			FA.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO
+			AND FA.ID_REGLA_NEGOCIO	= ISNULL(:idreglanegocio,FA.ID_REGLA_NEGOCIO)
+			AND FA.CREACION_FECHA BETWEEN :fechaPreparacionInicio AND :fechaPreparacionFin
+    </sql-query>
+
+
+       <sql-query name="fuentealerta.listarReglaNegocio">
+			SELECT  
+				rn.ID_REGLA_NEGOCIO  AS "id_Regla_negocio",
+				rn.NOMBRE  AS "nombre",
+				rn.ESTADO  AS "estado"
+			FROM SGALERTASSYS.REGLA_NEGOCIO rn with (nolock)
+				ORDER  BY 1
+    </sql-query>
+
+    	<sql-query name="fuentealerta.eliminarAdicional">
+	<![CDATA[
+		DELETE FROM SGALERTASSYS.FUENTE_ALERTA_ADICIONAL ADI
+        WHERE ADI.ID_FUENTE_ALERTA = :id_fuente_alerta
+	]]>
+	</sql-query>
+
+
+    	<sql-query name="fuentealerta.eliminarDetalle">
+	<![CDATA[
+		DELETE FROM SGALERTASSYS.FUENTE_ALERTA_DETALLE ADI
+        WHERE ADI.ID_FUENTE_ALERTA = :id_fuente_alerta
+	]]>
+	</sql-query>
+
+	<sql-query name="fuentealerta.eliminar">
+	<![CDATA[
+		DELETE FROM SGALERTASSYS.FUENTE_ALERTA ADI
+        WHERE ADI.ID_FUENTE_ALERTA = :id_fuente_alerta
+	]]>
+	</sql-query>
+
+    <sql-query name="fuentealerta.contarPorReglaNegocio">
+	<![CDATA[
+		SELECT MAX(NRO_REGISTRO) 
+		FROM SGALERTASSYS.FUENTE_ALERTA C with (nolock)
+			INNER JOIN SGALERTASSYS.FUENTE_ALERTA_DETALLE D with (nolock)
+			ON C.ID_FUENTE_ALERTA = D.ID_FUENTE_ALERTA
+		WHERE C.ID_REGLA_NEGOCIO = :p_id_regla_negocio
+	]]>
+	</sql-query>
+
+</hibernate-mapping>

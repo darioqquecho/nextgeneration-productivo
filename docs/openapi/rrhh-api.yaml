@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: Royal RRHH API
+  version: 1.0.0
+paths:
+  /api/rrhh/parametros:
+    get:
+      summary: Listar parametros
+    post:
+      summary: Crear parametro
+  /api/rrhh/parametros/{compania}/{codigo}:
+    get:
+      summary: Obtener parametro
+    put:
+      summary: Actualizar parametro
+    delete:
+      summary: Eliminar parametro
+  /api/rrhh/parametros/{compania}/{codigo}/estado:
+    patch:
+      summary: Cambiar estado parametro
+  /api/rrhh/capacitaciones:
+    post:
+      summary: Registrar capacitacion
+  /api/rrhh/requerimientos/{codigo}/aprobaciones:
+    post:
+      summary: Aprobar requerimiento

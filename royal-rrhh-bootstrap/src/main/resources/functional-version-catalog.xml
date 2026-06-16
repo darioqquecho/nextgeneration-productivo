@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<functional-version-catalog>
+	<mapping clientId="demo-client" module="RRHH" useCase="CrearParametroUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="ActualizarParametroUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="ObtenerParametroUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="ListarParametrosUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="CambiarEstadoParametroUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="EliminarParametroUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="RegistrarCapacitacionUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="RRHH" useCase="AprobarRequerimientoPersonalUseCase" version="V2"/>
+</functional-version-catalog>

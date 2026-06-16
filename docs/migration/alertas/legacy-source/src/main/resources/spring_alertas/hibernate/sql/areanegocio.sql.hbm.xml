@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .AreaNegocio
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <sql-query name="areanegocio.listar">
+       SELECT 
+          areaNegocio.ID_AREA_NEGOCIO as "idAreaNegocio"
+		,areaNegocio.NOMBRE as "nombre"
+		,areaNegocio.DESCRIPCION as "descripcion"
+		,CASE areaNegocio.ESTADO
+		WHEN 'A' THEN 'Activo'
+		WHEN 'I'
+		THEN 'Inactivo'
+		END as "estadoaux" , 
+		areaNegocio.ESTADO AS "estado", 
+		areaNegocio.CREACION_USUARIO AS "creacionUsuario", 
+		areaNegocio.CREACION_FECHA  AS "creacionFecha", 
+		areaNegocio.MODIFICACION_FECHA  AS "modiffecha", 
+		areaNegocio.MODIFICACION_USUARIO  AS "modifUsuario"
+		FROM SGALERTASSYS.AREA_NEGOCIO areaNegocio with (nolock)
+		WHERE
+		areaNegocio.ID_AREA_NEGOCIO = ISNULL(:p_codigo , areaNegocio.ID_AREA_NEGOCIO) AND
+		areaNegocio.NOMBRE LIKE '%'+ISNULL(:p_nombre,areaNegocio.NOMBRE)+'%' AND
+		areaNegocio.ESTADO = ISNULL(:p_estado,areaNegocio.ESTADO)
+    </sql-query>
+    
+      <sql-query name="areanegocio.listarcontar">
+       SELECT count(1) 
+       FROM SGALERTASSYS.AREA_NEGOCIO areaNegocio with (nolock)
+		WHERE
+		areaNegocio.ID_AREA_NEGOCIO = ISNULL(:p_codigo , areaNegocio.ID_AREA_NEGOCIO) AND
+		areaNegocio.NOMBRE LIKE '%'+ISNULL(:p_nombre,areaNegocio.NOMBRE)+'%' AND
+		areaNegocio.ESTADO = ISNULL(:p_estado,areaNegocio.ESTADO)
+    </sql-query>
+    
+</hibernate-mapping>

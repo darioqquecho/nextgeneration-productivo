@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .ConfiguracionServicio
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <sql-query name="configuracionservicio.lista">
+        SELECT 
+			 ID_CONFIGURACION_SERVICIO AS "id_configuracion_servicio" ,
+			 FLG_CORREO_PRUEBA AS "flg_correo_prueba"     ,
+			 CORREO_PRUEBA     as   "correo_prueba",
+			 FLG_INICIAR_SERVICIOS     as   "flg_iniciar_servicios",
+			 ULTIMA_FECHA_INICIO_SERVICIOS     as   "ultima_fecha_inicio_servicios",
+			 FLG_INICIAR_SERVICIOS_CONTROL     as   "flg_iniciar_servicios_control",
+			 ESTADO     as   "estado",
+			 CREACION_USUARIO     as   "creacion_usuario",
+			 CREACION_FECHA     as   "creacion_fecha",
+			 CREACION_TERMINAL     as   "creacion_terminal",
+			 MODIFICACION_USUARIO     as   "modificacion_usuario",
+			 MODIFICACION_FECHA     as   "modificacion_fecha",
+			 MODIFICACION_TERMINAL     as   "modificacion_terminal",
+			 FLG_FORZAR_REINICIO     as   "flg_forzar_reinicio",
+			 CORREO_TIPO_CONFIGURACION     as   "correo_tipo_configuracion",
+			 FLG_INICIAR_ENVIO_CORREO     as   "flg_iniciar_envio_correo",
+			 EMAIL_CUENTA     as   "email_cuenta",
+			 EMAIL_CLAVE     as   "email_clave",
+			 EMAIL_PERFIL     as   "email_perfil",
+			 FLG_EJECUTANDO_EVALUAR_REGLA     as   "flg_ejecutando_evaluar_regla",
+			 SI_EJECUTANDO_EVALUAR_REGLA     as   "si_ejecutando_evaluar_regla",
+			 NO_EJECUTANDO_EVALUAR_REGLA     as   "no_ejecutando_evaluar_regla",
+			 FLG_EJECUTANDO_EXTRAER_DATA     as   "flg_ejecutando_extraer_data",
+			 SI_EJECUTANDO_EXTRAER_DATA     as   "si_ejecutando_extraer_data",
+			 NO_EJECUTANDO_EXTRAER_DATA     as   "no_ejecutando_extraer_data",
+			 FLG_EJECUTANDO_CREAR_ALERTA     as   "flg_ejecutando_crear_alerta",
+			 SI_EJECUTANDO_CREAR_ALERTA     as   "si_ejecutando_crear_alerta",
+			 NO_EJECUTANDO_CREAR_ALERTA     as   "no_ejecutando_crear_alerta",
+			 FLG_EJECUTANDO_CREAR_CORREO     as   "flg_ejecutando_crear_correo",
+			 SI_EJECUTANDO_CREAR_CORREO     as   "si_ejecutando_crear_correo",
+			 NO_EJECUTANDO_CREAR_CORREO     as   "no_ejecutando_crear_correo",
+			 FLG_EJECUTANDO_ENVIO_CORREO     as   "flg_ejecutando_envio_correo",
+			 SI_EJECUTANDO_ENVIO_CORREO     as   "si_ejecutando_envio_correo",
+			 NO_EJECUTANDO_ENVIO_CORREO     as   "no_ejecutando_envio_correo",
+			 FLG_ENVIAR_CORREO     as   "flg_enviar_correo",
+			 FLG_CREAR_CORREO     as   "flg_crear_correo",
+			 FLG_CREAR_ALERTA     as   "flg_crear_alerta",
+			 FLG_EXTRAER_DATA     as   "flg_extraer_data",
+			 FLG_EVALUAR_REGLA     as   "flg_evaluar_regla",			 
+			 FLG_LOG_BASE_DATOS     as   "flgLogBaseDatos"
+			 
+			 ,flg_Enviar_Correo_Generico as "flgEnviarCorreoGenerico"
+			 
+			FROM SGALERTASSYS.CONFIGURACION_SERVICIO with (nolock)
+    </sql-query>
+    
+    <sql-query name="configuracionservicio.cambiarEjecutandoEvaluarRegla">
+     	UPDATE SGALERTASSYS.CONFIGURACION_SERVICIO
+		    SET FLG_EJECUTANDO_EVALUAR_REGLA = :p_estado,
+		    	SI_EJECUTANDO_EVALUAR_REGLA = (SELECT CASE :p_estado WHEN 'S' THEN GETDATE() ELSE SI_EJECUTANDO_EVALUAR_REGLA END),
+		    	NO_EJECUTANDO_EVALUAR_REGLA = (SELECT CASE :p_estado WHEN 'N' THEN GETDATE() ELSE NULL END)
+		WHERE ID_CONFIGURACION_SERVICIO = 1
+    </sql-query>
+    
+    
+     <sql-query name="configuracionservicio.cambiarEjecutandoExtraerData">
+     	UPDATE SGALERTASSYS.CONFIGURACION_SERVICIO
+		    SET FLG_EJECUTANDO_EXTRAER_DATA = :p_estado,
+		    	SI_EJECUTANDO_EXTRAER_DATA = (SELECT CASE :p_estado WHEN 'S' THEN GETDATE() ELSE SI_EJECUTANDO_EXTRAER_DATA END),
+		    	NO_EJECUTANDO_EXTRAER_DATA = (SELECT CASE :p_estado WHEN 'N' THEN GETDATE() ELSE NULL END)
+		WHERE ID_CONFIGURACION_SERVICIO = 1
+    </sql-query>
+    <sql-query name="configuracionservicio.cambiarEjecutandoCrearAlerta">
+     	UPDATE SGALERTASSYS.CONFIGURACION_SERVICIO
+		    SET FLG_EJECUTANDO_CREAR_ALERTA = :p_estado,
+		    	SI_EJECUTANDO_CREAR_ALERTA = (SELECT CASE :p_estado WHEN 'S' THEN GETDATE() ELSE SI_EJECUTANDO_CREAR_ALERTA END ),
+		    	NO_EJECUTANDO_CREAR_ALERTA = (SELECT CASE :p_estado WHEN 'N' THEN GETDATE() ELSE NULL END )
+		WHERE ID_CONFIGURACION_SERVICIO = 1
+    </sql-query>
+    <sql-query name="configuracionservicio.cambiarEjecutandoCrearCorreo">
+     	UPDATE SGALERTASSYS.CONFIGURACION_SERVICIO
+		    SET FLG_EJECUTANDO_CREAR_CORREO = :p_estado,
+		    	SI_EJECUTANDO_CREAR_CORREO = (SELECT CASE :p_estado WHEN 'S' THEN GETDATE() ELSE SI_EJECUTANDO_CREAR_CORREO END ),
+		    	NO_EJECUTANDO_CREAR_CORREO = (SELECT CASE :p_estado WHEN 'N' THEN GETDATE() ELSE NULL END )
+		WHERE ID_CONFIGURACION_SERVICIO = 1
+    </sql-query>
+    
+        
+    <sql-query name="configuracionservicio.cambiarEjecutandoEnvioCorreo">
+     	UPDATE SGALERTASSYS.CONFIGURACION_SERVICIO
+		    SET FLG_EJECUTANDO_ENVIO_CORREO = :p_estado,
+		    	SI_EJECUTANDO_ENVIO_CORREO = (SELECT CASE :p_estado WHEN 'S' THEN GETDATE() ELSE SI_EJECUTANDO_ENVIO_CORREO END ),
+		    	NO_EJECUTANDO_ENVIO_CORREO = (SELECT CASE :p_estado WHEN 'N' THEN GETDATE() ELSE NULL END )
+		WHERE ID_CONFIGURACION_SERVICIO = 1
+    </sql-query>
+    
+    
+  
+    
+</hibernate-mapping>

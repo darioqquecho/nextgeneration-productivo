@@ -1,0 +1,16 @@
+# ACCEPTANCE_CHECKLIST.md
+
+| Criterio | Estado | Evidencia |
+|---|---|---|
+| CRUD completo HR_Parametros | Implementado | ParametroController + UseCases |
+| RegistrarCapacitacion V1/V2 | Implementado | RegistrarCapacitacionVersionedUseCase |
+| AprobarRequerimiento V1/V2 | Implementado | AprobarRequerimientoPersonalVersionedUseCase |
+| Login | Implementado | LoginUseCase |
+| ConsultarAuditoria | Implementado | ConsultarAuditoriaUseCase |
+| JAR | Implementado | RrhhApplication |
+| WAR/Tomcat | Implementado | royal-rrhh-war |
+| Kubernetes | Implementado | k8s/deployment.yaml |
+| In-memory adapter | Implementado | InMemory*Adapter |
+| SQL Server/Oracle/PostgreSQL/MySQL puntos de extensión | Parcial | Placeholder explícito |
+| JavaDoc trazable | Implementado | Clases y métodos principales |
+| Matriz de trazabilidad | Implementado | docs/TRACEABILITY_MATRIX.md |

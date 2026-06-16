@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+	<property name="LOG_PATH" value="logs" />
+	<property name="LOG_PATTERN"
+		value="[%-5level] %d{yy-MM-dd HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n" />
+
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/royal-ma-api-interno.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>
+				${LOG_PATH}/royal-ma-api-interno-%d{yyyy-MM-dd}-%i.log
+			</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.springframework.web" level="ERROR" />
+	<logger name="org.springframework.aop" level="ERROR" />
+	<logger name="org.hibernate" level="ERROR" />
+	<logger name="com.microsoft" level="ERROR" />
+	<logger name="com.microsoft.sqlserver.jdbc" level="ERROR" />
+	<logger name="springfox.documentation.spring" level="ERROR" />
+	<logger name="net.royal" level="DEBUG" />
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLING" />
+	</root>
+
+</configuration>

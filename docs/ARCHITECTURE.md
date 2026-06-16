@@ -1,0 +1,3 @@
+# ARCHITECTURE.md
+
+Ver documento fuente codificado. Códigos usados: ARCH-003, ARCH-006, ARCH-008, ARCH-009, ARCH-010, ARCH-012, ARCH-013, ARCH-015, ARCH-016, ARCH-018, ARCH-025.

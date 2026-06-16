@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .LogAlerta
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    
+    <sql-query name="logalerta.listar">
+       select FA.ID_LOG_ALERTA AS "idLogAlerta",
+			FA.ID_REGLA_NEGOCIO AS "idReglaNegocio",
+			FA.ID_FUENTE_ALERTA AS "idFuenteAlerta",
+			RN.NOMBRE AS "nombre",
+			FA.CREACION_FECHA as "creacionFecha",
+			FA.FLG_ALERTA_GENERADA AS "flgEnviado",
+			(SELECT
+			count(*) "TOTAL"
+			FROM SGALERTASSYS.LOG_DETALLE LD
+			WHERE LD.ID_LOG_ALERTA = FA.ID_LOG_ALERTA) as "cantidadRegistros",
+			FA.ESTADO  AS "estado"
+		FROM SGALERTASSYS.LOG_ALERTA FA with (nolock)
+			LEFT JOIN SGALERTASSYS.REGLA_NEGOCIO RN  with (nolock)
+			ON FA.ID_REGLA_NEGOCIO  = RN.ID_REGLA_NEGOCIO 
+ 		WHERE FA.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO
+			AND FA.ID_REGLA_NEGOCIO = ISNULL(:idreglanegocio,FA.ID_REGLA_NEGOCIO)
+			AND cast(FA.CREACION_FECHA as date) BETWEEN cast(:fechaPreparacionInicio as date) AND cast(:fechaPreparacionFin as date)
+		ORDER BY FA.ID_LOG_ALERTA desc
+    </sql-query>
+
+    
+    
+    
+     <sql-query name="logalerta.listarcontar">
+       select count(1)
+		FROM SGALERTASSYS.LOG_ALERTA FA with (nolock), SGALERTASSYS.REGLA_NEGOCIO RN with (nolock)
+		WHERE FA.ID_REGLA_NEGOCIO = RN.ID_REGLA_NEGOCIO
+			AND FA.ID_REGLA_NEGOCIO = ISNULL(:idreglanegocio,FA.ID_REGLA_NEGOCIO)
+			AND cast(FA.CREACION_FECHA as date) BETWEEN cast(:fechaPreparacionInicio as date) AND cast(:fechaPreparacionFin as date)
+    </sql-query>
+    
+    
+    
+        <sql-query name="logalerta.listarDetalle">
+       SELECT 
+            DET.NRO_REGISTRO AS "nroRegistro",
+            DET.NOMBRE_CAMPO AS "campoNombre",
+            DET.VALOR AS "campoValor" 
+        FROM 
+        SGALERTASSYS.LOG_DETALLE DET with (nolock)
+        WHERE DET.ID_LOG_ALERTA = :id_log_alerta
+        ORDER BY DET.NRO_REGISTRO ASC, DET.NOMBRE_CAMPO
+    </sql-query>
+    
+    
+            <sql-query name="logalerta.listarDetallecontar">
+       SELECT 
+            COUNT(1)
+     FROM 
+        SGALERTASSYS.LOG_DETALLE DET with (nolock)
+        WHERE DET.ID_LOG_ALERTA = :id_log_alerta
+        </sql-query>
+    
+    
+    	<sql-query name="logalerta.listarReglasPendientes">
+		 SELECT RN.flg_log_generar_alerta                     AS "flgLogGenerarAlerta",
+		       DET.id_regla_negocio                          AS "idReglaNegocio",
+		       (SELECT Count(1)
+		        FROM   sgalertassys.regla_negocio_programacion PRO WITH (nolock)
+		        WHERE  PRO.id_regla_negocio = DET.id_regla_negocio
+		               AND PRO.estado = 'A'
+		               AND PRO.id_tipo_programacion = 'COR') AS
+		       "cantidadProgramacionCorreo"
+		FROM   (SELECT ALE.id_regla_negocio
+		        FROM   sgalertassys.log_alerta ALE WITH (nolock)
+		        WHERE  ALE.flg_alerta_generada = 'N'
+		        GROUP  BY ALE.id_regla_negocio) DET
+		       INNER JOIN sgalertassys.regla_negocio RN WITH (nolock)
+		               ON DET.id_regla_negocio = RN.id_regla_negocio  
+			   WHERE RN.ESTADO='A'
+	</sql-query>
+    
+    
+    
+      <sql-query name="logalerta.listarAdicional">
+		SELECT 
+            ADI.NRO_REGISTRO AS "nroRegistro",
+            ADI.NOMBRE_CAMPO AS "campoNombre",
+            ADI.VALOR AS "campoValor" 
+        FROM 
+        SGALERTASSYS.LOG_ADICIONAL ADI with (nolock)
+        WHERE ADI.ID_LOG_ALERTA = :id_log_alerta
+        ORDER BY ADI.NRO_REGISTRO ASC
+        </sql-query>
+        
+        
+    
+      <sql-query name="logalerta.listarAdicionalcontar">
+		SELECT 
+            count(*)
+        FROM 
+        SGALERTASSYS.LOG_ADICIONAL ADI with (nolock)
+        WHERE ADI.ID_LOG_ALERTA = :id_log_alerta
+        </sql-query>
+        
+</hibernate-mapping>

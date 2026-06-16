@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: royal-alertas-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: royal-alertas-api
+  template:
+    metadata:
+      labels:
+        app: royal-alertas-api
+    spec:
+      containers:
+        - name: royal-alertas-api
+          image: royal-alertas-api:1.0.0
+          ports:
+            - containerPort: 8085
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: royal-alertas-db
+                  key: url
+            - name: DB_USR
+              valueFrom:
+                secretKeyRef:
+                  name: royal-alertas-db
+                  key: username
+            - name: DB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: royal-alertas-db
+                  key: password
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: royal-alertas-api
+spec:
+  selector:
+    app: royal-alertas-api
+  ports:
+    - port: 80
+      targetPort: 8085

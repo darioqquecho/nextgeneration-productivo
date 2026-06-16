@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .CorreoCuerpo
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <sql-query name="correocuerpo.ObtenerXCuerpo">
+          SELECT  cc.CUERPO_CORREO AS "cuerpoCorreo" FROM SGALERTASSYS.CORREO_CUERPO cc  with (nolock)
+		    WHERE cc.ID_CORREO =:idCorreo
+    </sql-query>
+</hibernate-mapping>

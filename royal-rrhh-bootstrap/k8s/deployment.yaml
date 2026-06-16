@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: royal-rrhh-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: royal-rrhh-api
+  template:
+    metadata:
+      labels:
+        app: royal-rrhh-api
+    spec:
+      containers:
+        - name: royal-rrhh-api
+          image: royal-rrhh-api:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ROYAL_PERSISTENCE_ADAPTER
+              value: IN_MEMORY
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: royal-rrhh-api
+spec:
+  selector:
+    app: royal-rrhh-api
+  ports:
+    - port: 80
+      targetPort: 8080

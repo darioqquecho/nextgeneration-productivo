@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * * @author : desarrollo * @powerbuilder : .Alerta -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<sql-query name="ejecucionlog.estavivobd">
+         select cast(getdate() as varchar(400)) as "nombre"
+    </sql-query>
+
+</hibernate-mapping>

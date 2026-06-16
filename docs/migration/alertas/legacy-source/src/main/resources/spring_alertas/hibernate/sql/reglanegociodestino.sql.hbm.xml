@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * * @author : desarrollo * @powerbuilder : .ReglaNegocioDestino -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<sql-query name="reglanegociodestino.xxxxxx">
+		select GETDATE()
+	</sql-query>
+
+	<sql-query name="reglanegociodestino.listar">
+		SELECT
+		ID_REGLA_NEGOCIO AS "idReglaNegocio",
+		ID_TIPO_DESTINO AS "idTipoDestino",
+		CORREO_DESTINO AS "correoDestino",
+		NOMBRE_PERSONA AS "nombrePersona",
+		GRUPO_CORREO AS "grupoCorreo",
+		ESTADO AS "estado",
+		CASE ESTADO
+		WHEN 'A' THEN 'Activo'
+		WHEN 'I' THEN
+		'Inactivo'
+		END AS "estadoaux"
+		FROM SGALERTASSYS.REGLA_NEGOCIO_DESTINO  with (nolock)
+		WHERE ID_REGLA_NEGOCIO = :p_regla
+	</sql-query>
+
+	<sql-query name="reglanegociodestino.contar">
+		SELECT
+		count(*)
+		FROM
+		SGALERTASSYS.REGLA_NEGOCIO_DESTINO  with (nolock)
+		WHERE ID_REGLA_NEGOCIO = :p_regla
+	</sql-query>
+
+
+	<sql-query name="reglanegociodestino.selectoremplistar">
+		SELECT
+		P.PERSONA as "codigo",
+		P.BUSQUEDA as "busqueda",
+		P.DOCUMENTO as "documento",
+		P.CORREOELECTRONICO as "correoelectronico",
+		E.CORREOINTERNO as "correointerno"
+		FROM VW_REMOTO_PersonaMast P  with (nolock)
+		LEFT JOIN VW_REMOTO_EmpleadoMast E  with (nolock) ON P.PERSONA=E.EMPLEADO
+		WHERE E.ESTADOEMPLEADO = '2'
+		AND UPPER(P.BUSQUEDA) Like '%' || nvl(UPPER(:p_busqueda) ,
+		UPPER(P.BUSQUEDA)) || '%'
+		AND P.DOCUMENTO = NVL(:p_documento,P.DOCUMENTO)
+		AND ( P.CORREOELECTRONICO IS NOT NULL
+		OR E.CORREOINTERNO IS NOT NULL)
+		ORDER BY P.BUSQUEDA
+	</sql-query>
+
+	<sql-query name="reglanegociodestino.selectorempcontar">
+	SELECT 
+	COUNT(*)
+	FROM VW_REMOTO_PersonaMast P with (nolock)
+	LEFT JOIN VW_REMOTO_EmpleadoMast E with (nolock) ON P.PERSONA=E.EMPLEADO
+	WHERE
+	E.ESTADOEMPLEADO = '2'
+	AND UPPER(P.BUSQUEDA) Like '%' ||
+	nvl(UPPER(:p_busqueda) ,
+	UPPER(P.BUSQUEDA)) || '%'
+	AND P.DOCUMENTO = NVL(:p_documento,P.DOCUMENTO)
+	AND ( P.CORREOELECTRONICO IS NOT NULL
+	OR
+	E.CORREOINTERNO IS NOT NULL)
+	ORDER BY P.BUSQUEDA
+	</sql-query>
+
+	<sql-query name="reglanegociodestino.validarcorreoyausado">
+		SELECT COUNT(*) FROM SGALERTASSYS.REGLA_NEGOCIO_DESTINO rnd with (nolock)
+		WHERE rnd.ID_REGLA_NEGOCIO = :p_regla
+		AND rnd.CORREO_DESTINO = :p_correo
+	</sql-query>
+	
+	
+	
+
+</hibernate-mapping>

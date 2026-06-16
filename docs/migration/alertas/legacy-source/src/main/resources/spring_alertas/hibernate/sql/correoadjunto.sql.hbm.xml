@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * @author : desarrollo
+ * @powerbuilder : .CorreoAdjunto
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <sql-query name="correoadjunto.xxxxxx">
+         select GETDATE()
+    </sql-query>
+    
+     <sql-query name="correoadjunto.contarPaginacion">
+         SELECT  
+			  count(*)
+		FROM SGALERTASSYS.CORREO_ADJUNTO ca with (nolock)
+		where ca.ID_CORREO = :p_idcorreo
+    </sql-query>
+    
+     <sql-query name="correoadjunto.listarPaginacion">
+         SELECT  
+			  ca.ID_CORREO "idCorreo"
+				,ca.ID_ADJUNTO  "idAdjunto"
+				,ca.NOMBRE_ARCHIVO "nombreArchivo"
+				,ca.RUTA_COMPLETA "rutaCompleta"
+				,ca.CUERPO_ADJUNTO "cuerpoAdjunto"
+				,ca.CREACION_USUARIO "creacionUsuario"
+				,ca.CREACION_FECHA 	"creacionFecha"
+				,ca.CREACION_TERMINAL "creacionTerminal"
+				,ca.MODIFICACION_USUARIO "modificacionUsuario"
+				,ca.MODIFICACION_FECHA  "modificacionFecha"
+				,ca.MODIFICACION_TERMINAL "modificacionTerminal"
+		FROM SGALERTASSYS.CORREO_ADJUNTO ca with (nolock)
+		where ca.ID_CORREO = :p_idcorreo
+    </sql-query>
+</hibernate-mapping>
