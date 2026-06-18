@@ -18,9 +18,9 @@ public class AprobarRequerimientoPersonalV1UseCase implements AprobarRequerimien
 
 	public AprobarRequerimientoPersonalResult execute(AprobarRequerimientoPersonalCommand command,
 			FunctionalContext context) {
-		guards.check(context, "RRHH_REQUERIMIENTO_APROBAR");
-		auditPort.register(new FunctionalAuditRecord("RRHH", "Requerimiento", "Aprobar Requerimiento",
-				"AprobarRequerimientoPersonalUseCase", "V1", context.userId(), command.accion(), "Requerimiento",
+		guards.check(context);
+		auditPort.register(new FunctionalAuditRecord("HR", context.process(), context.useCase(),
+				context.functionality(), "V1", context.userId(), command.accion(), "Requerimiento",
 				command.codigoRequerimiento(), context.traceId(), context.requestId(), context.executedAt()));
 		return new AprobarRequerimientoPersonalResult(command.codigoRequerimiento(), command.accion(), "V1",
 				context.traceId());

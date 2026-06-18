@@ -1,6 +1,8 @@
 package net.royal.erp.modules.rrhh.infrastructure.parametro;
 
+import net.royal.erp.modules.rrhh.application.parametro.port.*;
 import net.royal.erp.modules.rrhh.domain.parametro.*;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,7 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Implementa: - MOD-013 Persistencia in-memory como adapter. - ARCH-009 Bases
  * de Datos.
  */
-public class InMemoryParametroRepositoryAdapter implements ParametroRepository {
+public class InMemoryParametroRepositoryAdapter implements MantenimientoTablaParametrosRepository,
+		ReporteParametrosRepository, AprobacionMasivaParametrosRepository {
 	private final Map<String, Parametro> data = new ConcurrentHashMap<>();
 
 	public boolean existsById(ParametroId id) {
@@ -29,5 +32,15 @@ public class InMemoryParametroRepositoryAdapter implements ParametroRepository {
 
 	public void deleteById(ParametroId id) {
 		data.remove(id.value());
+	}
+
+	public boolean approveIfPending(ParametroId id, String usuario, Instant fechaModif) {
+		Parametro parametro = data.get(id.value());
+		if (parametro == null || parametro.estado() != ParametroEstado.A) {
+			return false;
+		}
+		parametro.cambiarEstado(ParametroEstado.AP, usuario, fechaModif);
+		data.put(id.value(), parametro);
+		return true;
 	}
 }

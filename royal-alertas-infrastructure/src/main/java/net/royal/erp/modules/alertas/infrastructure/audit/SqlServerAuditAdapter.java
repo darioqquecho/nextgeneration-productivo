@@ -18,8 +18,8 @@ public class SqlServerAuditAdapter implements AuditPort {
 	@Override
 	public void register(FunctionalAuditRecord record) {
 		log.info(
-				"AUDIT_ALERTAS module={} process={} functionality={} useCase={} version={} user={} result={} traceId={}",
-				record.module(), record.process(), record.functionality(), record.useCase(), record.version(),
+				"AUDIT_ALERTAS module={} process={} useCase={} functionality={} version={} user={} result={} traceId={}",
+				record.module(), record.process(), record.useCase(), record.functionality(), record.version(),
 				record.userId(), record.result(), record.traceId());
 	}
 }

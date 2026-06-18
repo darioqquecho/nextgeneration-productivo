@@ -64,7 +64,7 @@ public class SqlServerAlertasRecordRepository implements AlertasRecordRepository
 		String set = meta.nonPrimaryKeys().stream().filter(f -> params.containsKey(f.field()))
 				.map(f -> f.column() + " = :" + f.field()).collect(Collectors.joining(", "));
 		if (set.isBlank())
-			throw new BusinessException("ALT-SQL-001", "No hay campos para actualizar");
+			throw new BusinessException("ALT-SQL-001");
 		jdbc.update("UPDATE " + meta.qualifiedTable() + " SET " + set + " WHERE " + wherePk(meta), params);
 		return record;
 	}
@@ -76,7 +76,7 @@ public class SqlServerAlertasRecordRepository implements AlertasRecordRepository
 		Map<String, Object> params = normalize(meta, id);
 		boolean hasEstado = meta.fields().stream().anyMatch(f -> f.column().equalsIgnoreCase("ESTADO"));
 		if (!hasEstado)
-			throw new BusinessException("ALT-SQL-002", "La tabla no tiene columna ESTADO para anular");
+			throw new BusinessException("ALT-SQL-002");
 		params.put("estado", "INA");
 		jdbc.update("UPDATE " + meta.qualifiedTable() + " SET ESTADO = :estado WHERE " + wherePk(meta), params);
 		return new AlertasRecord(entityName, params);
@@ -91,12 +91,12 @@ public class SqlServerAlertasRecordRepository implements AlertasRecordRepository
 
 	private AlertasEntityMetadata metadata(String entityName) {
 		return AlertasMetadataCatalog.byEntity(entityName)
-				.orElseThrow(() -> new BusinessException("ALT-META-404", "Entidad no migrada: " + entityName));
+				.orElseThrow(() -> new BusinessException("ALT-META-404", entityName));
 	}
 
 	private String wherePk(AlertasEntityMetadata meta) {
 		if (meta.primaryKeys().isEmpty())
-			throw new BusinessException("ALT-META-001", "Entidad sin PK: " + meta.entityName());
+			throw new BusinessException("ALT-META-001", meta.entityName());
 		return meta.primaryKeys().stream().map(f -> f.column() + " = :" + f.field())
 				.collect(Collectors.joining(" AND "));
 	}

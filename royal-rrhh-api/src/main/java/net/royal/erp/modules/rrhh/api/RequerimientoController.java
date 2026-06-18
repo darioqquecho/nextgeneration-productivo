@@ -26,7 +26,6 @@ public class RequerimientoController {
 		return ResponseEntity.ok(useCase.execute(
 				new AprobarRequerimientoPersonalCommand(codigo, body.accion(), body.comentario(),
 						body.usuarioAprobador()),
-				contextFactory.from(request, "Requerimiento", "Aprobar Requerimiento",
-						"AprobarRequerimientoPersonalUseCase")));
+				contextFactory.from(request, "Requerimiento", "Aprobar", "Aprobar Requerimiento Personal")));
 	}
 }

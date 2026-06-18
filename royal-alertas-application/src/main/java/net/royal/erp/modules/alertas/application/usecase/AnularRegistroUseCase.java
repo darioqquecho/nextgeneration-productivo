@@ -39,8 +39,8 @@ public class AnularRegistroUseCase implements UseCase<AlertasIdCommand, AlertasO
 		guards.check(context, "ALERTAS_ANULAR");
 		var record = repository.annul(command.entityName(), command.id());
 		var data = record.values();
-		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "Anular Registro",
-				"AnularRegistroUseCase", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
+		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "AnularRegistroUseCase",
+				"Anular Registro", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
 				context.traceId(), context.requestId(), context.executedAt()));
 		return new AlertasOperationResult(command.entityName(), "annul", data, context.traceId());
 	}

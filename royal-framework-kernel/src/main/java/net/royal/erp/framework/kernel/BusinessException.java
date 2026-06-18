@@ -10,15 +10,17 @@ package net.royal.erp.framework.kernel;
  */
 public class BusinessException extends RuntimeException {
 	private final String code;
+	private final Object[] args;
 
 	/**
 	 * Crea una excepción funcional controlada.
 	 *
 	 * Implementa: - ARCH-006 Seguridad por diseño.
 	 */
-	public BusinessException(String code, String message) {
-		super(message);
+	public BusinessException(String code, Object... args) {
+		super(code);
 		this.code = code;
+		this.args = args == null ? new Object[0] : args.clone();
 	}
 
 	/**
@@ -28,5 +30,9 @@ public class BusinessException extends RuntimeException {
 	 */
 	public String code() {
 		return code;
+	}
+
+	public Object[] args() {
+		return args.clone();
 	}
 }

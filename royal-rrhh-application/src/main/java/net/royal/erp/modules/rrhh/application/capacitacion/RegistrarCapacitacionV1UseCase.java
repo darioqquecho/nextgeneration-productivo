@@ -22,14 +22,14 @@ public class RegistrarCapacitacionV1UseCase implements RegistrarCapacitacionUseC
 	}
 
 	public RegistrarCapacitacionResult execute(RegistrarCapacitacionCommand command, FunctionalContext context) {
-		guards.check(context, "RRHH_CAPACITACION_REGISTRAR");
+		guards.check(context);
 		if (repository.existsByCodigo(command.codigo()))
-			throw new BusinessException("CAP-004", "Capacitación ya existe");
+			throw new BusinessException("CAP-004");
 		Capacitacion c = Capacitacion.registrar(command.codigo(), command.nombre(), command.fechaInicio(),
 				command.fechaFin(), command.instructor());
 		repository.save(c);
-		auditPort.register(new FunctionalAuditRecord("RRHH", "Capacitación", "Registrar Capacitación",
-				"RegistrarCapacitacionUseCase", "V1", context.userId(), "OK", "Capacitacion", command.codigo(),
+		auditPort.register(new FunctionalAuditRecord("HR", context.process(), context.useCase(),
+				context.functionality(), "V1", context.userId(), "OK", "Capacitacion", command.codigo(),
 				context.traceId(), context.requestId(), context.executedAt()));
 		return new RegistrarCapacitacionResult(command.codigo(), "REGISTRADA", "V1", context.traceId());
 	}

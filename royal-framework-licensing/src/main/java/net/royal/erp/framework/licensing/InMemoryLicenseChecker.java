@@ -35,7 +35,7 @@ public class InMemoryLicenseChecker implements LicenseChecker {
 	 */
 	public void checkModuleEnabled(FunctionalContext context, String moduleCode) {
 		if (!modules.getOrDefault(context.clientId(), Set.of()).contains(moduleCode)) {
-			throw new BusinessException("MODULE-NOT-LICENSED", "Módulo no licenciado: " + moduleCode);
+			throw new BusinessException("MODULE-NOT-LICENSED", moduleCode);
 		}
 	}
 }

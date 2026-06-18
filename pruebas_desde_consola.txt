@@ -1,3 +1,13 @@
+# Probar un solo caso de uso En Memoria
+mvn -pl royal-rrhh-bootstrap -am -Dtest=ParametroUseCaseTest -Dsurefire.failIfNoSpecifiedTests=false test
+
+# Probar un solo caso de uso En SQL SERVER
+mvn -pl royal-rrhh-bootstrap -am "-Dtest=ParametroSqlServerUseCaseIT#crudParametroContraSqlServer" "-Dsurefire.failIfNoSpecifiedTests=false" "-Dit.sqlserver=true" "-Dit.sqlserver.url=jdbc:sqlserver://172.190.78.152:58747;databaseName=DARIOA;encrypt=false" "-Dit.sqlserver.username=dariouser" "-Dit.sqlserver.password=2423Deffr" test
+
+# Probar un solo caso de uso En SQL SERVER con un Registro
+mvn -pl royal-rrhh-bootstrap -am "-Dtest=ParametroSqlServerUseCaseIT#crearParametroContraSqlServerDejandoRegistro" "-Dsurefire.failIfNoSpecifiedTests=false" "-Dit.sqlserver=true" "-Dit.sqlserver.url=jdbc:sqlserver://172.190.78.152:58747;databaseName=DARIOA;encrypt=false" "-Dit.sqlserver.username=dariouser" "-Dit.sqlserver.password=2423Deffr" test
+
+
 mvn -pl :royal-rrhh-bootstrap -am "-Dtest=ParametroSqlServerUseCaseIT#crearParametroContraSqlServer" "-Dsurefire.failIfNoSpecifiedTests=false" "-Dit.sqlserver=true" "-Dit.sqlserver.url=jdbc:sqlserver://172.190.78.152:58747;databaseName=DARIOA;sslmode=disable;encrypt=false;" "-Dit.sqlserver.username=dariouser" "-Dit.sqlserver.password=2423Deffr" test
 
 mvn -pl :royal-rrhh-bootstrap -am "-Dtest=ParametroSqlServerUseCaseIT#crearParametroContraSqlServerDejandoRegistro" "-Dsurefire.failIfNoSpecifiedTests=false" "-Dit.sqlserver=true" "-Dit.sqlserver.compania=COMP01" "-Dit.sqlserver.codigo=ITPRUEBA1" "-Dit.sqlserver.nombre=Parametro visible prueba" "-Dit.sqlserver.url=jdbc:sqlserver://172.190.78.152:58747;databaseName=DARIOA;sslmode=disable;encrypt=false;" "-Dit.sqlserver.username=dariouser" "-Dit.sqlserver.password=2423Deffr" test

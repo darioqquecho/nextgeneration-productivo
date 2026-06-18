@@ -5,5 +5,5 @@ package net.royal.erp.modules.rrhh.application.parametro.dto;
  *
  * Propósito: Entrada del caso de uso ListarParametros.
  */
-public record ListarParametrosQuery() {
+public record ListarParametrosQuery(String compania, String codigo, String estado) {
 }

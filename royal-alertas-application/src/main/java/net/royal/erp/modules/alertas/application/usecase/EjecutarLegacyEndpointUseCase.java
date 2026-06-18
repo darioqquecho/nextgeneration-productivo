@@ -72,7 +72,6 @@ public class EjecutarLegacyEndpointUseCase implements UseCase<LegacyEndpointComm
 			}
 			return listar.execute(new AlertasIdCommand(entity, payload), context);
 		}
-		throw new BusinessException("ALT-LEGACY-001",
-				"Endpoint legacy no mapeado: " + command.resource() + "/" + command.action());
+		throw new BusinessException("ALT-LEGACY-001", command.resource(), command.action());
 	}
 }

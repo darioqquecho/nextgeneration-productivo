@@ -6,5 +6,5 @@ package net.royal.erp.modules.rrhh.domain.parametro;
  * Propósito: Estados válidos de HR_Parametros.
  */
 public enum ParametroEstado {
-	ACTIVO, INACTIVO
+	A, AP, ACTIVO, INACTIVO
 }

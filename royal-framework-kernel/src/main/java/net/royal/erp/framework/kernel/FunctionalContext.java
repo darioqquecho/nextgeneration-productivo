@@ -16,7 +16,14 @@ import java.util.UUID;
  */
 public record FunctionalContext(String tenantId, String clientId, String userId, String module, String process,
 		String functionality, String useCase, String requestedVersion, String traceId, String requestId,
-		Instant executedAt) {
+		Instant executedAt, String language) {
+	public FunctionalContext(String tenantId, String clientId, String userId, String module, String process,
+			String functionality, String useCase, String requestedVersion, String traceId, String requestId,
+			Instant executedAt) {
+		this(tenantId, clientId, userId, module, process, functionality, useCase, requestedVersion, traceId, requestId,
+				executedAt, null);
+	}
+
 	/**
 	 * Normaliza TraceId, RequestId y fecha de ejecución.
 	 *
@@ -30,6 +37,7 @@ public record FunctionalContext(String tenantId, String clientId, String userId,
 		traceId = blank(traceId) ? UUID.randomUUID().toString() : traceId;
 		requestId = blank(requestId) ? UUID.randomUUID().toString() : requestId;
 		executedAt = executedAt == null ? Instant.now() : executedAt;
+		language = blank(language) ? "es" : language;
 	}
 
 	private static boolean blank(String value) {

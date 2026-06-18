@@ -16,7 +16,7 @@ public class RegistrarCapacitacionV2UseCase implements RegistrarCapacitacionUseC
 
 	public RegistrarCapacitacionResult execute(RegistrarCapacitacionCommand command, FunctionalContext context) {
 		if (command.instructor() == null || command.instructor().isBlank())
-			throw new BusinessException("CAP-V2-001", "Instructor obligatorio");
+			throw new BusinessException("CAP-V2-001");
 		RegistrarCapacitacionResult r = base.execute(command, context);
 		return new RegistrarCapacitacionResult(r.codigo(), r.estado(), "V2", r.traceId());
 	}

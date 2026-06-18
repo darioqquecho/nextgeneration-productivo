@@ -40,8 +40,8 @@ public class CrearRegistroUseCase implements UseCase<AlertasCrudCommand, Alertas
 		guards.check(context, "ALERTAS_REGISTRAR");
 		var record = repository.insert(new AlertasRecord(command.entityName(), command.values()));
 		var data = record.values();
-		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "Registrar Registro",
-				"CrearRegistroUseCase", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
+		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "CrearRegistroUseCase",
+				"Registrar Registro", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
 				context.traceId(), context.requestId(), context.executedAt()));
 		return new AlertasOperationResult(command.entityName(), "insert", data, context.traceId());
 	}

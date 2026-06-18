@@ -46,7 +46,7 @@ public class Parametro {
 
 	public void cambiarEstado(ParametroEstado estado, String usuario, Instant fechaModif) {
 		if (estado == null) {
-			throw new BusinessException("HR-PAR-003", "Estado requerido");
+			throw new BusinessException("HR-PAR-003");
 		}
 		this.estado = estado;
 		marcarModificacion(usuario, fechaModif);
@@ -59,13 +59,13 @@ public class Parametro {
 
 	private static void validarNombre(String nombre) {
 		if (nombre != null && nombre.length() > 100) {
-			throw new BusinessException("HR-PAR-002", "Nombre demasiado largo");
+			throw new BusinessException("HR-PAR-002");
 		}
 	}
 
 	private static String validarUsuario(String usuario) {
 		if (usuario != null && usuario.length() > 20) {
-			throw new BusinessException("HR-PAR-005", "UltimoUsuario demasiado largo");
+			throw new BusinessException("HR-PAR-005");
 		}
 		return usuario;
 	}

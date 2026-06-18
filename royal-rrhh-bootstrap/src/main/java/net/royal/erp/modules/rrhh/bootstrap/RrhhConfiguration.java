@@ -8,15 +8,14 @@ import net.royal.erp.framework.versioning.*;
 import net.royal.erp.modules.rrhh.api.FunctionalContextFactory;
 import net.royal.erp.modules.rrhh.application.capacitacion.*;
 import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.modules.rrhh.application.parametro.port.*;
 import net.royal.erp.modules.rrhh.application.parametro.usecase.*;
 import net.royal.erp.modules.rrhh.application.requerimiento.*;
 import net.royal.erp.modules.rrhh.domain.capacitacion.CapacitacionRepository;
-import net.royal.erp.modules.rrhh.domain.parametro.ParametroRepository;
 import net.royal.erp.modules.rrhh.infrastructure.aprobaciones.InMemoryAprobacionesAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.audit.ConsoleAuditAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.capacitacion.InMemoryCapacitacionRepositoryAdapter;
-import net.royal.erp.modules.rrhh.infrastructure.parametro.InMemoryParametroRepositoryAdapter;
-import net.royal.erp.modules.rrhh.infrastructure.parametro.SqlServerParametroRepositoryAdapter;
+import net.royal.erp.modules.rrhh.infrastructure.parametro.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,21 +43,17 @@ public class RrhhConfiguration {
 		return new PersistenceAdapterResolver().resolve(persistenceAdapter);
 	}
 
-	@Bean
-	ParametroRepository parametroRepository(PersistenceAdapterType adapterType, ObjectProvider<JdbcTemplate> jdbc) {
-		return switch (adapterType) {
-		case IN_MEMORY -> new InMemoryParametroRepositoryAdapter();
-		case SQL_SERVER -> new SqlServerParametroRepositoryAdapter(requiredJdbcTemplate(jdbc, adapterType));
-		default -> throw new IllegalStateException("ParametroRepository no implementado para adapter " + adapterType);
-		};
-	}
-
 	private JdbcTemplate requiredJdbcTemplate(ObjectProvider<JdbcTemplate> jdbc, PersistenceAdapterType adapterType) {
 		JdbcTemplate template = jdbc.getIfAvailable();
 		if (template == null) {
 			throw new IllegalStateException("JdbcTemplate requerido para adapter " + adapterType);
 		}
 		return template;
+	}
+
+	@Bean
+	InMemoryParametroRepositoryAdapter inMemoryParametroRepositoryAdapter() {
+		return new InMemoryParametroRepositoryAdapter();
 	}
 
 	@Bean
@@ -82,9 +77,9 @@ public class RrhhConfiguration {
 	@Bean
 	PermissionChecker permissionChecker() {
 		InMemoryPermissionChecker c = new InMemoryPermissionChecker();
-		for (String p : new String[] { "RRHH_PARAMETRO_CREAR", "RRHH_PARAMETRO_ACTUALIZAR", "RRHH_PARAMETRO_CONSULTAR",
-				"RRHH_PARAMETRO_CAMBIARESTADO", "RRHH_PARAMETRO_ELIMINAR", "RRHH_CAPACITACION_REGISTRAR",
-				"RRHH_REQUERIMIENTO_APROBAR" }) {
+		for (String p : new String[] { "HR_MANTENIMIENTO_DE_PARAMETRO", "HR_REPORTE_DE_PARAMETRO",
+				"HR_APROBACION_MASIVA_DE_PARAMETROS", "HR_REGISTRAR_CAPACITACION",
+				"HR_APROBAR_REQUERIMIENTO_PERSONAL" }) {
 			c.grant("admin", p);
 		}
 		return c;
@@ -93,7 +88,7 @@ public class RrhhConfiguration {
 	@Bean
 	LicenseChecker licenseChecker() {
 		InMemoryLicenseChecker c = new InMemoryLicenseChecker();
-		c.enable("demo-client", "RRHH");
+		c.enable("demo-client", "HR");
 		return c;
 	}
 
@@ -109,51 +104,57 @@ public class RrhhConfiguration {
 	}
 
 	@Bean
-	CrearParametroUseCase crearParametroUseCase(FunctionalVersionResolver v, ParametroRepository r, UseCaseGuards g,
+	MantenimientoTablaParametrosUseCase mantenimientoTablaParametrosUseCase(FunctionalVersionResolver v,
+			PersistenceAdapterType adapterType, ObjectProvider<JdbcTemplate> jdbc,
+			InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a) {
+		MantenimientoTablaParametrosUseCase v1 = new MantenimientoTablaParametrosV1UseCase(
+				mantenimientoRepository(adapterType, jdbc, inMemory, "v1"), g, a);
+		MantenimientoTablaParametrosUseCase v2 = new MantenimientoTablaParametrosV2UseCase(
+				mantenimientoRepository(adapterType, jdbc, inMemory, "v2"), g, a);
+		return new MantenimientoTablaParametrosVersionedUseCase(v, v1, v2);
+	}
+
+	@Bean
+	ReporteParametrosUseCase reporteParametrosUseCase(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g,
 			AuditPort a) {
-		CrearParametroUseCase v1 = new CrearParametroV1UseCase(r, g, a);
-		CrearParametroUseCase v2 = new CrearParametroV2UseCase(r, g, a);
-		return new CrearParametroVersionedUseCase(v, v1, v2);
+		return new ReporteParametrosJasperUseCase(reporteRepository(adapterType, jdbc, inMemory), g, a);
 	}
 
 	@Bean
-	ActualizarParametroUseCase actualizarParametroUseCase(FunctionalVersionResolver v, ParametroRepository r,
-			UseCaseGuards g, AuditPort a) {
-		ActualizarParametroUseCase v1 = new ActualizarParametroV1UseCase(r, g, a);
-		ActualizarParametroUseCase v2 = new ActualizarParametroV2UseCase(r, g, a);
-		return new ActualizarParametroVersionedUseCase(v, v1, v2);
+	AprobacionMasivaParametrosUseCase aprobacionMasivaParametrosUseCase(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g,
+			AuditPort a) {
+		return new AprobacionMasivaParametrosV1UseCase(aprobacionMasivaRepository(adapterType, jdbc, inMemory), g, a);
 	}
 
-	@Bean
-	ObtenerParametroUseCase obtenerParametroUseCase(FunctionalVersionResolver v, ParametroRepository r,
-			UseCaseGuards g) {
-		ObtenerParametroUseCase v1 = new ObtenerParametroV1UseCase(r, g);
-		ObtenerParametroUseCase v2 = new ObtenerParametroV2UseCase(r, g);
-		return new ObtenerParametroVersionedUseCase(v, v1, v2);
+	private MantenimientoTablaParametrosRepository mantenimientoRepository(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, String version) {
+		return switch (adapterType) {
+		case IN_MEMORY -> inMemory;
+		case SQL_SERVER -> "v2".equalsIgnoreCase(version)
+				? new SqlServerMantenimientoTablaParametrosV2Adapter(requiredJdbcTemplate(jdbc, adapterType))
+				: new SqlServerMantenimientoTablaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		default -> throw new IllegalStateException("Mantenimiento de Parametro no implementado para " + adapterType);
+		};
 	}
 
-	@Bean
-	ListarParametrosUseCase listarParametrosUseCase(FunctionalVersionResolver v, ParametroRepository r,
-			UseCaseGuards g) {
-		ListarParametrosUseCase v1 = new ListarParametrosV1UseCase(r, g);
-		ListarParametrosUseCase v2 = new ListarParametrosV2UseCase(r, g);
-		return new ListarParametrosVersionedUseCase(v, v1, v2);
+	private ReporteParametrosRepository reporteRepository(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory) {
+		return switch (adapterType) {
+		case IN_MEMORY -> inMemory;
+		case SQL_SERVER -> new SqlServerReporteParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		default -> throw new IllegalStateException("Reporte de Parametro no implementado para " + adapterType);
+		};
 	}
 
-	@Bean
-	CambiarEstadoParametroUseCase cambiarEstadoParametroUseCase(FunctionalVersionResolver v, ParametroRepository r,
-			UseCaseGuards g, AuditPort a) {
-		CambiarEstadoParametroUseCase v1 = new CambiarEstadoParametroV1UseCase(r, g, a);
-		CambiarEstadoParametroUseCase v2 = new CambiarEstadoParametroV2UseCase(r, g, a);
-		return new CambiarEstadoParametroVersionedUseCase(v, v1, v2);
-	}
-
-	@Bean
-	EliminarParametroUseCase eliminarParametroUseCase(FunctionalVersionResolver v, ParametroRepository r,
-			UseCaseGuards g, AuditPort a) {
-		EliminarParametroUseCase v1 = new EliminarParametroV1UseCase(r, g, a);
-		EliminarParametroUseCase v2 = new EliminarParametroV2UseCase(r, g, a);
-		return new EliminarParametroVersionedUseCase(v, v1, v2);
+	private AprobacionMasivaParametrosRepository aprobacionMasivaRepository(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory) {
+		return switch (adapterType) {
+		case IN_MEMORY -> inMemory;
+		case SQL_SERVER -> new SqlServerAprobacionMasivaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		default -> throw new IllegalStateException("Aprobacion masiva de Parametros no implementado para " + adapterType);
+		};
 	}
 
 	@Bean

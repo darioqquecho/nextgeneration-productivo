@@ -41,8 +41,8 @@ public class ActualizarRegistroUseCase implements UseCase<AlertasCrudCommand, Al
 		guards.check(context, "ALERTAS_ACTUALIZAR");
 		var record = repository.update(new AlertasRecord(command.entityName(), command.values()));
 		var data = record.values();
-		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "Actualizar Registro",
-				"ActualizarRegistroUseCase", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
+		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "ActualizarRegistroUseCase",
+				"Actualizar Registro", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
 				context.traceId(), context.requestId(), context.executedAt()));
 		return new AlertasOperationResult(command.entityName(), "update", data, context.traceId());
 	}

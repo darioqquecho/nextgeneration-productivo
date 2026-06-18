@@ -25,7 +25,7 @@ public class SqlServerNamedQueryRepository implements AlertasNamedQueryRepositor
 	@Override
 	public List<Map<String, Object>> query(String queryName, Map<String, Object> parameters) {
 		String sql = catalog.get(queryName)
-				.orElseThrow(() -> new BusinessException("ALT-SQL-404", "Query no encontrada: " + queryName));
+				.orElseThrow(() -> new BusinessException("ALT-SQL-404", queryName));
 		return jdbc.queryForList(sql, parameters == null ? Map.of() : parameters);
 	}
 
@@ -33,7 +33,7 @@ public class SqlServerNamedQueryRepository implements AlertasNamedQueryRepositor
 	@Override
 	public int update(String queryName, Map<String, Object> parameters) {
 		String sql = catalog.get(queryName)
-				.orElseThrow(() -> new BusinessException("ALT-SQL-404", "Query no encontrada: " + queryName));
+				.orElseThrow(() -> new BusinessException("ALT-SQL-404", queryName));
 		return jdbc.update(sql, parameters == null ? Map.of() : parameters);
 	}
 

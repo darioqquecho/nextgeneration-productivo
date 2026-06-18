@@ -22,7 +22,7 @@ public class CapacitacionController {
 	@PostMapping
 	public ResponseEntity<RegistrarCapacitacionResult> registrar(@RequestBody RegistrarCapacitacionCommand command,
 			HttpServletRequest request) {
-		return ResponseEntity.ok(useCase.execute(command, contextFactory.from(request, "Capacitación",
-				"Registrar Capacitación", "RegistrarCapacitacionUseCase")));
+		return ResponseEntity.ok(
+				useCase.execute(command, contextFactory.from(request, "Capacitacion", "Registrar", "Registrar Capacitacion")));
 	}
 }

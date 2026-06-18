@@ -34,7 +34,7 @@ public class InMemoryPermissionChecker implements PermissionChecker {
 	 */
 	public void check(FunctionalContext context, String permission) {
 		if (!permissionsByUser.getOrDefault(context.userId(), Set.of()).contains(permission)) {
-			throw new BusinessException("SECURITY-DENIED", "Usuario sin permiso: " + permission);
+			throw new BusinessException("SECURITY-DENIED", permission);
 		}
 	}
 }

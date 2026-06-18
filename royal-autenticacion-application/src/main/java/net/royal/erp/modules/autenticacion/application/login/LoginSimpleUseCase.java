@@ -16,7 +16,7 @@ public class LoginSimpleUseCase implements LoginUseCase {
 	 */
 	public LoginResult execute(LoginCommand command, FunctionalContext context) {
 		if (!"admin".equals(command.username()) || !"admin".equals(command.password())) {
-			throw new BusinessException("AUTH-001", "Credenciales inválidas");
+			throw new BusinessException("AUTH-001");
 		}
 		return new LoginResult("admin", "demo-jwt-token", "Bearer");
 	}

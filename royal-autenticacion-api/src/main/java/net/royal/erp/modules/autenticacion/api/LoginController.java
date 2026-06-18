@@ -1,6 +1,7 @@
 package net.royal.erp.modules.autenticacion.api;
 
-import net.royal.erp.framework.kernel.FunctionalContext;
+import jakarta.servlet.http.HttpServletRequest;
+import net.royal.erp.framework.kernel.*;
 import net.royal.erp.modules.autenticacion.application.login.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +30,10 @@ public class LoginController {
 	 * Implementa: - ARCH-006 Autenticación.
 	 */
 	@PostMapping("/login")
-	public ResponseEntity<LoginResult> login(@RequestBody LoginCommand command) {
+	public ResponseEntity<LoginResult> login(@RequestBody LoginCommand command, HttpServletRequest request) {
 		FunctionalContext context = new FunctionalContext("default", "demo-client", command.username(), "AUTENTICACION",
-				"Login", "Login", "LoginUseCase", null, null, null, Instant.now());
+				"Login", "Login", "LoginUseCase", null, null, null, Instant.now(),
+				RequestLanguage.fromHeaders(request.getHeader("X-Language"), request.getHeader("Accept-Language")));
 		return ResponseEntity.ok(useCase.execute(command, context));
 	}
 }

@@ -39,10 +39,10 @@ public class ObtenerRegistroUseCase implements UseCase<AlertasIdCommand, Alertas
 	public AlertasOperationResult execute(AlertasIdCommand command, FunctionalContext context) {
 		guards.check(context, "ALERTAS_CONSULTAR");
 		var record = repository.findById(command.entityName(), command.id())
-				.orElseThrow(() -> new BusinessException("ALT-404", "Registro no encontrado"));
+				.orElseThrow(() -> new BusinessException("ALT-404"));
 		var data = record.values();
-		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "Obtener Registro",
-				"ObtenerRegistroUseCase", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
+		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "ObtenerRegistroUseCase",
+				"Obtener Registro", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
 				context.traceId(), context.requestId(), context.executedAt()));
 		return new AlertasOperationResult(command.entityName(), "find", data, context.traceId());
 	}

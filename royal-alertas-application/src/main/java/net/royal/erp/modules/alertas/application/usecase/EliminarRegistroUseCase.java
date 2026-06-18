@@ -40,8 +40,8 @@ public class EliminarRegistroUseCase implements UseCase<AlertasIdCommand, Alerta
 		guards.check(context, "ALERTAS_ELIMINAR");
 		repository.delete(command.entityName(), command.id());
 		var data = command.id();
-		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "Eliminar Registro",
-				"EliminarRegistroUseCase", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
+		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Migración Legacy", "EliminarRegistroUseCase",
+				"Eliminar Registro", "V1", context.userId(), "OK", command.entityName(), String.valueOf(data),
 				context.traceId(), context.requestId(), context.executedAt()));
 		return new AlertasOperationResult(command.entityName(), "delete", data, context.traceId());
 	}

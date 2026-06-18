@@ -29,11 +29,11 @@ public class Capacitacion {
 	public static Capacitacion registrar(String codigo, String nombre, LocalDate fechaInicio, LocalDate fechaFin,
 			String instructor) {
 		if (codigo == null || codigo.isBlank())
-			throw new BusinessException("CAP-001", "Código requerido");
+			throw new BusinessException("CAP-001");
 		if (nombre == null || nombre.isBlank())
-			throw new BusinessException("CAP-002", "Nombre requerido");
+			throw new BusinessException("CAP-002");
 		if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin))
-			throw new BusinessException("CAP-003", "Fechas inválidas");
+			throw new BusinessException("CAP-003");
 		return new Capacitacion(codigo, nombre, fechaInicio, fechaFin, instructor);
 	}
 

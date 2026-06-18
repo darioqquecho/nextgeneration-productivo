@@ -38,8 +38,8 @@ public class ProcesarCicloAlertasUseCase implements UseCase<NamedQueryCommand, S
 		if (command != null && command.queryName() != null && !command.queryName().isBlank()) {
 			namedQueryUseCase.execute(command, context);
 		}
-		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Scheduler", "Procesar Ciclo Alertas",
-				"ProcesarCicloAlertasUseCase", "V1", context.userId(), "OK", "Scheduler",
+		auditPort.register(new FunctionalAuditRecord("ALERTAS", "Scheduler", "ProcesarCicloAlertasUseCase",
+				"Procesar Ciclo Alertas", "V1", context.userId(), "OK", "Scheduler",
 				String.valueOf(command == null ? "default" : command.queryName()), context.traceId(),
 				context.requestId(), context.executedAt()));
 		return "OK";

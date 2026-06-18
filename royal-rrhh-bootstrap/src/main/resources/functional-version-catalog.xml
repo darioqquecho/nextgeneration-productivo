@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <functional-version-catalog>
-	<mapping clientId="demo-client" module="RRHH" useCase="CrearParametroUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="ActualizarParametroUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="ObtenerParametroUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="ListarParametrosUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="CambiarEstadoParametroUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="EliminarParametroUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="RegistrarCapacitacionUseCase" version="V2"/>
-	<mapping clientId="demo-client" module="RRHH" useCase="AprobarRequerimientoPersonalUseCase" version="V2"/>
+	<mapping clientId="demo-client" module="HR" useCase="Mantenimiento de Parametro" version="V2"/>
+	<mapping clientId="demo-client" module="HR" useCase="Aprobacion masiva de Parametros" version="V1"/>
+	<mapping clientId="demo-client" module="HR" useCase="Registrar Capacitacion" version="V2"/>
+	<mapping clientId="demo-client" module="HR" useCase="Aprobar Requerimiento Personal" version="V2"/>
 </functional-version-catalog>
