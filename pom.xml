@@ -29,38 +29,12 @@
         <module>royal-autenticacion-infrastructure</module>
         <module>royal-autenticacion-api</module>
         <module>royal-autenticacion-bootstrap</module>
-        <module>royal-seguridad-domain</module>
-        <module>royal-seguridad-application</module>
-        <module>royal-seguridad-infrastructure</module>
-        <module>royal-seguridad-api</module>
-        <module>royal-seguridad-bootstrap</module>
-        <module>royal-auditoria-domain</module>
-        <module>royal-auditoria-application</module>
-        <module>royal-auditoria-infrastructure</module>
-        <module>royal-auditoria-api</module>
-        <module>royal-auditoria-bootstrap</module>
-        <module>royal-workflow-domain</module>
-        <module>royal-workflow-application</module>
-        <module>royal-workflow-infrastructure</module>
-        <module>royal-workflow-api</module>
-        <module>royal-workflow-bootstrap</module>
-        <module>royal-aprobaciones-domain</module>
-        <module>royal-aprobaciones-application</module>
-        <module>royal-aprobaciones-infrastructure</module>
-        <module>royal-aprobaciones-api</module>
-        <module>royal-aprobaciones-bootstrap</module>
         <module>royal-rrhh-domain</module>
         <module>royal-rrhh-application</module>
         <module>royal-rrhh-infrastructure</module>
         <module>royal-rrhh-api</module>
         <module>royal-rrhh-bootstrap</module>
         <module>royal-rrhh-war</module>
-        <module>royal-alertas-domain</module>
-        <module>royal-alertas-application</module>
-        <module>royal-alertas-infrastructure</module>
-        <module>royal-alertas-api</module>
-        <module>royal-alertas-bootstrap</module>
-        <module>royal-alertas-war</module>
     </modules>
 
     <dependencyManagement>

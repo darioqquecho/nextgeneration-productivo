@@ -4,7 +4,7 @@ Baseline productivo inicial para el nuevo framework ERP Royal.
 
 ## Alcance Nivel C
 
-Incluye código fuente Java para cubrir los requisitos de:
+Incluye codigo fuente Java para cubrir los requisitos de:
 
 - ARCHITECTURE.md
 - AS_IS_ARCHITECTURE.md
@@ -14,11 +14,11 @@ Incluye código fuente Java para cubrir los requisitos de:
 
 - CU-001 CRUD completo `HR_Parametros`
 - CU-002 RegistrarCapacitacion con V1/V2
-- CU-003 AprobarRequerimientoPersonal con V1/V2 e integración por puerto con Aprobaciones
+- CU-003 AprobarRequerimientoPersonal con V1/V2 e integracion por puerto con Aprobaciones
 - CU-004 Login
 - CU-005 ConsultarAuditoria
 
-## Ejecución JAR
+## Ejecucion JAR
 
 ```bash
 mvn clean install
@@ -100,43 +100,4 @@ Importar como:
 
 ```text
 File > Import > Maven > Existing Maven Projects
-```
-
-
-# Módulo Alertas Migrado
-
-## Ejecución JAR
-
-```bash
-mvn clean install
-mvn spring-boot:run -pl royal-alertas-bootstrap
-```
-
-## WAR Tomcat
-
-```bash
-mvn clean package -pl royal-alertas-war -am
-```
-
-## Endpoints principales
-
-```http
-GET    /api/alertas/{entityName}
-POST   /api/alertas/{entityName}
-PUT    /api/alertas/{entityName}
-POST   /api/alertas/{entityName}/obtener
-PUT    /api/alertas/{entityName}/anular
-DELETE /api/alertas/{entityName}
-POST   /api/alertas/sql/{queryName}
-ANY    /spring/alertas/{resource}/**
-```
-
-## SQL Server
-
-Configurar:
-
-```properties
-spring.datasource.url=jdbc:sqlserver://servidor:1433;databaseName=SGALERTASSYS;encrypt=true;trustServerCertificate=true
-spring.datasource.username=usuario
-spring.datasource.password=clave
 ```
