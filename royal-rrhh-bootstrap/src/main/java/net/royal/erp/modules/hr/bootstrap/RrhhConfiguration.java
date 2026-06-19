@@ -11,9 +11,23 @@ import net.royal.erp.modules.hr.application.capacitacion.port.CapacitacionReposi
 import net.royal.erp.modules.hr.application.parametro.port.*;
 import net.royal.erp.modules.hr.application.parametro.usecase.*;
 import net.royal.erp.modules.hr.application.requerimiento.*;
+import net.royal.erp.modules.hr.application.tiposeguro.port.MantenimientoTipoSeguroRepository;
+import net.royal.erp.modules.hr.application.tiposeguro.usecase.*;
 import net.royal.erp.modules.hr.infrastructure.aprobaciones.InMemoryAprobacionesAdapter;
 import net.royal.erp.modules.hr.infrastructure.capacitacion.InMemoryCapacitacionRepositoryAdapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.*;
+import net.royal.erp.modules.hr.infrastructure.parametro.inmemory.InMemoryParametroRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.jasper.JasperReporteParametrosDocumentGenerator;
+import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleAprobacionMasivaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleMantenimientoTablaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleMantenimientoTablaParametrosV2Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleReporteParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerAprobacionMasivaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV2Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerReporteParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.tiposeguro.inmemory.InMemoryTipoSeguroRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.tiposeguro.oracle.OracleMantenimientoTipoSeguroV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.tiposeguro.sqlserver.SqlServerMantenimientoTipoSeguroV1Adapter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +69,11 @@ public class RrhhConfiguration {
 	}
 
 	@Bean
+	InMemoryTipoSeguroRepositoryAdapter inMemoryTipoSeguroRepositoryAdapter() {
+		return new InMemoryTipoSeguroRepositoryAdapter();
+	}
+
+	@Bean
 	CapacitacionRepository capacitacionRepository(PersistenceAdapterType adapterType) {
 		return switch (adapterType) {
 		case IN_MEMORY -> new InMemoryCapacitacionRepositoryAdapter();
@@ -76,7 +95,7 @@ public class RrhhConfiguration {
 	PermissionChecker permissionChecker() {
 		InMemoryPermissionChecker c = new InMemoryPermissionChecker();
 		for (String p : new String[] { "HR_MANTENIMIENTO_DE_PARAMETRO", "HR_REPORTE_DE_PARAMETRO",
-				"HR_APROBACION_MASIVA_DE_PARAMETROS", "HR_REGISTRAR_CAPACITACION",
+				"HR_APROBACION_MASIVA_DE_PARAMETROS", "HR_MANTENIMIENTO_DE_TIPO_SEGURO", "HR_REGISTRAR_CAPACITACION",
 				"HR_APROBAR_REQUERIMIENTO_PERSONAL" }) {
 			c.grant("admin", p);
 		}
@@ -131,6 +150,14 @@ public class RrhhConfiguration {
 				new AprobacionMasivaParametrosV1UseCase(aprobacionMasivaRepository(adapterType, jdbc, inMemory), g, a), o);
 	}
 
+	@Bean
+	MantenimientoTipoSeguroUseCase mantenimientoTipoSeguroUseCase(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryTipoSeguroRepositoryAdapter inMemory, UseCaseGuards g,
+			AuditPort a, ObservabilityPort o) {
+		return new ObservedMantenimientoTipoSeguroUseCase(
+				new MantenimientoTipoSeguroV1UseCase(tipoSeguroRepository(adapterType, jdbc, inMemory), g, a), o);
+	}
+
 	private MantenimientoTablaParametrosRepository mantenimientoRepository(PersistenceAdapterType adapterType,
 			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, String version) {
 		return switch (adapterType) {
@@ -138,6 +165,9 @@ public class RrhhConfiguration {
 		case SQL_SERVER -> "v2".equalsIgnoreCase(version)
 				? new SqlServerMantenimientoTablaParametrosV2Adapter(requiredJdbcTemplate(jdbc, adapterType))
 				: new SqlServerMantenimientoTablaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		case ORACLE -> "v2".equalsIgnoreCase(version)
+				? new OracleMantenimientoTablaParametrosV2Adapter(requiredJdbcTemplate(jdbc, adapterType))
+				: new OracleMantenimientoTablaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
 		default -> throw new IllegalStateException("Mantenimiento de Parametro no implementado para " + adapterType);
 		};
 	}
@@ -147,6 +177,7 @@ public class RrhhConfiguration {
 		return switch (adapterType) {
 		case IN_MEMORY -> inMemory;
 		case SQL_SERVER -> new SqlServerReporteParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		case ORACLE -> new OracleReporteParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
 		default -> throw new IllegalStateException("Reporte de Parametro no implementado para " + adapterType);
 		};
 	}
@@ -156,7 +187,18 @@ public class RrhhConfiguration {
 		return switch (adapterType) {
 		case IN_MEMORY -> inMemory;
 		case SQL_SERVER -> new SqlServerAprobacionMasivaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		case ORACLE -> new OracleAprobacionMasivaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
 		default -> throw new IllegalStateException("Aprobacion masiva de Parametros no implementado para " + adapterType);
+		};
+	}
+
+	private MantenimientoTipoSeguroRepository tipoSeguroRepository(PersistenceAdapterType adapterType,
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryTipoSeguroRepositoryAdapter inMemory) {
+		return switch (adapterType) {
+		case IN_MEMORY -> inMemory;
+		case SQL_SERVER -> new SqlServerMantenimientoTipoSeguroV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		case ORACLE -> new OracleMantenimientoTipoSeguroV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
+		default -> throw new IllegalStateException("Mantenimiento de Tipo Seguro no implementado para " + adapterType);
 		};
 	}
 

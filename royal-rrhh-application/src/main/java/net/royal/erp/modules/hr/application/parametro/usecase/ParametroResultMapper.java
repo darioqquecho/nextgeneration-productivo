@@ -9,6 +9,7 @@ final class ParametroResultMapper {
 
 	static ParametroResult toResult(Parametro parametro, String traceId) {
 		return new ParametroResult(parametro.id().compania(), parametro.id().codigo(), parametro.nombre(),
+				parametro.precio(), parametro.cantidad(), parametro.fechaProceso(),
 				parametro.estado() == null ? null : parametro.estado().name(), parametro.ultimoUsuario(),
 				parametro.ultimaFechaModif(), traceId);
 	}

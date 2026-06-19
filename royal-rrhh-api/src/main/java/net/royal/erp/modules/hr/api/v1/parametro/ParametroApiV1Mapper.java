@@ -10,11 +10,13 @@ final class ParametroApiV1Mapper {
 	}
 
 	static CrearParametroCommand toCommand(CrearParametroRequestV1 request) {
-		return new CrearParametroCommand(request.compania(), request.codigo(), request.nombre());
+		return new CrearParametroCommand(request.compania(), request.codigo(), request.nombre(), request.precio(),
+				request.cantidad(), request.fechaProceso());
 	}
 
 	static ActualizarParametroCommand toCommand(String compania, String codigo, ActualizarParametroRequestV1 request) {
-		return new ActualizarParametroCommand(compania, codigo, request.nombre());
+		return new ActualizarParametroCommand(compania, codigo, request.nombre(), request.precio(), request.cantidad(),
+				request.fechaProceso());
 	}
 
 	static CambiarEstadoParametroCommand toCommand(String compania, String codigo,
@@ -51,8 +53,9 @@ final class ParametroApiV1Mapper {
 	}
 
 	static ParametroResponseV1 toResponse(ParametroResult result) {
-		return new ParametroResponseV1(result.compania(), result.codigo(), result.nombre(), result.estado(),
-				result.ultimoUsuario(), result.ultimaFechaModif(), result.traceId());
+		return new ParametroResponseV1(result.compania(), result.codigo(), result.nombre(), result.precio(),
+				result.cantidad(), result.fechaProceso(), result.estado(), result.ultimoUsuario(),
+				result.ultimaFechaModif(), result.traceId());
 	}
 
 	static ListarParametrosResponseV1 toResponse(ListarParametrosResult result) {

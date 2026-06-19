@@ -8,7 +8,7 @@ import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.hr.application.parametro.dto.*;
 import net.royal.erp.modules.hr.application.parametro.usecase.*;
 import net.royal.erp.modules.hr.domain.parametro.ParametroId;
-import net.royal.erp.modules.hr.infrastructure.parametro.SqlServerMantenimientoTablaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV1Adapter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.jdbc.core.JdbcTemplate;

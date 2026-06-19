@@ -1,18 +1,19 @@
-package net.royal.erp.modules.hr.infrastructure.parametro;
+package net.royal.erp.modules.hr.infrastructure.parametro.sqlserver;
 
 import java.util.*;
 
+import net.royal.erp.framework.database.VersionedCrudSqlStatements;
 import net.royal.erp.modules.hr.application.parametro.port.MantenimientoTablaParametrosRepository;
 import net.royal.erp.modules.hr.domain.parametro.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract class AbstractSqlServerMantenimientoTablaParametrosAdapter implements MantenimientoTablaParametrosRepository {
 	private final JdbcTemplate jdbc;
-	private final ParametroSqlStatements sql;
+	private final VersionedCrudSqlStatements sql;
 
 	AbstractSqlServerMantenimientoTablaParametrosAdapter(JdbcTemplate jdbc, String version) {
 		this.jdbc = jdbc;
-		this.sql = new ParametroSqlStatements("mantenimientoparametros", version);
+		this.sql = new VersionedCrudSqlStatements("hr", "maestros", "mantenimientoparametros", "parametros", version);
 	}
 
 	public boolean existsById(ParametroId id) {
@@ -32,12 +33,15 @@ abstract class AbstractSqlServerMantenimientoTablaParametrosAdapter implements M
 	public void save(Parametro parametro) {
 		if (existsById(parametro.id())) {
 			jdbc.update(sql.update(), parametro.nombre(), SqlServerParametroJdbcSupport.estado(parametro),
-					parametro.ultimoUsuario(), SqlServerParametroJdbcSupport.toTimestamp(parametro.ultimaFechaModif()),
-					parametro.id().compania(), parametro.id().codigo());
+					parametro.precio(), parametro.cantidad(),
+					SqlServerParametroJdbcSupport.toTimestamp(parametro.fechaProceso()), parametro.ultimoUsuario(),
+					SqlServerParametroJdbcSupport.toTimestamp(parametro.ultimaFechaModif()), parametro.id().compania(),
+					parametro.id().codigo());
 			return;
 		}
 		jdbc.update(sql.insert(), parametro.id().compania(), parametro.id().codigo(), parametro.nombre(),
-				SqlServerParametroJdbcSupport.estado(parametro), parametro.ultimoUsuario(),
+				SqlServerParametroJdbcSupport.estado(parametro), parametro.precio(), parametro.cantidad(),
+				SqlServerParametroJdbcSupport.toTimestamp(parametro.fechaProceso()), parametro.ultimoUsuario(),
 				SqlServerParametroJdbcSupport.toTimestamp(parametro.ultimaFechaModif()));
 	}
 

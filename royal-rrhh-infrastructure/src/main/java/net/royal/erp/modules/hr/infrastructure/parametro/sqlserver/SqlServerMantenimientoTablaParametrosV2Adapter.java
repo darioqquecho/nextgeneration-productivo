@@ -1,4 +1,4 @@
-package net.royal.erp.modules.hr.infrastructure.parametro;
+package net.royal.erp.modules.hr.infrastructure.parametro.sqlserver;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 

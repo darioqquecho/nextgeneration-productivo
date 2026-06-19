@@ -55,7 +55,10 @@ public class ReporteParametrosV1UseCase implements ReporteParametrosUseCase {
 
 	private ReporteParametrosDocumentRow toRow(Parametro parametro) {
 		return new ReporteParametrosDocumentRow(parametro.id().compania(), parametro.id().codigo(), parametro.nombre(),
-				parametro.estado() == null ? "" : parametro.estado().name(), parametro.ultimoUsuario(),
+				parametro.precio(), parametro.cantidad(),
+				parametro.fechaProceso() == null ? "" : FORMATTER.format(parametro.fechaProceso()),
+				parametro.estado() == null ? "" : parametro.estado().name(),
+				parametro.ultimoUsuario(),
 				parametro.ultimaFechaModif() == null ? "" : FORMATTER.format(parametro.ultimaFechaModif()));
 	}
 

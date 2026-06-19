@@ -1,4 +1,4 @@
-package net.royal.erp.modules.hr.infrastructure.parametro;
+package net.royal.erp.modules.hr.infrastructure.parametro.inmemory;
 
 import net.royal.erp.modules.hr.application.parametro.port.*;
 import net.royal.erp.modules.hr.domain.parametro.*;

@@ -9,6 +9,7 @@ import java.util.*;
  * Carga sentencias SQL versionadas desde recursos del classpath.
  *
  * Convencion: sql/{module}/{process}/{useCase}/{resource}.{version}.sql
+ * Convencion por adapter: {adapter}/{module}/{process}/{useCase}/{resource}.{version}.sql
  */
 public final class VersionedSqlResourceLoader {
 	private static final String ROOT = "sql/";
@@ -26,6 +27,16 @@ public final class VersionedSqlResourceLoader {
 		return sql;
 	}
 
+	public static String load(String module, String adapter, String process, String useCase, String resource,
+			String version, String statementName) {
+		String resourcePath = path(module, adapter, process, useCase, resource, version);
+		String sql = statements(read(resourcePath)).get(statementName);
+		if (sql == null || sql.isBlank()) {
+			throw new IllegalStateException("Sentencia SQL no encontrada: " + resourcePath + " :: " + statementName);
+		}
+		return sql;
+	}
+
 	public static Map<String, String> loadAll(String module, String process, String useCase, String resource,
 			String version) {
 		return statements(read(path(module, process, useCase, resource, version)));
@@ -34,6 +45,12 @@ public final class VersionedSqlResourceLoader {
 	private static String path(String module, String process, String useCase, String resource, String version) {
 		return ROOT + segment(module) + "/" + segment(process) + "/" + segment(useCase) + "/" + segment(resource)
 				+ "." + segment(version) + ".sql";
+	}
+
+	private static String path(String module, String adapter, String process, String useCase, String resource,
+			String version) {
+		return segment(adapter) + "/" + segment(module) + "/" + segment(process) + "/" + segment(useCase) + "/"
+				+ segment(resource) + "." + segment(version) + ".sql";
 	}
 
 	private static String segment(String value) {

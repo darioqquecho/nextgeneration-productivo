@@ -10,7 +10,7 @@ import net.royal.erp.modules.hr.application.parametro.dto.*;
 import net.royal.erp.modules.hr.application.parametro.usecase.*;
 import net.royal.erp.modules.hr.domain.parametro.Parametro;
 import net.royal.erp.modules.hr.domain.parametro.ParametroId;
-import net.royal.erp.modules.hr.infrastructure.parametro.InMemoryParametroRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.parametro.inmemory.InMemoryParametroRepositoryAdapter;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

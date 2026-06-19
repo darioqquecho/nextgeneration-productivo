@@ -12,6 +12,9 @@
 	<field name="compania" class="java.lang.String"/>
 	<field name="codigo" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
+	<field name="precio" class="java.math.BigDecimal"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="fechaProceso" class="java.lang.String"/>
 	<field name="estado" class="java.lang.String"/>
 	<field name="ultimoUsuario" class="java.lang.String"/>
 	<field name="ultimaFechaModif" class="java.lang.String"/>
@@ -56,61 +59,88 @@
 	<columnHeader>
 		<band height="22">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="80" height="20" backcolor="#E6E6E6" uuid="1ce087c2-a5d3-477a-8ef7-2446953c99bb"/>
+				<reportElement mode="Opaque" x="0" y="0" width="70" height="20" backcolor="#E6E6E6" uuid="1ce087c2-a5d3-477a-8ef7-2446953c99bb"/>
 				<textElement><font isBold="true"/></textElement>
 				<text><![CDATA[Compania]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="80" y="0" width="80" height="20" backcolor="#E6E6E6" uuid="a905e32c-2f2e-49c6-87ef-a54369e3bb93"/>
+				<reportElement mode="Opaque" x="70" y="0" width="70" height="20" backcolor="#E6E6E6" uuid="a905e32c-2f2e-49c6-87ef-a54369e3bb93"/>
 				<textElement><font isBold="true"/></textElement>
 				<text><![CDATA[Codigo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="160" y="0" width="300" height="20" backcolor="#E6E6E6" uuid="735310cf-2bda-4ae8-91e8-10a9b30a54c9"/>
+				<reportElement mode="Opaque" x="140" y="0" width="205" height="20" backcolor="#E6E6E6" uuid="735310cf-2bda-4ae8-91e8-10a9b30a54c9"/>
 				<textElement><font isBold="true"/></textElement>
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="460" y="0" width="90" height="20" backcolor="#E6E6E6" uuid="cfd04a0a-3ef1-45df-9c6a-d0fbe702d37e"/>
+				<reportElement mode="Opaque" x="345" y="0" width="70" height="20" backcolor="#E6E6E6" uuid="3c9849ad-eb30-427d-9d31-d46a33c6e203"/>
+				<textElement><font isBold="true"/></textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="415" y="0" width="65" height="20" backcolor="#E6E6E6" uuid="d604d94b-8828-4ee4-a91a-f0cf130c1ed7"/>
+				<textElement><font isBold="true"/></textElement>
+				<text><![CDATA[Cant.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="480" y="0" width="90" height="20" backcolor="#E6E6E6" uuid="ca016d3b-0c65-48a0-bddc-347f619cb60b"/>
+				<textElement><font isBold="true"/></textElement>
+				<text><![CDATA[F. Proceso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="570" y="0" width="65" height="20" backcolor="#E6E6E6" uuid="cfd04a0a-3ef1-45df-9c6a-d0fbe702d37e"/>
 				<textElement><font isBold="true"/></textElement>
 				<text><![CDATA[Estado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="550" y="0" width="110" height="20" backcolor="#E6E6E6" uuid="241a353e-3721-4633-8919-88e83e121bd9"/>
+				<reportElement mode="Opaque" x="635" y="0" width="85" height="20" backcolor="#E6E6E6" uuid="241a353e-3721-4633-8919-88e83e121bd9"/>
 				<textElement><font isBold="true"/></textElement>
-				<text><![CDATA[Ult. Usuario]]></text>
+				<text><![CDATA[Usuario]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="660" y="0" width="142" height="20" backcolor="#E6E6E6" uuid="237ab88c-077c-4196-8f0d-e23b77f1b87d"/>
+				<reportElement mode="Opaque" x="720" y="0" width="82" height="20" backcolor="#E6E6E6" uuid="237ab88c-077c-4196-8f0d-e23b77f1b87d"/>
 				<textElement><font isBold="true"/></textElement>
-				<text><![CDATA[Ult. Fecha Modif.]]></text>
+				<text><![CDATA[Ult. Fecha]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="18">
 			<textField>
-				<reportElement x="0" y="0" width="80" height="16" uuid="646a7c1f-36e0-4591-ae17-8e2fb1359f36"/>
+				<reportElement x="0" y="0" width="70" height="16" uuid="646a7c1f-36e0-4591-ae17-8e2fb1359f36"/>
 				<textFieldExpression><![CDATA[$F{compania}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="0" width="80" height="16" uuid="bbde3d52-57ea-48f2-8673-edf44b4c8232"/>
+				<reportElement x="70" y="0" width="70" height="16" uuid="bbde3d52-57ea-48f2-8673-edf44b4c8232"/>
 				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="160" y="0" width="300" height="16" uuid="5e2d62b6-d7b9-4891-85cc-4c5f8c8bd3c9"/>
+				<reportElement x="140" y="0" width="205" height="16" uuid="5e2d62b6-d7b9-4891-85cc-4c5f8c8bd3c9"/>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="460" y="0" width="90" height="16" uuid="1aa6258f-6472-4d38-8807-98afb9828d88"/>
+				<reportElement x="345" y="0" width="70" height="16" uuid="37a9f319-2779-4dfb-af41-553c4a34e678"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="0" width="65" height="16" uuid="a50b6142-90f6-4346-a527-faa40c741a0a"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="90" height="16" uuid="b1f2cad3-4a1f-4418-9d30-659efdf82f7b"/>
+				<textFieldExpression><![CDATA[$F{fechaProceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="570" y="0" width="65" height="16" uuid="1aa6258f-6472-4d38-8807-98afb9828d88"/>
 				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="550" y="0" width="110" height="16" uuid="5155c56b-6930-48c2-a90f-74b169d51e25"/>
+				<reportElement x="635" y="0" width="85" height="16" uuid="5155c56b-6930-48c2-a90f-74b169d51e25"/>
 				<textFieldExpression><![CDATA[$F{ultimoUsuario}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="660" y="0" width="142" height="16" uuid="ab905355-aa49-4590-b870-f83b0f2ee91e"/>
+				<reportElement x="720" y="0" width="82" height="16" uuid="ab905355-aa49-4590-b870-f83b0f2ee91e"/>
 				<textFieldExpression><![CDATA[$F{ultimaFechaModif}]]></textFieldExpression>
 			</textField>
 		</band>

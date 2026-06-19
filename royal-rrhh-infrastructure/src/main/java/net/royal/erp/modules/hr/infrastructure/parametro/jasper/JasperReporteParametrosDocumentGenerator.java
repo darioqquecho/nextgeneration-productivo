@@ -1,4 +1,4 @@
-package net.royal.erp.modules.hr.infrastructure.parametro;
+package net.royal.erp.modules.hr.infrastructure.parametro.jasper;
 
 import java.io.InputStream;
 import java.util.HashMap;

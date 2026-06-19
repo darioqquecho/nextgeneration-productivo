@@ -9,6 +9,9 @@ select compania,
        codigo,
        nombre,
        estado,
+       Precio,
+       cantidad,
+       FechaProceso,
        UltimoUsuario,
        UltimaFechaModif
 from HR_Parametros
@@ -20,6 +23,9 @@ select compania,
        codigo,
        nombre,
        estado,
+       Precio,
+       cantidad,
+       FechaProceso,
        UltimoUsuario,
        UltimaFechaModif
 from HR_Parametros
@@ -30,15 +36,21 @@ insert into HR_Parametros (
     codigo,
     nombre,
     estado,
+    Precio,
+    cantidad,
+    FechaProceso,
     UltimoUsuario,
     UltimaFechaModif
 )
-values (?, ?, ?, ?, ?, ?)
+values (?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 -- name: update
 update HR_Parametros
 set nombre = ?,
     estado = ?,
+    Precio = ?,
+    cantidad = ?,
+    FechaProceso = ?,
     UltimoUsuario = ?,
     UltimaFechaModif = ?
 where compania = ?

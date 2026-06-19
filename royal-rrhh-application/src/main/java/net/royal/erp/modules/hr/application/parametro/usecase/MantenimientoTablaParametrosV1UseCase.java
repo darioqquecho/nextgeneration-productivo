@@ -51,8 +51,8 @@ public class MantenimientoTablaParametrosV1UseCase implements MantenimientoTabla
 		if (repository.existsById(id)) {
 			throw new BusinessException("HR-PAR-004");
 		}
-		Parametro parametro = Parametro.crear(command.compania(), command.codigo(), command.nombre(), context.userId(),
-				context.executedAt());
+		Parametro parametro = Parametro.crear(command.compania(), command.codigo(), command.nombre(), command.precio(),
+				command.cantidad(), command.fechaProceso(), context.userId(), context.executedAt());
 		repository.save(parametro);
 		registerAudit(context, id);
 		return new CrearParametroResult(command.compania(), command.codigo(), "CREADO", context.traceId());
@@ -73,7 +73,8 @@ public class MantenimientoTablaParametrosV1UseCase implements MantenimientoTabla
 		ParametroId id = new ParametroId(command.compania(), command.codigo());
 		Parametro parametro = repository.findById(id)
 				.orElseThrow(() -> new BusinessException("HR-PAR-404"));
-		parametro.actualizarNombre(command.nombre(), context.userId(), context.executedAt());
+		parametro.actualizarDatos(command.nombre(), command.precio(), command.cantidad(), command.fechaProceso(),
+				context.userId(), context.executedAt());
 		repository.save(parametro);
 		registerAudit(context, id);
 		return new ActualizarParametroResult(command.compania(), command.codigo(), "ACTUALIZADO", context.traceId());
