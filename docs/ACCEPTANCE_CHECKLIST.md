@@ -11,6 +11,6 @@
 | WAR/Tomcat | Implementado | royal-rrhh-war |
 | Kubernetes | Implementado | k8s/deployment.yaml |
 | In-memory adapter | Implementado | InMemory*Adapter |
-| SQL Server/Oracle/PostgreSQL/MySQL puntos de extensión | Parcial | Placeholder explícito |
+| SQL Server configurable | Implementado | Adapter SQL Server para HR_Parametros |
 | JavaDoc trazable | Implementado | Clases y métodos principales |
 | Matriz de trazabilidad | Implementado | docs/TRACEABILITY_MATRIX.md |
