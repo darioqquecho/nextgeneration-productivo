@@ -13,6 +13,11 @@
 
     <dependency>
         <groupId>net.royal.erp</groupId>
+        <artifactId>royal-rrhh-bootstrap</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>net.royal.erp</groupId>
         <artifactId>royal-rrhh-api</artifactId>
         <version>${project.version}</version>
     </dependency>

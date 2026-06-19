@@ -12,7 +12,7 @@ abstract class AbstractSqlServerMantenimientoTablaParametrosAdapter implements M
 
 	AbstractSqlServerMantenimientoTablaParametrosAdapter(JdbcTemplate jdbc, String version) {
 		this.jdbc = jdbc;
-		this.sql = new ParametroSqlStatements("mantenimiento-de-parametro", version);
+		this.sql = new ParametroSqlStatements("mantenimientoparametros", version);
 	}
 
 	public boolean existsById(ParametroId id) {

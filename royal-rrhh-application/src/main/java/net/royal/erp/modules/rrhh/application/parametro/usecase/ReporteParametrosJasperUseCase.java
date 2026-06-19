@@ -19,7 +19,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  * funcional.
  */
 public class ReporteParametrosJasperUseCase implements ReporteParametrosUseCase {
-	private static final String REPORT_PATH = "reports/rrhh/parametros.jrxml";
+	private static final String REPORT_PATH = "hr/maestros/reporteparametros/parametros.v1.jrxml";
 	private static final String MODULE = "HR";
 
 	private final ReporteParametrosRepository repository;
@@ -50,9 +50,10 @@ public class ReporteParametrosJasperUseCase implements ReporteParametrosUseCase 
 			JasperPrint print = JasperFillManager.fillReport(report, parameters,
 					new JRBeanCollectionDataSource(rows(filters)));
 			byte[] pdf = JasperExportManager.exportReportToPdf(print);
-			auditPort.register(new FunctionalAuditRecord(MODULE, context.process(), context.useCase(),
-					context.functionality(), "V1", context.userId(), "OK", "HR_Parametros", "REPORTE", context.traceId(),
-					context.requestId(), context.executedAt()));
+			auditPort.register(new FunctionalAuditRecord(context.tenantId(), context.clientId(), MODULE,
+					context.process(), context.useCase(), context.functionality(), "V1", context.userId(), "OK",
+					"HR_Parametros", "REPORTE", context.traceId(), context.requestId(), context.executedAt(),
+					context.language(), null));
 			return new ReporteParametrosResult(pdf, "reporte-parametros.pdf", context.traceId());
 		} catch (JRException e) {
 			throw new BusinessException("HR-PAR-REP-002");

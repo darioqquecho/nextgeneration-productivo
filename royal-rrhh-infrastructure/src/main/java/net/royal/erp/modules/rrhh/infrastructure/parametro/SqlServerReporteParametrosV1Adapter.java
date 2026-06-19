@@ -15,7 +15,7 @@ public class SqlServerReporteParametrosV1Adapter implements ReporteParametrosRep
 
 	public SqlServerReporteParametrosV1Adapter(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
-		this.findAllSql = SqlResourceLoader.load("reporte-de-parametro", "v1", "find-all");
+		this.findAllSql = SqlResourceLoader.load("reporteparametros", "v1", "find-all");
 	}
 
 	public List<Parametro> findAll() {

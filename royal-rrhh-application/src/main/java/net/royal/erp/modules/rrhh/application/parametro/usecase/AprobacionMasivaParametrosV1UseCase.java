@@ -65,9 +65,10 @@ public class AprobacionMasivaParametrosV1UseCase implements AprobacionMasivaPara
 			return new AprobarParametroItemResult(parametro.id().compania(), parametro.id().codigo(), estadoAnterior,
 					estadoAnterior, "OMITIDO");
 		}
-		auditPort.register(new FunctionalAuditRecord(MODULE, context.process(), context.useCase(),
-				context.functionality(), "V1", context.userId(), "OK", ENTITY, parametro.id().value(), context.traceId(),
-				context.requestId(), context.executedAt()));
+		auditPort.register(new FunctionalAuditRecord(context.tenantId(), context.clientId(), MODULE, context.process(),
+				context.useCase(), context.functionality(), "V1", context.userId(), "OK", ENTITY,
+				parametro.id().value(), context.traceId(), context.requestId(), context.executedAt(), context.language(),
+				null));
 		return new AprobarParametroItemResult(parametro.id().compania(), parametro.id().codigo(), estadoAnterior,
 				ParametroEstado.AP.name(), "APROBADO");
 	}

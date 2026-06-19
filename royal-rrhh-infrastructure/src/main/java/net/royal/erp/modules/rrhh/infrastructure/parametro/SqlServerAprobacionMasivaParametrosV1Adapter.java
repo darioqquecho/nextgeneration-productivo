@@ -17,8 +17,8 @@ public class SqlServerAprobacionMasivaParametrosV1Adapter implements AprobacionM
 
 	public SqlServerAprobacionMasivaParametrosV1Adapter(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
-		this.findByIdSql = SqlResourceLoader.load("aprobacion-masiva-de-parametros", "v1", "find-by-id");
-		this.approveIfPendingSql = SqlResourceLoader.load("aprobacion-masiva-de-parametros", "v1",
+		this.findByIdSql = SqlResourceLoader.load("aprobacionmasivaparametros", "v1", "find-by-id");
+		this.approveIfPendingSql = SqlResourceLoader.load("aprobacionmasivaparametros", "v1",
 				"approve-if-pending");
 	}
 

@@ -10,13 +10,13 @@ import java.util.Map;
  * Carga sentencias SQL versionadas desde classpath.
  */
 final class SqlResourceLoader {
-	private static final String BASE_PATH = "sql/rrhh/parametro/";
+	private static final String BASE_PATH = "sql/hr/maestros/";
 
 	private SqlResourceLoader() {
 	}
 
 	static String load(String useCase, String version, String operation) {
-		String resourcePath = BASE_PATH + useCase + "." + version.toLowerCase() + ".sql";
+		String resourcePath = BASE_PATH + useCase + "/parametros." + version.toLowerCase() + ".sql";
 		String script = read(resourcePath);
 		String sql = statements(script).get(operation);
 		if (sql == null || sql.isBlank()) {

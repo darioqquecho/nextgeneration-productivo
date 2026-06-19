@@ -3,6 +3,7 @@ package net.royal.erp.modules.rrhh.bootstrap;
 import net.royal.erp.framework.audit.AuditPort;
 import net.royal.erp.framework.database.*;
 import net.royal.erp.framework.licensing.*;
+import net.royal.erp.framework.observability.ObservabilityPort;
 import net.royal.erp.framework.security.*;
 import net.royal.erp.framework.versioning.*;
 import net.royal.erp.modules.rrhh.api.FunctionalContextFactory;
@@ -14,8 +15,12 @@ import net.royal.erp.modules.rrhh.application.requerimiento.*;
 import net.royal.erp.modules.rrhh.domain.capacitacion.CapacitacionRepository;
 import net.royal.erp.modules.rrhh.infrastructure.aprobaciones.InMemoryAprobacionesAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.audit.ConsoleAuditAdapter;
+import net.royal.erp.modules.rrhh.infrastructure.audit.CompositeAuditAdapter;
+import net.royal.erp.modules.rrhh.infrastructure.audit.JdbcFunctionalAuditAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.capacitacion.InMemoryCapacitacionRepositoryAdapter;
+import net.royal.erp.modules.rrhh.infrastructure.observability.MicrometerStructuredObservabilityAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.parametro.*;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -65,8 +70,18 @@ public class RrhhConfiguration {
 	}
 
 	@Bean
-	AuditPort auditPort() {
-		return new ConsoleAuditAdapter();
+	AuditPort auditPort(PersistenceAdapterType adapterType, ObjectProvider<JdbcTemplate> jdbc) {
+		AuditPort console = new ConsoleAuditAdapter();
+		return switch (adapterType) {
+		case SQL_SERVER -> new CompositeAuditAdapter(console,
+				new JdbcFunctionalAuditAdapter(requiredJdbcTemplate(jdbc, adapterType)));
+		default -> console;
+		};
+	}
+
+	@Bean
+	ObservabilityPort observabilityPort(MeterRegistry registry) {
+		return new MicrometerStructuredObservabilityAdapter(registry);
 	}
 
 	@Bean
@@ -106,26 +121,29 @@ public class RrhhConfiguration {
 	@Bean
 	MantenimientoTablaParametrosUseCase mantenimientoTablaParametrosUseCase(FunctionalVersionResolver v,
 			PersistenceAdapterType adapterType, ObjectProvider<JdbcTemplate> jdbc,
-			InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a) {
+			InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a, ObservabilityPort o) {
 		MantenimientoTablaParametrosUseCase v1 = new MantenimientoTablaParametrosV1UseCase(
 				mantenimientoRepository(adapterType, jdbc, inMemory, "v1"), g, a);
 		MantenimientoTablaParametrosUseCase v2 = new MantenimientoTablaParametrosV2UseCase(
 				mantenimientoRepository(adapterType, jdbc, inMemory, "v2"), g, a);
-		return new MantenimientoTablaParametrosVersionedUseCase(v, v1, v2);
+		return new ObservedMantenimientoTablaParametrosUseCase(new MantenimientoTablaParametrosVersionedUseCase(v, v1, v2),
+				o);
 	}
 
 	@Bean
 	ReporteParametrosUseCase reporteParametrosUseCase(PersistenceAdapterType adapterType,
 			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g,
-			AuditPort a) {
-		return new ReporteParametrosJasperUseCase(reporteRepository(adapterType, jdbc, inMemory), g, a);
+			AuditPort a, ObservabilityPort o) {
+		return new ObservedReporteParametrosUseCase(
+				new ReporteParametrosJasperUseCase(reporteRepository(adapterType, jdbc, inMemory), g, a), o);
 	}
 
 	@Bean
 	AprobacionMasivaParametrosUseCase aprobacionMasivaParametrosUseCase(PersistenceAdapterType adapterType,
 			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g,
-			AuditPort a) {
-		return new AprobacionMasivaParametrosV1UseCase(aprobacionMasivaRepository(adapterType, jdbc, inMemory), g, a);
+			AuditPort a, ObservabilityPort o) {
+		return new ObservedAprobacionMasivaParametrosUseCase(
+				new AprobacionMasivaParametrosV1UseCase(aprobacionMasivaRepository(adapterType, jdbc, inMemory), g, a), o);
 	}
 
 	private MantenimientoTablaParametrosRepository mantenimientoRepository(PersistenceAdapterType adapterType,
@@ -159,10 +177,10 @@ public class RrhhConfiguration {
 
 	@Bean
 	RegistrarCapacitacionUseCase registrarCapacitacionUseCase(FunctionalVersionResolver v, CapacitacionRepository r,
-			UseCaseGuards g, AuditPort a) {
+			UseCaseGuards g, AuditPort a, ObservabilityPort o) {
 		RegistrarCapacitacionV1UseCase v1 = new RegistrarCapacitacionV1UseCase(r, g, a);
 		RegistrarCapacitacionV2UseCase v2 = new RegistrarCapacitacionV2UseCase(v1);
-		return new RegistrarCapacitacionVersionedUseCase(v, v1, v2);
+		return new ObservedRegistrarCapacitacionUseCase(new RegistrarCapacitacionVersionedUseCase(v, v1, v2), o);
 	}
 
 	@Bean
@@ -172,9 +190,10 @@ public class RrhhConfiguration {
 
 	@Bean
 	AprobarRequerimientoPersonalUseCase aprobarRequerimientoPersonalUseCase(FunctionalVersionResolver v,
-			UseCaseGuards g, AuditPort a, AprobacionesPort p) {
+			UseCaseGuards g, AuditPort a, AprobacionesPort p, ObservabilityPort o) {
 		AprobarRequerimientoPersonalV1UseCase v1 = new AprobarRequerimientoPersonalV1UseCase(g, a);
 		AprobarRequerimientoPersonalV2UseCase v2 = new AprobarRequerimientoPersonalV2UseCase(v1, p);
-		return new AprobarRequerimientoPersonalVersionedUseCase(v, v1, v2);
+		return new ObservedAprobarRequerimientoPersonalUseCase(
+				new AprobarRequerimientoPersonalVersionedUseCase(v, v1, v2), o);
 	}
 }

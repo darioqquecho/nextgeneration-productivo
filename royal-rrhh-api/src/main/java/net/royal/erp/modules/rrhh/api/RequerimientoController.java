@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
  * Implementa: - MOD-012 CU-003 AprobarRequerimientoPersonal.
  */
 @RestController
-@RequestMapping("/api/v1/rrhh/requerimientos")
+@RequestMapping("/api/v1/hr/requerimiento/requerimientos")
 public class RequerimientoController {
 	private final AprobarRequerimientoPersonalUseCase useCase;
 	private final FunctionalContextFactory contextFactory;

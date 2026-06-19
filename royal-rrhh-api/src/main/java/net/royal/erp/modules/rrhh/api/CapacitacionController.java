@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
  * Implementa: - MOD-012 CU-002 RegistrarCapacitacion.
  */
 @RestController
-@RequestMapping("/api/v1/rrhh/capacitaciones")
+@RequestMapping("/api/v1/hr/capacitacion/capacitaciones")
 public class CapacitacionController {
 	private final RegistrarCapacitacionUseCase useCase;
 	private final FunctionalContextFactory contextFactory;

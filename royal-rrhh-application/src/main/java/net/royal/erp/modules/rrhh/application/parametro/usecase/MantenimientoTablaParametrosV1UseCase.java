@@ -99,9 +99,9 @@ public class MantenimientoTablaParametrosV1UseCase implements MantenimientoTabla
 	}
 
 	private void registerAudit(FunctionalContext context, ParametroId id) {
-		auditPort.register(new FunctionalAuditRecord(MODULE, context.process(), context.useCase(), context.functionality(),
-				functionalVersion(), context.userId(), "OK", ENTITY, id.value(), context.traceId(), context.requestId(),
-				context.executedAt()));
+		auditPort.register(new FunctionalAuditRecord(context.tenantId(), context.clientId(), MODULE, context.process(),
+				context.useCase(), context.functionality(), functionalVersion(), context.userId(), "OK", ENTITY,
+				id.value(), context.traceId(), context.requestId(), context.executedAt(), context.language(), null));
 	}
 
 	private boolean matches(String value, String filter) {

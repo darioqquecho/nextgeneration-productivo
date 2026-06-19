@@ -28,9 +28,10 @@ public class RegistrarCapacitacionV1UseCase implements RegistrarCapacitacionUseC
 		Capacitacion c = Capacitacion.registrar(command.codigo(), command.nombre(), command.fechaInicio(),
 				command.fechaFin(), command.instructor());
 		repository.save(c);
-		auditPort.register(new FunctionalAuditRecord("HR", context.process(), context.useCase(),
-				context.functionality(), "V1", context.userId(), "OK", "Capacitacion", command.codigo(),
-				context.traceId(), context.requestId(), context.executedAt()));
+		auditPort.register(new FunctionalAuditRecord(context.tenantId(), context.clientId(), "HR", context.process(),
+				context.useCase(), context.functionality(), "V1", context.userId(), "OK", "Capacitacion",
+				command.codigo(), context.traceId(), context.requestId(), context.executedAt(), context.language(),
+				null));
 		return new RegistrarCapacitacionResult(command.codigo(), "REGISTRADA", "V1", context.traceId());
 	}
 }

@@ -11,7 +11,13 @@ import java.time.Instant;
  *
  * Propósito: Registro estándar de auditoría funcional.
  */
-public record FunctionalAuditRecord(String module, String process, String useCase, String functionality, String version,
-		String userId, String result, String entity, String entityId, String traceId, String requestId,
-		Instant executedAt) {
+public record FunctionalAuditRecord(String tenantId, String clientId, String module, String process, String useCase,
+		String functionality, String version, String userId, String result, String entity, String entityId,
+		String traceId, String requestId, Instant executedAt, String language, String message) {
+	public FunctionalAuditRecord(String module, String process, String useCase, String functionality, String version,
+			String userId, String result, String entity, String entityId, String traceId, String requestId,
+			Instant executedAt) {
+		this(null, null, module, process, useCase, functionality, version, userId, result, entity, entityId, traceId,
+				requestId, executedAt, null, null);
+	}
 }
