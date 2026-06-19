@@ -2,7 +2,7 @@ package net.royal.erp.modules.rrhh.api.v1.parametro;
 
 import jakarta.servlet.http.HttpServletRequest;
 import net.royal.erp.framework.kernel.FunctionalContext;
-import net.royal.erp.modules.rrhh.api.FunctionalContextFactory;
+import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.modules.rrhh.api.v1.parametro.dto.*;
 import net.royal.erp.modules.rrhh.application.parametro.usecase.AprobacionMasivaParametrosUseCase;
 import org.springframework.http.*;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/hr/maestros/parametros")
 public class AprobacionMasivaParametroControllerV1 {
+	private static final String MODULE = "HR";
 	private static final String PROCESS = "Maestros";
 	private static final String USE_CASE = "Aprobacion masiva de Parametros";
 
@@ -34,6 +35,6 @@ public class AprobacionMasivaParametroControllerV1 {
 	}
 
 	private FunctionalContext context(HttpServletRequest request, String functionality) {
-		return contextFactory.from(request, PROCESS, functionality, USE_CASE);
+		return contextFactory.from(request, MODULE, PROCESS, functionality, USE_CASE);
 	}
 }

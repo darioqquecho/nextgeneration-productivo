@@ -1,26 +1,19 @@
 package net.royal.erp.modules.rrhh.bootstrap;
 
-import net.royal.erp.framework.audit.AuditPort;
+import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.database.*;
 import net.royal.erp.framework.licensing.*;
 import net.royal.erp.framework.observability.ObservabilityPort;
 import net.royal.erp.framework.security.*;
 import net.royal.erp.framework.versioning.*;
-import net.royal.erp.modules.rrhh.api.FunctionalContextFactory;
 import net.royal.erp.modules.rrhh.application.capacitacion.*;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.port.*;
 import net.royal.erp.modules.rrhh.application.parametro.usecase.*;
 import net.royal.erp.modules.rrhh.application.requerimiento.*;
 import net.royal.erp.modules.rrhh.domain.capacitacion.CapacitacionRepository;
 import net.royal.erp.modules.rrhh.infrastructure.aprobaciones.InMemoryAprobacionesAdapter;
-import net.royal.erp.modules.rrhh.infrastructure.audit.ConsoleAuditAdapter;
-import net.royal.erp.modules.rrhh.infrastructure.audit.CompositeAuditAdapter;
-import net.royal.erp.modules.rrhh.infrastructure.audit.JdbcFunctionalAuditAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.capacitacion.InMemoryCapacitacionRepositoryAdapter;
-import net.royal.erp.modules.rrhh.infrastructure.observability.MicrometerStructuredObservabilityAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.parametro.*;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -77,16 +70,6 @@ public class RrhhConfiguration {
 				new JdbcFunctionalAuditAdapter(requiredJdbcTemplate(jdbc, adapterType)));
 		default -> console;
 		};
-	}
-
-	@Bean
-	ObservabilityPort observabilityPort(MeterRegistry registry) {
-		return new MicrometerStructuredObservabilityAdapter(registry);
-	}
-
-	@Bean
-	FunctionalContextFactory functionalContextFactory() {
-		return new FunctionalContextFactory();
 	}
 
 	@Bean

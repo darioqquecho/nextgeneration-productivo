@@ -1,6 +1,7 @@
 package net.royal.erp.modules.rrhh.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.modules.rrhh.application.requerimiento.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/hr/requerimiento/requerimientos")
 public class RequerimientoController {
+	private static final String MODULE = "HR";
+
 	private final AprobarRequerimientoPersonalUseCase useCase;
 	private final FunctionalContextFactory contextFactory;
 
@@ -26,6 +29,6 @@ public class RequerimientoController {
 		return ResponseEntity.ok(useCase.execute(
 				new AprobarRequerimientoPersonalCommand(codigo, body.accion(), body.comentario(),
 						body.usuarioAprobador()),
-				contextFactory.from(request, "Requerimiento", "Aprobar", "Aprobar Requerimiento Personal")));
+				contextFactory.from(request, MODULE, "Requerimiento", "Aprobar", "Aprobar Requerimiento Personal")));
 	}
 }

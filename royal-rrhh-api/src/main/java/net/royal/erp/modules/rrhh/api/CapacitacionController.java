@@ -1,6 +1,7 @@
 package net.royal.erp.modules.rrhh.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.modules.rrhh.application.capacitacion.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/hr/capacitacion/capacitaciones")
 public class CapacitacionController {
+	private static final String MODULE = "HR";
+
 	private final RegistrarCapacitacionUseCase useCase;
 	private final FunctionalContextFactory contextFactory;
 
@@ -23,6 +26,7 @@ public class CapacitacionController {
 	public ResponseEntity<RegistrarCapacitacionResult> registrar(@RequestBody RegistrarCapacitacionCommand command,
 			HttpServletRequest request) {
 		return ResponseEntity.ok(
-				useCase.execute(command, contextFactory.from(request, "Capacitacion", "Registrar", "Registrar Capacitacion")));
+				useCase.execute(command, contextFactory.from(request, MODULE, "Capacitacion", "Registrar",
+						"Registrar Capacitacion")));
 	}
 }

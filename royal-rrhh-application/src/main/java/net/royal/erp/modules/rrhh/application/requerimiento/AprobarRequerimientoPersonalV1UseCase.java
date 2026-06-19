@@ -2,7 +2,7 @@ package net.royal.erp.modules.rrhh.application.requerimiento;
 
 import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.*;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 
 /**
  * Implementa: - MOD-012 CU-003 AprobarRequerimientoPersonal.

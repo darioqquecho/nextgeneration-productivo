@@ -3,6 +3,7 @@ package net.royal.erp.modules.rrhh.infrastructure.parametro;
 import java.time.Instant;
 import java.util.Optional;
 
+import net.royal.erp.framework.database.VersionedSqlResourceLoader;
 import net.royal.erp.modules.rrhh.application.parametro.port.AprobacionMasivaParametrosRepository;
 import net.royal.erp.modules.rrhh.domain.parametro.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,9 +18,13 @@ public class SqlServerAprobacionMasivaParametrosV1Adapter implements AprobacionM
 
 	public SqlServerAprobacionMasivaParametrosV1Adapter(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
-		this.findByIdSql = SqlResourceLoader.load("aprobacionmasivaparametros", "v1", "find-by-id");
-		this.approveIfPendingSql = SqlResourceLoader.load("aprobacionmasivaparametros", "v1",
-				"approve-if-pending");
+		this.findByIdSql = sql("find-by-id");
+		this.approveIfPendingSql = sql("approve-if-pending");
+	}
+
+	private String sql(String statementName) {
+		return VersionedSqlResourceLoader.load("hr", "maestros", "aprobacionmasivaparametros", "parametros", "v1",
+				statementName);
 	}
 
 	public Optional<Parametro> findById(ParametroId id) {

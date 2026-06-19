@@ -1,16 +1,17 @@
-package net.royal.erp.modules.rrhh.infrastructure.observability;
+package net.royal.erp.framework.observability;
 
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.*;
+import org.springframework.stereotype.Component;
 
 import io.micrometer.core.instrument.*;
 import net.royal.erp.framework.kernel.FunctionalContext;
-import net.royal.erp.framework.observability.ObservabilityPort;
 
 /**
  * Registra logs estructurados y metricas Micrometer por caso de uso.
  */
+@Component
 public class MicrometerStructuredObservabilityAdapter implements ObservabilityPort {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MicrometerStructuredObservabilityAdapter.class);
 
@@ -45,8 +46,8 @@ public class MicrometerStructuredObservabilityAdapter implements ObservabilityPo
 		Tags tags = Tags.of("module", value(context.module()), "useCase", value(context.useCase()), "version",
 				value(context.requestedVersion()), "clientId", value(context.clientId()), "status", status);
 		registry.counter("royal_usecase_total", tags).increment();
-		Timer.builder("royal_usecase_duration").tags(tags).publishPercentileHistogram()
-				.register(registry).record(durationMillis, TimeUnit.MILLISECONDS);
+		Timer.builder("royal_usecase_duration").tags(tags).publishPercentileHistogram().register(registry)
+				.record(durationMillis, TimeUnit.MILLISECONDS);
 		if ("ERROR".equals(status)) {
 			registry.counter("royal_usecase_errors_total", tags).increment();
 		}

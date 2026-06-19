@@ -1,14 +1,13 @@
 package net.royal.erp.modules.rrhh.bootstrap;
 
-import net.royal.erp.framework.audit.AuditPort;
+import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.licensing.InMemoryLicenseChecker;
 import net.royal.erp.framework.security.InMemoryPermissionChecker;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.dto.*;
 import net.royal.erp.modules.rrhh.application.parametro.usecase.*;
 import net.royal.erp.modules.rrhh.domain.parametro.ParametroId;
-import net.royal.erp.modules.rrhh.infrastructure.audit.ConsoleAuditAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.parametro.SqlServerMantenimientoTablaParametrosV1Adapter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
@@ -30,15 +29,13 @@ class ParametroSqlServerUseCaseIT {
 		SqlServerMantenimientoTablaParametrosV1Adapter repository =
 				new SqlServerMantenimientoTablaParametrosV1Adapter(jdbcTemplate());
 		MantenimientoTablaParametrosUseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository, guards(),
-				new ConsoleAuditAdapter());
+				auditPort());
 		String compania = System.getProperty("it.sqlserver.compania", "COMP01");
 		String codigo = System.getProperty("it.sqlserver.codigo", "ITVISIBLE");
 		String nombre = System.getProperty("it.sqlserver.nombre", "Parametro visible desde IT");
-		FunctionalContext context = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
-				"Registrar", "Mantenimiento de Parametro", "V1", null, null, Instant.now());
 
 		repository.deleteById(new ParametroId(compania, codigo));
-		var creado = mantenimiento.crear(new CrearParametroCommand(compania, codigo, nombre), context);
+		var creado = mantenimiento.crear(new CrearParametroCommand(compania, codigo, nombre), context("Registrar"));
 
 		assertEquals("CREADO", creado.estado());
 		assertTrue(repository.existsById(new ParametroId(compania, codigo)));
@@ -49,33 +46,32 @@ class ParametroSqlServerUseCaseIT {
 		SqlServerMantenimientoTablaParametrosV1Adapter repository =
 				new SqlServerMantenimientoTablaParametrosV1Adapter(jdbcTemplate());
 		UseCaseGuards guards = guards();
-		AuditPort audit = new ConsoleAuditAdapter();
+		AuditPort audit = auditPort();
 		String compania = System.getProperty("it.sqlserver.compania", "COMP01");
 		String codigo = ("IT" + UUID.randomUUID().toString().replace("-", "")).substring(0, 10).toUpperCase();
-		FunctionalContext context = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
-				"Registrar", "Mantenimiento de Parametro", "V1", null, null, Instant.now());
 
 		repository.deleteById(new ParametroId(compania, codigo));
 		try {
 			MantenimientoTablaParametrosUseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository, guards,
 					audit);
 
-			var creado = mantenimiento.crear(new CrearParametroCommand(compania, codigo, "Parametro IT SQL"), context);
+			var creado = mantenimiento.crear(new CrearParametroCommand(compania, codigo, "Parametro IT SQL"),
+					context("Registrar"));
 			assertEquals("CREADO", creado.estado());
 
-			var obtenido = mantenimiento.obtener(new ObtenerParametroQuery(compania, codigo), context);
+			var obtenido = mantenimiento.obtener(new ObtenerParametroQuery(compania, codigo), context("Obtener"));
 			assertEquals("Parametro IT SQL", obtenido.nombre());
 			assertEquals("admin", obtenido.ultimoUsuario());
 
 			var actualizado = mantenimiento.actualizar(new ActualizarParametroCommand(compania, codigo, "Parametro IT SQL 2"),
-					context);
+					context("Actualizar"));
 			assertEquals("ACTUALIZADO", actualizado.estado());
 
 			var inactivo = mantenimiento.cambiarEstado(new CambiarEstadoParametroCommand(compania, codigo, "INACTIVO"),
-					context);
+					context("Cambiar de Estado"));
 			assertEquals("INACTIVO", inactivo.estado());
 
-			var eliminado = mantenimiento.eliminar(new EliminarParametroCommand(compania, codigo), context);
+			var eliminado = mantenimiento.eliminar(new EliminarParametroCommand(compania, codigo), context("Eliminar"));
 			assertTrue(eliminado.eliminado());
 			assertFalse(repository.existsById(new ParametroId(compania, codigo)));
 		} finally {
@@ -89,6 +85,15 @@ class ParametroSqlServerUseCaseIT {
 		dataSource.setUsername(required("it.sqlserver.username"));
 		dataSource.setPassword(required("it.sqlserver.password"));
 		return new JdbcTemplate(dataSource);
+	}
+
+	private AuditPort auditPort() {
+		return new CompositeAuditAdapter(new ConsoleAuditAdapter(), new JdbcFunctionalAuditAdapter(jdbcTemplate()));
+	}
+
+	private FunctionalContext context(String functionality) {
+		return new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros", functionality,
+				"Mantenimiento de Parametro", "V1", null, null, Instant.now());
 	}
 
 	private UseCaseGuards guards() {

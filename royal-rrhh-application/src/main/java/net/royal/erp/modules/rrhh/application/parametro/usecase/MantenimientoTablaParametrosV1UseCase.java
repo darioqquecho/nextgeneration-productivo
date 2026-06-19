@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.*;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.dto.*;
 import net.royal.erp.modules.rrhh.application.parametro.port.MantenimientoTablaParametrosRepository;
 import net.royal.erp.modules.rrhh.domain.parametro.*;
@@ -35,11 +35,13 @@ public class MantenimientoTablaParametrosV1UseCase implements MantenimientoTabla
 	public ListarParametrosResult listar(ListarParametrosQuery query, FunctionalContext context) {
 		guards.check(context);
 		ListarParametrosQuery filters = query == null ? new ListarParametrosQuery(null, null, null) : query;
-		return new ListarParametrosResult(repository.findAll().stream()
+		ListarParametrosResult result = new ListarParametrosResult(repository.findAll().stream()
 				.filter(p -> matches(p.id().compania(), filters.compania()))
 				.filter(p -> matches(p.id().codigo(), filters.codigo()))
 				.filter(p -> matches(p.estado() == null ? null : p.estado().name(), filters.estado()))
 				.map(p -> ParametroResultMapper.toResult(p, context.traceId())).toList(), context.traceId());
+		registerAudit(context, "LISTAR", "registros=" + result.parametros().size());
+		return result;
 	}
 
 	@Override
@@ -61,6 +63,7 @@ public class MantenimientoTablaParametrosV1UseCase implements MantenimientoTabla
 		guards.check(context);
 		Parametro parametro = repository.findById(new ParametroId(query.compania(), query.codigo()))
 				.orElseThrow(() -> new BusinessException("HR-PAR-404"));
+		registerAudit(context, parametro.id());
 		return ParametroResultMapper.toResult(parametro, context.traceId());
 	}
 
@@ -99,9 +102,13 @@ public class MantenimientoTablaParametrosV1UseCase implements MantenimientoTabla
 	}
 
 	private void registerAudit(FunctionalContext context, ParametroId id) {
+		registerAudit(context, id.value(), null);
+	}
+
+	private void registerAudit(FunctionalContext context, String entityId, String message) {
 		auditPort.register(new FunctionalAuditRecord(context.tenantId(), context.clientId(), MODULE, context.process(),
 				context.useCase(), context.functionality(), functionalVersion(), context.userId(), "OK", ENTITY,
-				id.value(), context.traceId(), context.requestId(), context.executedAt(), context.language(), null));
+				entityId, context.traceId(), context.requestId(), context.executedAt(), context.language(), message));
 	}
 
 	private boolean matches(String value, String filter) {

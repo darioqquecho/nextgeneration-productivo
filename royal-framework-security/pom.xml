@@ -16,6 +16,11 @@
         <artifactId>royal-framework-kernel</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>net.royal.erp</groupId>
+        <artifactId>royal-framework-licensing</artifactId>
+        <version>${project.version}</version>
+    </dependency>
     </dependencies>
 
 </project>

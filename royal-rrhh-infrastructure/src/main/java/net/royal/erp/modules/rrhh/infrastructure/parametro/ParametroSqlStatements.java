@@ -1,9 +1,15 @@
 package net.royal.erp.modules.rrhh.infrastructure.parametro;
 
+import net.royal.erp.framework.database.VersionedSqlResourceLoader;
+
 /**
  * Agrupa las sentencias SQL de un caso de uso y version especificos.
  */
 final class ParametroSqlStatements {
+	private static final String MODULE = "hr";
+	private static final String PROCESS = "maestros";
+	private static final String RESOURCE = "parametros";
+
 	private final String existsById;
 	private final String findById;
 	private final String findAll;
@@ -12,12 +18,16 @@ final class ParametroSqlStatements {
 	private final String deleteById;
 
 	ParametroSqlStatements(String useCase, String version) {
-		this.existsById = SqlResourceLoader.load(useCase, version, "exists-by-id");
-		this.findById = SqlResourceLoader.load(useCase, version, "find-by-id");
-		this.findAll = SqlResourceLoader.load(useCase, version, "find-all");
-		this.insert = SqlResourceLoader.load(useCase, version, "insert");
-		this.update = SqlResourceLoader.load(useCase, version, "update");
-		this.deleteById = SqlResourceLoader.load(useCase, version, "delete-by-id");
+		this.existsById = load(useCase, version, "exists-by-id");
+		this.findById = load(useCase, version, "find-by-id");
+		this.findAll = load(useCase, version, "find-all");
+		this.insert = load(useCase, version, "insert");
+		this.update = load(useCase, version, "update");
+		this.deleteById = load(useCase, version, "delete-by-id");
+	}
+
+	private String load(String useCase, String version, String statementName) {
+		return VersionedSqlResourceLoader.load(MODULE, PROCESS, useCase, RESOURCE, version, statementName);
 	}
 
 	String existsById() {

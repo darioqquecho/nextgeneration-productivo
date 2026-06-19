@@ -1,16 +1,15 @@
 package net.royal.erp.modules.rrhh.bootstrap;
 
-import net.royal.erp.framework.audit.AuditPort;
+import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.licensing.InMemoryLicenseChecker;
 import net.royal.erp.framework.security.InMemoryPermissionChecker;
 import net.royal.erp.framework.versioning.*;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.dto.*;
 import net.royal.erp.modules.rrhh.application.parametro.usecase.*;
 import net.royal.erp.modules.rrhh.domain.parametro.Parametro;
 import net.royal.erp.modules.rrhh.domain.parametro.ParametroId;
-import net.royal.erp.modules.rrhh.infrastructure.audit.ConsoleAuditAdapter;
 import net.royal.erp.modules.rrhh.infrastructure.parametro.InMemoryParametroRepositoryAdapter;
 import org.junit.jupiter.api.Test;
 

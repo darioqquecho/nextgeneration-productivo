@@ -1,10 +1,8 @@
-package net.royal.erp.modules.rrhh.infrastructure.audit;
+package net.royal.erp.framework.audit;
 
 import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import net.royal.erp.framework.audit.*;
 
 /**
  * Persiste eventos de auditoria funcional en la base transaccional.

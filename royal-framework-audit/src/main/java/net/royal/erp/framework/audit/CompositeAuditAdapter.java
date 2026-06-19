@@ -1,8 +1,6 @@
-package net.royal.erp.modules.rrhh.infrastructure.audit;
+package net.royal.erp.framework.audit;
 
 import java.util.List;
-
-import net.royal.erp.framework.audit.*;
 
 /**
  * Envia la auditoria funcional a varios destinos.

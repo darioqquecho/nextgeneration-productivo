@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.*;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.dto.*;
 import net.royal.erp.modules.rrhh.application.parametro.port.AprobacionMasivaParametrosRepository;
 import net.royal.erp.modules.rrhh.domain.parametro.*;
@@ -44,8 +44,13 @@ public class AprobacionMasivaParametrosV1UseCase implements AprobacionMasivaPara
 			}
 			results.add(result);
 		}
+		int omitidos = command.parametros().size() - aprobados;
+		auditPort.register(new FunctionalAuditRecord(context.tenantId(), context.clientId(), MODULE, context.process(),
+				context.useCase(), context.functionality(), "V1", context.userId(), "OK", ENTITY, "APROBACION_MASIVA",
+				context.traceId(), context.requestId(), context.executedAt(), context.language(),
+				"solicitados=" + command.parametros().size() + "; aprobados=" + aprobados + "; omitidos=" + omitidos));
 		return new AprobarMasivamenteParametrosResult(command.parametros().size(), aprobados,
-				command.parametros().size() - aprobados, List.copyOf(results), context.traceId());
+				omitidos, List.copyOf(results), context.traceId());
 	}
 
 	private AprobarParametroItemResult aprobarItem(AprobarParametroItem item, FunctionalContext context) {

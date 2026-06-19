@@ -1,7 +1,7 @@
 package net.royal.erp.modules.rrhh.application.parametro.usecase;
 
 import net.royal.erp.framework.audit.AuditPort;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.port.MantenimientoTablaParametrosRepository;
 
 /**

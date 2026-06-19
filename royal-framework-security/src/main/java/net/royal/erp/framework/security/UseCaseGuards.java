@@ -1,16 +1,13 @@
-package net.royal.erp.modules.rrhh.application.common;
+package net.royal.erp.framework.security;
 
 import java.text.Normalizer;
 import java.util.Locale;
 
 import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.licensing.LicenseChecker;
-import net.royal.erp.framework.security.PermissionChecker;
 
 /**
- * Implementa: - ARCH-006 Seguridad. - ARCH-025 Licenciamiento.
- *
- * Proposito: Valida licencia y permiso a nivel de caso de uso RRHH.
+ * Valida licencia y permiso a nivel de caso de uso.
  */
 public class UseCaseGuards {
 	private final PermissionChecker permissionChecker;
@@ -21,13 +18,8 @@ public class UseCaseGuards {
 		this.licenseChecker = licenseChecker;
 	}
 
-	/**
-	 * Valida modulo HR y permiso a nivel de caso de uso.
-	 *
-	 * Implementa: - ARCH-006 Seguridad. - ARCH-025 Licenciamiento.
-	 */
 	public void check(FunctionalContext context) {
-		licenseChecker.checkModuleEnabled(context, "HR");
+		licenseChecker.checkModuleEnabled(context, context.module());
 		permissionChecker.check(context, permissionFor(context));
 	}
 

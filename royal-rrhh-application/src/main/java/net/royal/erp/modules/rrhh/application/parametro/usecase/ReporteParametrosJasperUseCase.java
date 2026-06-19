@@ -7,7 +7,7 @@ import java.util.*;
 
 import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.*;
-import net.royal.erp.modules.rrhh.application.common.UseCaseGuards;
+import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.modules.rrhh.application.parametro.dto.*;
 import net.royal.erp.modules.rrhh.application.parametro.port.ReporteParametrosRepository;
 import net.royal.erp.modules.rrhh.domain.parametro.*;
