@@ -14,7 +14,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
  * Adapter JasperReports para generar el PDF del reporte de Parametros.
  */
 public class JasperReporteParametrosDocumentGenerator implements ReporteParametrosDocumentGenerator {
-	private static final String REPORT_PATH = "hr/maestros/reporteparametros/parametros.v1.jrxml";
+	private static final String REPORT_PATH = "recursos/hr/maestros/reporteparametros/parametros.v1.jrxml";
 
 	@Override
 	public byte[] generate(ReporteParametrosDocumentData data) {
