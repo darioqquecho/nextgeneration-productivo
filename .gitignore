@@ -26,3 +26,6 @@ Thumbs.db
 *.local.properties
 application-local.properties
 application-secrets.properties
+/.tmp-edge-png
+/.tmp-chrome-png
+/.tmp-chrome
