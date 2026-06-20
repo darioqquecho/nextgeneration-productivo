@@ -20,6 +20,30 @@ spec:
           env:
             - name: ROYAL_PERSISTENCE_ADAPTER
               value: IN_MEMORY
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: royal-rrhh-db
+                  key: url
+                  optional: true
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: royal-rrhh-db
+                  key: username
+                  optional: true
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: royal-rrhh-db
+                  key: password
+                  optional: true
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: royal-rrhh-db
+                  key: driver-class-name
+                  optional: true
           readinessProbe:
             httpGet:
               path: /actuator/health

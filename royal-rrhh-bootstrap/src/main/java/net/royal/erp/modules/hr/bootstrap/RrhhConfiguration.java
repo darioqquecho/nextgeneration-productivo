@@ -30,10 +30,12 @@ import net.royal.erp.modules.hr.infrastructure.tiposeguro.oracle.OracleMantenimi
 import net.royal.erp.modules.hr.infrastructure.tiposeguro.sqlserver.SqlServerMantenimientoTipoSeguroV1Adapter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
  * Implementa: - ARCH-008 Bootstrap. - ARCH-009 Bases de Datos. - MOD-013
@@ -50,9 +52,47 @@ public class RrhhConfiguration {
 	@Value("${royal.functional-version.catalog:classpath:functional-version-catalog.xml}")
 	private String functionalVersionCatalog;
 
+	@Value("${spring.datasource.url:}")
+	private String datasourceUrl;
+
+	@Value("${spring.datasource.username:}")
+	private String datasourceUsername;
+
+	@Value("${spring.datasource.password:}")
+	private String datasourcePassword;
+
+	@Value("${spring.datasource.driver-class-name:}")
+	private String datasourceDriverClassName;
+
 	@Bean
 	PersistenceAdapterType persistenceAdapterType() {
 		return new PersistenceAdapterResolver().resolve(persistenceAdapter);
+	}
+
+	@Bean
+	@ConditionalOnProperty(name = "royal.persistence.adapter", havingValue = "SQL_SERVER")
+	JdbcTemplate sqlServerJdbcTemplate() {
+		return jdbcTemplate("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	}
+
+	@Bean
+	@ConditionalOnProperty(name = "royal.persistence.adapter", havingValue = "ORACLE")
+	JdbcTemplate oracleJdbcTemplate() {
+		return jdbcTemplate("oracle.jdbc.OracleDriver");
+	}
+
+	private JdbcTemplate jdbcTemplate(String defaultDriverClassName) {
+		if (datasourceUrl == null || datasourceUrl.isBlank()) {
+			throw new IllegalStateException("spring.datasource.url requerido para adapter " + persistenceAdapter);
+		}
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName(datasourceDriverClassName == null || datasourceDriverClassName.isBlank()
+				? defaultDriverClassName
+				: datasourceDriverClassName);
+		dataSource.setUrl(datasourceUrl);
+		dataSource.setUsername(datasourceUsername);
+		dataSource.setPassword(datasourcePassword);
+		return new JdbcTemplate(dataSource);
 	}
 
 	private JdbcTemplate requiredJdbcTemplate(ObjectProvider<JdbcTemplate> jdbc, PersistenceAdapterType adapterType) {
