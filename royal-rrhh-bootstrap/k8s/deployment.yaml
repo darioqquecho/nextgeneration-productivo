@@ -20,6 +20,23 @@ spec:
           env:
             - name: ROYAL_PERSISTENCE_ADAPTER
               value: IN_MEMORY
+            - name: ROYAL_AUTENTICACION_BASE_URL
+              value: http://royal-autenticacion-api:8080
+            - name: ROYAL_DEFAULT_TENANT
+              value: default
+            - name: ROYAL_DEFAULT_CLIENT
+              value: demo-client
+            - name: ROYAL_DEFAULT_USER
+              value: admin
+            - name: ROYAL_CLIENT_CATALOG
+              value: file:/etc/royal/rrhh/client-catalog.xml
+            - name: ROYAL_SECURITY_API_KEY_ENABLED
+              value: "true"
+            - name: ROYAL_SECURITY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: royal-api-security
+                  key: api-key
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 secretKeyRef:
@@ -52,6 +69,14 @@ spec:
             httpGet:
               path: /actuator/health
               port: 8080
+          volumeMounts:
+            - name: client-catalog
+              mountPath: /etc/royal/rrhh
+              readOnly: true
+      volumes:
+        - name: client-catalog
+          configMap:
+            name: royal-rrhh-client-catalog
 ---
 apiVersion: v1
 kind: Service
@@ -63,3 +88,33 @@ spec:
   ports:
     - port: 80
       targetPort: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: royal-rrhh-client-catalog
+data:
+  client-catalog.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <client-catalog>
+      <client tenantId="default" clientId="demo-client">
+        <module code="HR"/>
+        <property name="persistence.adapter" value="IN_MEMORY"/>
+      </client>
+      <client tenantId="tenant-acme" clientId="acme">
+        <module code="HR"/>
+        <property name="persistence.adapter" value="SQL_SERVER"/>
+      </client>
+      <client tenantId="tenant-contoso" clientId="contoso">
+        <module code="HR"/>
+        <property name="persistence.adapter" value="ORACLE"/>
+      </client>
+    </client-catalog>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: royal-api-security
+type: Opaque
+stringData:
+  api-key: change-this-api-key

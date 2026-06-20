@@ -6,9 +6,9 @@ import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.licensing.InMemoryLicenseChecker;
 import net.royal.erp.framework.security.*;
-import net.royal.erp.modules.hr.application.tiposeguro.dto.*;
-import net.royal.erp.modules.hr.application.tiposeguro.usecase.*;
-import net.royal.erp.modules.hr.infrastructure.tiposeguro.inmemory.InMemoryTipoSeguroRepositoryAdapter;
+import net.royal.erp.modules.hr.application.maestros.tiposeguro.dto.*;
+import net.royal.erp.modules.hr.application.maestros.tiposeguro.usecase.*;
+import net.royal.erp.modules.hr.infrastructure.maestros.tiposeguro.inmemory.InMemoryTipoSeguroRepositoryAdapter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

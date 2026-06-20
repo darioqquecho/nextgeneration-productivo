@@ -2,32 +2,35 @@ package net.royal.erp.modules.hr.bootstrap;
 
 import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.database.*;
+import net.royal.erp.framework.kernel.client.ClientCatalog;
 import net.royal.erp.framework.licensing.*;
 import net.royal.erp.framework.observability.ObservabilityPort;
 import net.royal.erp.framework.security.*;
 import net.royal.erp.framework.versioning.*;
-import net.royal.erp.modules.hr.application.capacitacion.*;
-import net.royal.erp.modules.hr.application.capacitacion.port.CapacitacionRepository;
-import net.royal.erp.modules.hr.application.parametro.port.*;
-import net.royal.erp.modules.hr.application.parametro.usecase.*;
-import net.royal.erp.modules.hr.application.requerimiento.*;
-import net.royal.erp.modules.hr.application.tiposeguro.port.MantenimientoTipoSeguroRepository;
-import net.royal.erp.modules.hr.application.tiposeguro.usecase.*;
-import net.royal.erp.modules.hr.infrastructure.aprobaciones.InMemoryAprobacionesAdapter;
-import net.royal.erp.modules.hr.infrastructure.capacitacion.InMemoryCapacitacionRepositoryAdapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.inmemory.InMemoryParametroRepositoryAdapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.jasper.JasperReporteParametrosDocumentGenerator;
-import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleAprobacionMasivaParametrosV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleMantenimientoTablaParametrosV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleMantenimientoTablaParametrosV2Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.oracle.OracleReporteParametrosV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerAprobacionMasivaParametrosV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV2Adapter;
-import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.SqlServerReporteParametrosV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.tiposeguro.inmemory.InMemoryTipoSeguroRepositoryAdapter;
-import net.royal.erp.modules.hr.infrastructure.tiposeguro.oracle.OracleMantenimientoTipoSeguroV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.tiposeguro.sqlserver.SqlServerMantenimientoTipoSeguroV1Adapter;
+import net.royal.erp.framework.web.client.RestApiClient;
+import net.royal.erp.modules.hr.application.capacitacion.registrar.*;
+import net.royal.erp.modules.hr.application.capacitacion.registrar.port.CapacitacionRepository;
+import net.royal.erp.modules.hr.application.maestros.parametro.port.*;
+import net.royal.erp.modules.hr.application.maestros.parametro.usecase.*;
+import net.royal.erp.modules.hr.application.requerimiento.aprobar.*;
+import net.royal.erp.modules.hr.application.maestros.tiposeguro.port.MantenimientoTipoSeguroRepository;
+import net.royal.erp.modules.hr.application.maestros.tiposeguro.usecase.*;
+import net.royal.erp.modules.hr.infrastructure.requerimiento.aprobar.InMemoryAprobacionesAdapter;
+import net.royal.erp.modules.hr.infrastructure.capacitacion.registrar.InMemoryCapacitacionRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.inmemory.InMemoryParametroRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.jasper.JasperReporteParametrosDocumentGenerator;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.oracle.OracleAprobacionMasivaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.oracle.OracleMantenimientoTablaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.oracle.OracleMantenimientoTablaParametrosV2Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.oracle.OracleReporteParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.sqlserver.SqlServerAprobacionMasivaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.sqlserver.SqlServerMantenimientoTablaParametrosV2Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.sqlserver.SqlServerReporteParametrosV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.seguridad.RestConsultaPermisoAdapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.tiposeguro.inmemory.InMemoryTipoSeguroRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.tiposeguro.oracle.OracleMantenimientoTipoSeguroV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.tiposeguro.sqlserver.SqlServerMantenimientoTipoSeguroV1Adapter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -52,6 +55,9 @@ public class RrhhConfiguration {
 	@Value("${royal.functional-version.catalog:classpath:functional-version-catalog.xml}")
 	private String functionalVersionCatalog;
 
+	@Value("${royal.client.catalog:classpath:client-catalog.xml}")
+	private String clientCatalogLocation;
+
 	@Value("${spring.datasource.url:}")
 	private String datasourceUrl;
 
@@ -63,6 +69,12 @@ public class RrhhConfiguration {
 
 	@Value("${spring.datasource.driver-class-name:}")
 	private String datasourceDriverClassName;
+
+	@Value("${royal.autenticacion.base-url:http://localhost:8080}")
+	private String autenticacionBaseUrl;
+
+	@Value("${royal.security.api-key.value:}")
+	private String apiKey;
 
 	@Bean
 	PersistenceAdapterType persistenceAdapterType() {
@@ -137,21 +149,36 @@ public class RrhhConfiguration {
 		for (String p : new String[] { "HR_MANTENIMIENTO_DE_PARAMETRO", "HR_REPORTE_DE_PARAMETRO",
 				"HR_APROBACION_MASIVA_DE_PARAMETROS", "HR_MANTENIMIENTO_DE_TIPO_SEGURO", "HR_REGISTRAR_CAPACITACION",
 				"HR_APROBAR_REQUERIMIENTO_PERSONAL" }) {
-			c.grant("admin", p);
+			c.grant("demo-client", "admin", p);
+			c.grant("acme", "admin", p);
+			c.grant("contoso", "admin", p);
 		}
 		return c;
 	}
 
 	@Bean
-	LicenseChecker licenseChecker() {
-		InMemoryLicenseChecker c = new InMemoryLicenseChecker();
-		c.enable("demo-client", "HR");
-		return c;
+	ClientCatalog clientCatalog(ResourceLoader resourceLoader) {
+		return new ClientCatalogXmlLoader(resourceLoader).load(clientCatalogLocation);
+	}
+
+	@Bean
+	LicenseChecker licenseChecker(ClientCatalog clientCatalog) {
+		return new ClientCatalogLicenseChecker(clientCatalog);
 	}
 
 	@Bean
 	UseCaseGuards guards(PermissionChecker p, LicenseChecker l) {
 		return new UseCaseGuards(p, l);
+	}
+
+	@Bean
+	ConsultaPermisoPort consultaPermisoPort() {
+		return new RestConsultaPermisoAdapter(autenticacionRestApiClient());
+	}
+
+	@Bean
+	RestApiClient autenticacionRestApiClient() {
+		return new RestApiClient(autenticacionBaseUrl, "SECURITY-PERMISSION-SERVICE", apiKey);
 	}
 
 	@Bean
@@ -163,11 +190,12 @@ public class RrhhConfiguration {
 	@Bean
 	MantenimientoTablaParametrosUseCase mantenimientoTablaParametrosUseCase(FunctionalVersionResolver v,
 			PersistenceAdapterType adapterType, ObjectProvider<JdbcTemplate> jdbc,
-			InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a, ObservabilityPort o) {
+			InMemoryParametroRepositoryAdapter inMemory, ConsultaPermisoPort consultaPermiso, UseCaseGuards g,
+			AuditPort a, ObservabilityPort o) {
 		MantenimientoTablaParametrosUseCase v1 = new MantenimientoTablaParametrosV1UseCase(
-				mantenimientoRepository(adapterType, jdbc, inMemory, "v1"), g, a);
+				mantenimientoRepository(adapterType, jdbc, inMemory, "v1"), consultaPermiso, g, a);
 		MantenimientoTablaParametrosUseCase v2 = new MantenimientoTablaParametrosV2UseCase(
-				mantenimientoRepository(adapterType, jdbc, inMemory, "v2"), g, a);
+				mantenimientoRepository(adapterType, jdbc, inMemory, "v2"), consultaPermiso, g, a);
 		return new ObservedMantenimientoTablaParametrosUseCase(new MantenimientoTablaParametrosVersionedUseCase(v, v1, v2),
 				o);
 	}

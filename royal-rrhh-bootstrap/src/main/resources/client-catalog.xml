@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<client-catalog>
+	<client tenantId="default" clientId="demo-client">
+		<module code="HR"/>
+		<property name="persistence.adapter" value="IN_MEMORY"/>
+	</client>
+	<client tenantId="tenant-acme" clientId="acme">
+		<module code="HR"/>
+		<property name="persistence.adapter" value="SQL_SERVER"/>
+	</client>
+	<client tenantId="tenant-contoso" clientId="contoso">
+		<module code="HR"/>
+		<property name="persistence.adapter" value="ORACLE"/>
+	</client>
+</client-catalog>

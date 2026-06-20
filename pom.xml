@@ -20,6 +20,7 @@
         <module>royal-framework-kernel</module>
         <module>royal-framework-web</module>
         <module>royal-framework-security</module>
+        <module>royal-framework-application</module>
         <module>royal-framework-audit</module>
         <module>royal-framework-versioning</module>
         <module>royal-framework-licensing</module>

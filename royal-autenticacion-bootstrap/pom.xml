@@ -22,6 +22,11 @@
         <version>${project.version}</version>
     </dependency>
     <dependency>
+        <groupId>net.royal.erp</groupId>
+        <artifactId>royal-framework-security</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
     </dependency>

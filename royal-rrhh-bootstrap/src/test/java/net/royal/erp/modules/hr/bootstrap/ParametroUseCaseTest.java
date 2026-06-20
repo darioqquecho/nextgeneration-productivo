@@ -6,11 +6,11 @@ import net.royal.erp.framework.licensing.InMemoryLicenseChecker;
 import net.royal.erp.framework.security.InMemoryPermissionChecker;
 import net.royal.erp.framework.versioning.*;
 import net.royal.erp.framework.security.UseCaseGuards;
-import net.royal.erp.modules.hr.application.parametro.dto.*;
-import net.royal.erp.modules.hr.application.parametro.usecase.*;
+import net.royal.erp.modules.hr.application.maestros.parametro.dto.*;
+import net.royal.erp.modules.hr.application.maestros.parametro.usecase.*;
 import net.royal.erp.modules.hr.domain.parametro.Parametro;
 import net.royal.erp.modules.hr.domain.parametro.ParametroId;
-import net.royal.erp.modules.hr.infrastructure.parametro.inmemory.InMemoryParametroRepositoryAdapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.inmemory.InMemoryParametroRepositoryAdapter;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -87,6 +87,27 @@ class ParametroUseCaseTest {
 		assertEquals("COMP01", result.parametros().get(0).compania());
 		assertEquals("P4", result.parametros().get(0).codigo());
 	}
+
+	@Test
+	void eliminarParametroConsultaPermisoAntesDeEliminar() {
+		InMemoryPermissionChecker p = new InMemoryPermissionChecker();
+		p.grant("admin", "HR_MANTENIMIENTO_DE_PARAMETRO");
+		InMemoryLicenseChecker l = new InMemoryLicenseChecker();
+		l.enable("demo-client", "HR");
+		UseCaseGuards guards = new UseCaseGuards(p, l);
+		AuditPort audit = new ConsoleAuditAdapter();
+		InMemoryParametroRepositoryAdapter repository = new InMemoryParametroRepositoryAdapter();
+		repository.save(Parametro.cargar("COMP01", "P9", "Parametro protegido", "ACTIVO", "admin", Instant.now()));
+		MantenimientoTablaParametrosUseCase useCase = new MantenimientoTablaParametrosV1UseCase(repository,
+				(query, context) -> false, guards, audit);
+		FunctionalContext context = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
+				"Eliminar", "Mantenimiento de Parametro", null, null, null, Instant.now());
+
+		assertThrows(net.royal.erp.framework.kernel.BusinessException.class,
+				() -> useCase.eliminar(new EliminarParametroCommand("COMP01", "P9"), context));
+		assertTrue(repository.existsById(new ParametroId("COMP01", "P9")));
+	}
+
 
 	@Test
 	void reporteParametrosPdfOk() {

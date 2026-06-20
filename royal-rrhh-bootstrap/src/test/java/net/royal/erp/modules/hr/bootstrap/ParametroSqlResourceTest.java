@@ -1,9 +1,9 @@
 package net.royal.erp.modules.hr.bootstrap;
 
-import net.royal.erp.modules.hr.infrastructure.parametro.sqlserver.*;
-import net.royal.erp.modules.hr.infrastructure.parametro.oracle.*;
-import net.royal.erp.modules.hr.infrastructure.tiposeguro.oracle.OracleMantenimientoTipoSeguroV1Adapter;
-import net.royal.erp.modules.hr.infrastructure.tiposeguro.sqlserver.SqlServerMantenimientoTipoSeguroV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.sqlserver.*;
+import net.royal.erp.modules.hr.infrastructure.maestros.parametro.oracle.*;
+import net.royal.erp.modules.hr.infrastructure.maestros.tiposeguro.oracle.OracleMantenimientoTipoSeguroV1Adapter;
+import net.royal.erp.modules.hr.infrastructure.maestros.tiposeguro.sqlserver.SqlServerMantenimientoTipoSeguroV1Adapter;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
