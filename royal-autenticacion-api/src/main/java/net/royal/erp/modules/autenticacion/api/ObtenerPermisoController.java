@@ -7,7 +7,7 @@ import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.modules.autenticacion.application.permiso.ObtenerPermisoCommand;
 import net.royal.erp.modules.autenticacion.application.permiso.ObtenerPermisoResult;
-import net.royal.erp.modules.autenticacion.application.permiso.ObtenerPermisoUseCase;
+import net.royal.erp.modules.autenticacion.application.permiso.ObtenerPermisoSimpleUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/autenticacion")
 public class ObtenerPermisoController {
-	private final ObtenerPermisoUseCase useCase;
+	private final ObtenerPermisoSimpleUseCase useCase;
 	private final FunctionalContextFactory contextFactory;
 
-	public ObtenerPermisoController(ObtenerPermisoUseCase useCase, FunctionalContextFactory contextFactory) {
+	public ObtenerPermisoController(ObtenerPermisoSimpleUseCase useCase, FunctionalContextFactory contextFactory) {
 		this.useCase = useCase;
 		this.contextFactory = contextFactory;
 	}

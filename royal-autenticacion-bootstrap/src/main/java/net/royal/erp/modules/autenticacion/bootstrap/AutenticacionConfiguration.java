@@ -18,12 +18,12 @@ public class AutenticacionConfiguration {
 	 * Implementa: - MOD-012 CU-004 Login.
 	 */
 	@Bean
-	LoginUseCase loginUseCase() {
+	LoginSimpleUseCase loginUseCase() {
 		return new LoginSimpleUseCase();
 	}
 
 	@Bean
-	ObtenerPermisoUseCase obtenerPermisoUseCase(PermissionChecker permissionChecker) {
+	ObtenerPermisoSimpleUseCase obtenerPermisoUseCase(PermissionChecker permissionChecker) {
 		return new ObtenerPermisoSimpleUseCase(permissionChecker);
 	}
 

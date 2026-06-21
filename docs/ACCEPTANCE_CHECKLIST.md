@@ -3,9 +3,9 @@
 | Criterio | Estado | Evidencia |
 |---|---|---|
 | CRUD completo HR_Parametros | Implementado | ParametroController + UseCases |
-| RegistrarCapacitacion V1/V2 | Implementado | RegistrarCapacitacionVersionedUseCase |
-| AprobarRequerimiento V1/V2 | Implementado | AprobarRequerimientoPersonalVersionedUseCase |
-| Login | Implementado | LoginUseCase |
+| RegistrarCapacitacion V1/V2 | Implementado | RoyalFunctionalVersionProxyFactory |
+| AprobarRequerimiento V1/V2 | Implementado | RoyalFunctionalVersionProxyFactory |
+| Login | Implementado | LoginSimpleUseCase |
 | ConsultarAuditoria | Implementado | ConsultarAuditoriaUseCase |
 | JAR | Implementado | RrhhApplication |
 | WAR/Tomcat | Implementado | royal-rrhh-war |

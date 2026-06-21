@@ -15,14 +15,14 @@ import java.time.Instant;
 @RestController
 @RequestMapping("/api/autenticacion")
 public class LoginController {
-	private final LoginUseCase useCase;
+	private final LoginSimpleUseCase useCase;
 
 	/**
 	 * Crea controller de login.
 	 *
 	 * Implementa: - ARCH-012 API.
 	 */
-	public LoginController(LoginUseCase useCase) {
+	public LoginController(LoginSimpleUseCase useCase) {
 		this.useCase = useCase;
 	}
 
@@ -35,7 +35,7 @@ public class LoginController {
 	public ResponseEntity<LoginResult> login(@Valid @RequestBody LoginRequest body, HttpServletRequest request) {
 		LoginCommand command = new LoginCommand(body.username(), body.password());
 		FunctionalContext context = new FunctionalContext("default", "demo-client", body.username(), "AUTENTICACION",
-				"Login", "Login", "LoginUseCase", null, null, null, Instant.now(),
+				"Login", "Login", "LoginSimpleUseCase", null, null, null, Instant.now(),
 				RequestLanguage.fromHeaders(request.getHeader("X-Language"), request.getHeader("Accept-Language")));
 		return ResponseEntity.ok(useCase.execute(command, context));
 	}

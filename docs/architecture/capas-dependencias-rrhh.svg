@@ -119,9 +119,9 @@
   <rect class="dash-outline shadow" x="1080" y="423" width="335" height="184"/>
   <text class="label-green" x="1110" y="454">Base comun de casos de uso</text>
   <text class="small" x="1110" y="482">&#8226; RoyalBaseUseCase</text>
-  <text class="small" x="1110" y="508">&#8226; RoyalBaseVersionedUseCase</text>
-  <text class="small" x="1110" y="534">&#8226; RoyalObservedUseCase</text>
-  <text class="small" x="1110" y="560">&#8226; ModuleVersionRouter</text>
+  <text class="small" x="1110" y="508">&#8226; RoyalFunctionalVersionProxyFactory</text>
+  <text class="small" x="1110" y="534">&#8226; RoyalUseCaseObservabilityPostProcessor</text>
+  <text class="small" x="1110" y="560">&#8226; FunctionalVersionResolver</text>
   <text class="small" x="1110" y="586">&#8226; Audit, license, guards, logs</text>
 
   <!-- Port -->

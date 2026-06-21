@@ -11,7 +11,7 @@ import net.royal.erp.framework.security.PermissionChecker;
 /**
  * Implementacion inicial de consulta de permisos.
  */
-public class ObtenerPermisoSimpleUseCase implements ObtenerPermisoUseCase {
+public class ObtenerPermisoSimpleUseCase {
 	private final PermissionChecker permissionChecker;
 
 	public ObtenerPermisoSimpleUseCase(PermissionChecker permissionChecker) {

@@ -8,7 +8,7 @@ import net.royal.erp.framework.kernel.FunctionalContext;
  *
  * Propósito: Implementación mínima productiva inicial para Login local.
  */
-public class LoginSimpleUseCase implements LoginUseCase {
+public class LoginSimpleUseCase {
 	/**
 	 * Valida credenciales y emite token simple.
 	 *

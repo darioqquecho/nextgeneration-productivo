@@ -4,18 +4,15 @@ Esta guia define la forma estandar de crear casos de uso en el ERP. El objetivo 
 
 ## Regla Principal
 
-La regla de negocio vive en el caso de uso concreto. La infraestructura repetida vive en clases maestras.
+La regla de negocio vive en el caso de uso concreto. La infraestructura repetida vive en framework/bootstrap.
 
 ## Estructura Esperada
 
 ```text
 royal-<modulo>-application
-  src/main/java/.../<modulo>/application/<proceso>/<casouso>
-    <CasoUso>UseCase.java
+  src/main/java/.../<modulo>/application/<proceso>/<entidad>/<casouso>
     <CasoUso>V1UseCase.java
     <CasoUso>V2UseCase.java
-    <CasoUso>VersionedUseCase.java
-    Observed<CasoUso>UseCase.java
     dto
     port
 ```
@@ -23,7 +20,7 @@ royal-<modulo>-application
 Ejemplo canonico:
 
 ```text
-hr/application/maestros/parametro
+hr/application/maestros/parametro/mantenimiento
 ```
 
 ## Herencia Obligatoria
@@ -31,11 +28,15 @@ hr/application/maestros/parametro
 ```text
 Controller              -> RoyalBaseController
 UseCase con negocio     -> RoyalBaseUseCase
-UseCase delegador/V2    -> RoyalDelegatingUseCase o una clase base funcional
-UseCase versionado      -> RoyalBaseVersionedUseCase
-UseCase observado       -> RoyalObservedUseCase
 Adapter SQL             -> RoyalBaseSqlAdapter
 REST entre modulos      -> RestApiClient
+```
+
+## Infraestructura Global
+
+```text
+Observabilidad          -> RoyalUseCaseObservabilityPostProcessor
+Versionamiento          -> RoyalFunctionalVersionProxyFactory
 ```
 
 ## Prohibido En Casos De Uso Concretos
@@ -54,13 +55,12 @@ Usar:
 checkGuards(context)
 auditOk(context, entityId)
 audit(context, result, entityId, message)
-observe(context, () -> ...)
 ```
 
 ## Patron De Caso De Uso
 
 ```java
-public class MiCasoUsoV1UseCase extends RoyalBaseUseCase implements MiCasoUsoUseCase {
+public class MiCasoUsoV1UseCase extends RoyalBaseUseCase {
     public MiCasoUsoV1UseCase(MiRepository repository, UseCaseGuards guards, AuditPort auditPort) {
         super("HR", "MiEntidad", "V1", guards, auditPort);
         this.repository = repository;
@@ -76,4 +76,3 @@ public class MiCasoUsoV1UseCase extends RoyalBaseUseCase implements MiCasoUsoUse
     }
 }
 ```
-
