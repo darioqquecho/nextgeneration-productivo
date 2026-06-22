@@ -9,8 +9,8 @@ import net.royal.erp.hr.application.maestros.parametro.mantenimiento.port.Manten
  * Implementa: - MOD-012 CU-001 Mantenimiento de Tabla Parametros V2.
  */
 public class MantenimientoTablaParametrosV2UseCase extends MantenimientoTablaParametrosV1UseCase {
-	public MantenimientoTablaParametrosV2UseCase(MantenimientoTablaParametrosRepository repository, UseCaseGuards guards,
-			AuditPort auditPort) {
+	public MantenimientoTablaParametrosV2UseCase(MantenimientoTablaParametrosRepository repository,
+			UseCaseGuards guards, AuditPort auditPort) {
 		super(repository, ConsultaPermisoPort.permitirSiempre(), guards, auditPort, "V2");
 	}
 

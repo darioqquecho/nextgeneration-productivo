@@ -26,7 +26,8 @@ public final class VersionedCrudSqlStatements {
 				"exists-by-id");
 		this.findById = VersionedSqlResourceLoader.load(module, adapter, process, useCase, resource, version,
 				"find-by-id");
-		this.findAll = VersionedSqlResourceLoader.load(module, adapter, process, useCase, resource, version, "find-all");
+		this.findAll = VersionedSqlResourceLoader.load(module, adapter, process, useCase, resource, version,
+				"find-all");
 		this.insert = VersionedSqlResourceLoader.load(module, adapter, process, useCase, resource, version, "insert");
 		this.update = VersionedSqlResourceLoader.load(module, adapter, process, useCase, resource, version, "update");
 		this.deleteById = VersionedSqlResourceLoader.load(module, adapter, process, useCase, resource, version,

@@ -28,12 +28,10 @@ public class RegistrarCapacitacionControllerV1 extends RoyalBaseController {
 	}
 
 	@PostMapping
-	public ResponseEntity<RegistrarCapacitacionResult> registrar(@Valid @RequestBody RegistrarCapacitacionRequestV1 body,
-			HttpServletRequest request) {
-		return ResponseEntity.ok(useCase.execute(
-				new RegistrarCapacitacionCommand(body.codigo(), body.nombre(), body.fechaInicio(), body.fechaFin(),
-						body.instructor()),
-				context(request, "Registrar")));
+	public ResponseEntity<RegistrarCapacitacionResult> registrar(
+			@Valid @RequestBody RegistrarCapacitacionRequestV1 body, HttpServletRequest request) {
+		return ResponseEntity.ok(useCase.execute(new RegistrarCapacitacionCommand(body.codigo(), body.nombre(),
+				body.fechaInicio(), body.fechaFin(), body.instructor()), context(request, "Registrar")));
 	}
 
 	private record RegistrarCapacitacionRequestV1(

@@ -44,15 +44,14 @@ public class AprobacionMasivaParametrosV1UseCase extends RoyalBaseUseCase {
 		int omitidos = command.parametros().size() - aprobados;
 		auditOk(context, "APROBACION_MASIVA",
 				"solicitados=" + command.parametros().size() + "; aprobados=" + aprobados + "; omitidos=" + omitidos);
-		return new AprobarMasivamenteParametrosResult(command.parametros().size(), aprobados,
-				omitidos, List.copyOf(results), context.traceId());
+		return new AprobarMasivamenteParametrosResult(command.parametros().size(), aprobados, omitidos,
+				List.copyOf(results), context.traceId());
 	}
 
 	private AprobarParametroItemResult aprobarItem(AprobarParametroItem item, FunctionalContext context) {
 		ParametroId id = new ParametroId(item.compania(), item.codigo());
-		return repository.findById(id).map(parametro -> aprobarEncontrado(parametro, context))
-				.orElseGet(() -> new AprobarParametroItemResult(item.compania(), item.codigo(), null, null,
-						"NO_ENCONTRADO"));
+		return repository.findById(id).map(parametro -> aprobarEncontrado(parametro, context)).orElseGet(
+				() -> new AprobarParametroItemResult(item.compania(), item.codigo(), null, null, "NO_ENCONTRADO"));
 	}
 
 	private AprobarParametroItemResult aprobarEncontrado(Parametro parametro, FunctionalContext context) {

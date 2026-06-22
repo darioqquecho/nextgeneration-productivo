@@ -34,8 +34,8 @@ class ParametroUseCaseTest {
 		InMemoryLicenseChecker l = new InMemoryLicenseChecker();
 		l.enable("demo-client", "HR");
 		AuditPort audit = new ConsoleAuditAdapter();
-		MantenimientoTablaParametrosV1UseCase useCase = new MantenimientoTablaParametrosV1UseCase(new InMemoryParametroRepositoryAdapter(),
-				new UseCaseGuards(p, l), audit);
+		MantenimientoTablaParametrosV1UseCase useCase = new MantenimientoTablaParametrosV1UseCase(
+				new InMemoryParametroRepositoryAdapter(), new UseCaseGuards(p, l), audit);
 
 		var result = useCase.crear(new CrearParametroCommand("COMP01", "P1", "Parametro 1"),
 				new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros", "Registrar",
@@ -81,9 +81,8 @@ class ParametroUseCaseTest {
 		InMemoryParametroRepositoryAdapter repository = new InMemoryParametroRepositoryAdapter();
 		MantenimientoTablaParametrosV1UseCase useCase = new MantenimientoTablaParametrosV1UseCase(repository, guards,
 				audit);
-		FunctionalContext context = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
-				"Listar", "Mantenimiento de Parametro", null, null, null,
-				Instant.now());
+		FunctionalContext context = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros", "Listar",
+				"Mantenimiento de Parametro", null, null, null, Instant.now());
 
 		useCase.crear(new CrearParametroCommand("COMP01", "P4", "Parametro 4"), context);
 		useCase.crear(new CrearParametroCommand("COMP02", "P5", "Parametro 5"), context);
@@ -115,7 +114,6 @@ class ParametroUseCaseTest {
 		assertTrue(repository.existsById(new ParametroId("COMP01", "P9")));
 	}
 
-
 	@Test
 	void reporteParametrosPdfOk() {
 		InMemoryPermissionChecker p = new InMemoryPermissionChecker();
@@ -126,12 +124,12 @@ class ParametroUseCaseTest {
 		UseCaseGuards guards = new UseCaseGuards(p, l);
 		AuditPort audit = new ConsoleAuditAdapter();
 		InMemoryParametroRepositoryAdapter repository = new InMemoryParametroRepositoryAdapter();
-		MantenimientoTablaParametrosV1UseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository, guards,
-				audit);
+		MantenimientoTablaParametrosV1UseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository,
+				guards, audit);
 		ReporteParametrosV1UseCase reporte = new ReporteParametrosV1UseCase(repository,
 				data -> "%PDF-test".getBytes(java.nio.charset.StandardCharsets.US_ASCII), guards, audit);
-		FunctionalContext maintenanceContext = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
-				"Registrar", "Mantenimiento de Parametro", null, null, null, Instant.now());
+		FunctionalContext maintenanceContext = new FunctionalContext("default", "demo-client", "admin", "HR",
+				"Maestros", "Registrar", "Mantenimiento de Parametro", null, null, null, Instant.now());
 		FunctionalContext reportContext = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
 				"Reporte", "Reporte de Parametro", null, null, null, Instant.now());
 
@@ -154,14 +152,16 @@ class ParametroUseCaseTest {
 		InMemoryParametroRepositoryAdapter repository = new InMemoryParametroRepositoryAdapter();
 		repository.save(Parametro.cargar("COMP01", "P6", "Parametro aprobable", "A", "admin", Instant.now()));
 		repository.save(Parametro.cargar("COMP01", "P7", "Parametro omitido", "ACTIVO", "admin", Instant.now()));
-		AprobacionMasivaParametrosV1UseCase useCase = new AprobacionMasivaParametrosV1UseCase(repository, guards, audit);
+		AprobacionMasivaParametrosV1UseCase useCase = new AprobacionMasivaParametrosV1UseCase(repository, guards,
+				audit);
 		FunctionalContext context = new FunctionalContext("default", "demo-client", "admin", "HR", "Maestros",
 				"Aprobar", "Aprobacion masiva de Parametros", null, null, null, Instant.now());
 
-		var result = useCase.aprobar(new AprobarMasivamenteParametrosCommand(List.of(
-				new AprobarParametroItem("COMP01", "P6"),
-				new AprobarParametroItem("COMP01", "P7"),
-				new AprobarParametroItem("COMP01", "PX"))), context);
+		var result = useCase
+				.aprobar(
+						new AprobarMasivamenteParametrosCommand(List.of(new AprobarParametroItem("COMP01", "P6"),
+								new AprobarParametroItem("COMP01", "P7"), new AprobarParametroItem("COMP01", "PX"))),
+						context);
 
 		assertEquals(3, result.solicitados());
 		assertEquals(1, result.aprobados());

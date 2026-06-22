@@ -11,15 +11,13 @@ public final class RrhhProcessCatalog {
 	public static final Process CAPACITACION = new Process("capacitacion", "Capacitacion");
 	public static final Process REQUERIMIENTO = new Process("requerimiento", "Requerimiento");
 
-	public static final UseCase MANTENIMIENTO_PARAMETRO = useCase(MAESTROS, "parametro",
-			"Mantenimiento de Parametro");
+	public static final UseCase MANTENIMIENTO_PARAMETRO = useCase(MAESTROS, "parametro", "Mantenimiento de Parametro");
 	public static final UseCase REPORTE_PARAMETRO = useCase(MAESTROS, "reporte-parametro", "Reporte de Parametro");
 	public static final UseCase APROBACION_MASIVA_PARAMETROS = useCase(MAESTROS, "aprobacion-masiva-parametros",
 			"Aprobacion masiva de Parametros");
 	public static final UseCase MANTENIMIENTO_TIPO_SEGURO = useCase(MAESTROS, "tiposeguro",
 			"Mantenimiento de Tipo Seguro");
-	public static final UseCase REGISTRAR_CAPACITACION = useCase(CAPACITACION, "registrar",
-			"Registrar Capacitacion");
+	public static final UseCase REGISTRAR_CAPACITACION = useCase(CAPACITACION, "registrar", "Registrar Capacitacion");
 	public static final UseCase APROBAR_REQUERIMIENTO_PERSONAL = useCase(REQUERIMIENTO, "aprobar",
 			"Aprobar Requerimiento Personal");
 

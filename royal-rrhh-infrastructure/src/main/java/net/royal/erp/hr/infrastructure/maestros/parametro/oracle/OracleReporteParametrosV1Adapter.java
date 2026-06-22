@@ -16,8 +16,8 @@ public class OracleReporteParametrosV1Adapter implements ReporteParametrosReposi
 
 	public OracleReporteParametrosV1Adapter(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
-		this.findAllSql = VersionedSqlResourceLoader.load("hr", "oracle", "maestros", "reporteparametros",
-				"parametros", "v1", "find-all");
+		this.findAllSql = VersionedSqlResourceLoader.load("hr", "oracle", "maestros", "reporteparametros", "parametros",
+				"v1", "find-all");
 	}
 
 	public List<Parametro> findAll() {

@@ -59,10 +59,9 @@ public class ObtenerPermisoSimpleUseCase {
 	}
 
 	private String normalize(String value) {
-		String normalized = Normalizer.normalize(value == null ? "" : value, Normalizer.Form.NFD)
-				.replaceAll("\\p{M}", "");
-		return normalized.trim().replaceAll("[^A-Za-z0-9]+", "_").replaceAll("^_|_$", "")
-				.toUpperCase(Locale.ROOT);
+		String normalized = Normalizer.normalize(value == null ? "" : value, Normalizer.Form.NFD).replaceAll("\\p{M}",
+				"");
+		return normalized.trim().replaceAll("[^A-Za-z0-9]+", "_").replaceAll("^_|_$", "").toUpperCase(Locale.ROOT);
 	}
 
 	private String trimToNull(String value) {

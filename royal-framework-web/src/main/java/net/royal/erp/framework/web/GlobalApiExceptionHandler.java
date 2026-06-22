@@ -1,6 +1,7 @@
 package net.royal.erp.framework.web;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import net.royal.erp.framework.kernel.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,33 +26,40 @@ public class GlobalApiExceptionHandler {
 	}
 
 	@ExceptionHandler(BusinessException.class)
-	public ResponseEntity<ApiErrorResponse> business(BusinessException ex, HttpServletRequest request) {
+	public ResponseEntity<RoyalResponse<Void>> business(BusinessException ex, HttpServletRequest request) {
+		String message = messages.resolve(ex.code(), language(request), ex.args());
 		return ResponseEntity.badRequest()
-				.body(new ApiErrorResponse(ex.code(), messages.resolve(ex.code(), language(request), ex.args())));
+				.body(RoyalResponse.error(traceId(request), ex.code(), message));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ApiErrorResponse> validation(MethodArgumentNotValidException ex, HttpServletRequest request) {
+	public ResponseEntity<RoyalResponse<Void>> validation(MethodArgumentNotValidException ex, HttpServletRequest request) {
 		var fields = ex.getBindingResult().getFieldErrors().stream()
-				.map(error -> new ApiErrorResponse.ApiFieldError(error.getField(), error.getDefaultMessage())).toList();
-		return ResponseEntity.badRequest()
-				.body(new ApiErrorResponse("VALIDATION-ERROR", messages.resolve("VALIDATION-ERROR", language(request)), fields));
+				.map(error -> new RoyalApiError("VALIDATION-ERROR", error.getField(), error.getDefaultMessage())).toList();
+		return ResponseEntity.badRequest().body(RoyalResponse.error(traceId(request),
+				messages.resolve("VALIDATION-ERROR", language(request)), fields));
 	}
 
 	@ExceptionHandler(HandlerMethodValidationException.class)
-	public ResponseEntity<ApiErrorResponse> methodValidation(HandlerMethodValidationException ex,
+	public ResponseEntity<RoyalResponse<Void>> methodValidation(HandlerMethodValidationException ex,
 			HttpServletRequest request) {
-		return ResponseEntity.badRequest()
-				.body(new ApiErrorResponse("VALIDATION-ERROR", messages.resolve("VALIDATION-ERROR", language(request))));
+		String message = messages.resolve("VALIDATION-ERROR", language(request));
+		return ResponseEntity.badRequest().body(RoyalResponse.error(traceId(request), "VALIDATION-ERROR", message));
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ApiErrorResponse> generic(Exception ex, HttpServletRequest request) {
+	public ResponseEntity<RoyalResponse<Void>> generic(Exception ex, HttpServletRequest request) {
+		String message = messages.resolve(INTERNAL_ERROR, language(request));
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(new ApiErrorResponse(INTERNAL_ERROR, messages.resolve(INTERNAL_ERROR, language(request))));
+				.body(RoyalResponse.error(traceId(request), INTERNAL_ERROR, message));
 	}
 
 	private String language(HttpServletRequest request) {
 		return RequestLanguage.fromHeaders(request.getHeader("X-Language"), request.getHeader("Accept-Language"));
+	}
+
+	private String traceId(HttpServletRequest request) {
+		String traceId = request.getHeader("X-Trace-Id");
+		return traceId == null || traceId.isBlank() ? null : traceId;
 	}
 }

@@ -2,10 +2,8 @@ package net.royal.erp.hr.api.maestros.tiposeguro.v1;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.framework.web.RoyalBaseController;
-import net.royal.erp.hr.api.maestros.tiposeguro.v1.dto.*;
 import net.royal.erp.hr.application.maestros.tiposeguro.dto.*;
 import net.royal.erp.hr.application.maestros.tiposeguro.usecase.MantenimientoTipoSeguroV1UseCase;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
@@ -27,44 +25,38 @@ public class MantenimientoTipoSeguroControllerV1 extends RoyalBaseController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CrearTipoSeguroResponseV1> crear(@Valid @RequestBody CrearTipoSeguroRequestV1 request,
+	public ResponseEntity<CrearTipoSeguroResult> crear(@Valid @RequestBody CrearTipoSeguroCommand command,
 			HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(TipoSeguroApiV1Mapper.toResponse(
-				mantenimiento.crear(TipoSeguroApiV1Mapper.toCommand(request), context(httpRequest, "Registrar"))));
+		return ResponseEntity.ok(mantenimiento.crear(command, context(httpRequest, "Registrar")));
 	}
 
-	@PutMapping("/{tipoSeguro}")
-	public ResponseEntity<ActualizarTipoSeguroResponseV1> actualizar(@PathVariable @Min(1) Integer tipoSeguro,
-			@Valid @RequestBody ActualizarTipoSeguroRequestV1 request, HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(TipoSeguroApiV1Mapper.toResponse(mantenimiento.actualizar(
-				TipoSeguroApiV1Mapper.toCommand(tipoSeguro, request), context(httpRequest, "Actualizar"))));
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ActualizarTipoSeguroResult> actualizar(@Valid @RequestBody ActualizarTipoSeguroCommand command,
+			HttpServletRequest httpRequest) {
+		return ResponseEntity.ok(mantenimiento.actualizar(command, context(httpRequest, "Actualizar")));
 	}
 
-	@GetMapping("/{tipoSeguro}")
-	public ResponseEntity<TipoSeguroResponseV1> obtener(@PathVariable @Min(1) Integer tipoSeguro,
+	@PostMapping(value = "/obtener", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TipoSeguroResult> obtener(@Valid @RequestBody ObtenerTipoSeguroQuery query,
 			HttpServletRequest request) {
-		return ResponseEntity.ok(TipoSeguroApiV1Mapper.toResponse(
-				mantenimiento.obtener(new ObtenerTipoSeguroQuery(tipoSeguro), context(request, "Obtener"))));
+		return ResponseEntity.ok(mantenimiento.obtener(query, context(request, "Obtener")));
 	}
 
 	@PostMapping(value = "/listar", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ListarTiposSeguroResponseV1> listar(
-			@Valid @RequestBody(required = false) ListarTiposSeguroRequestV1 request, HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(TipoSeguroApiV1Mapper
-				.toResponse(mantenimiento.listar(TipoSeguroApiV1Mapper.toQuery(request), context(httpRequest, "Listar"))));
+	public ResponseEntity<ListarTiposSeguroResult> listar(
+			@Valid @RequestBody(required = false) ListarTiposSeguroQuery query, HttpServletRequest httpRequest) {
+		return ResponseEntity.ok(mantenimiento.listar(query, context(httpRequest, "Listar")));
 	}
 
-	@PatchMapping("/{tipoSeguro}/estado")
-	public ResponseEntity<TipoSeguroResponseV1> cambiarEstado(@PathVariable @Min(1) Integer tipoSeguro,
-			@Valid @RequestBody CambiarEstadoTipoSeguroRequestV1 request, HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(TipoSeguroApiV1Mapper.toResponse(mantenimiento.cambiarEstado(
-				TipoSeguroApiV1Mapper.toCommand(tipoSeguro, request), context(httpRequest, "Cambiar de Estado"))));
+	@PatchMapping(value = "/estado", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TipoSeguroResult> cambiarEstado(@Valid @RequestBody CambiarEstadoTipoSeguroCommand command,
+			HttpServletRequest httpRequest) {
+		return ResponseEntity.ok(mantenimiento.cambiarEstado(command, context(httpRequest, "Cambiar de Estado")));
 	}
 
-	@DeleteMapping("/{tipoSeguro}")
-	public ResponseEntity<EliminarTipoSeguroResponseV1> eliminar(@PathVariable @Min(1) Integer tipoSeguro,
+	@PostMapping(value = "/eliminar", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EliminarTipoSeguroResult> eliminar(@Valid @RequestBody EliminarTipoSeguroCommand command,
 			HttpServletRequest request) {
-		return ResponseEntity.ok(TipoSeguroApiV1Mapper.toResponse(
-				mantenimiento.eliminar(new EliminarTipoSeguroCommand(tipoSeguro), context(request, "Eliminar"))));
+		return ResponseEntity.ok(mantenimiento.eliminar(command, context(request, "Eliminar")));
 	}
 }

@@ -27,8 +27,8 @@ public class FunctionalContextFactory {
 	public FunctionalContext from(HttpServletRequest request, String module, String process, String functionality,
 			String useCase) {
 		return new FunctionalContext(header(request, "X-Tenant-Id", defaultTenantId),
-				header(request, "X-Client-Id", defaultClientId), header(request, "X-User-Id", defaultUserId), module, process,
-				functionality, useCase, header(request, "X-Functional-Version", null),
+				header(request, "X-Client-Id", defaultClientId), header(request, "X-User-Id", defaultUserId), module,
+				process, functionality, useCase, header(request, "X-Functional-Version", null),
 				header(request, "X-Trace-Id", null), header(request, "X-Request-Id", null), Instant.now(),
 				RequestLanguage.fromHeaders(header(request, "X-Language", null),
 						header(request, "Accept-Language", null)));

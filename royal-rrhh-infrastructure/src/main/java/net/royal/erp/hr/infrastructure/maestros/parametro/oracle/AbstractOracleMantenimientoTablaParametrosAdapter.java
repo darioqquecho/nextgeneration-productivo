@@ -13,8 +13,8 @@ abstract class AbstractOracleMantenimientoTablaParametrosAdapter implements Mant
 
 	AbstractOracleMantenimientoTablaParametrosAdapter(JdbcTemplate jdbc, String version) {
 		this.jdbc = jdbc;
-		this.sql = new VersionedCrudSqlStatements("hr", "oracle", "maestros", "mantenimientoparametros",
-				"parametros", version);
+		this.sql = new VersionedCrudSqlStatements("hr", "oracle", "maestros", "mantenimientoparametros", "parametros",
+				version);
 	}
 
 	public boolean existsById(ParametroId id) {
@@ -23,8 +23,9 @@ abstract class AbstractOracleMantenimientoTablaParametrosAdapter implements Mant
 	}
 
 	public Optional<Parametro> findById(ParametroId id) {
-		return jdbc.query(sql.findById(), (rs, rowNum) -> OracleParametroJdbcSupport.map(rs), id.compania(),
-				id.codigo()).stream().findFirst();
+		return jdbc
+				.query(sql.findById(), (rs, rowNum) -> OracleParametroJdbcSupport.map(rs), id.compania(), id.codigo())
+				.stream().findFirst();
 	}
 
 	public List<Parametro> findAll() {

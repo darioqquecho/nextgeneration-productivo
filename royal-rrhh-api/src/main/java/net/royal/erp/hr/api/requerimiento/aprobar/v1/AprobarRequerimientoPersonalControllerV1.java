@@ -32,14 +32,13 @@ public class AprobarRequerimientoPersonalControllerV1 extends RoyalBaseControlle
 	public ResponseEntity<AprobarRequerimientoPersonalResult> aprobar(
 			@PathVariable @NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z0-9_.-]+$") String codigo,
 			@Valid @RequestBody AprobarRequerimientoPersonalRequestV1 body, HttpServletRequest request) {
-		return ResponseEntity.ok(useCase.execute(
-				new AprobarRequerimientoPersonalCommand(codigo, body.accion(), body.comentario(),
-						body.usuarioAprobador()),
-				context(request, "Aprobar")));
+		return ResponseEntity.ok(useCase.execute(new AprobarRequerimientoPersonalCommand(codigo, body.accion(),
+				body.comentario(), body.usuarioAprobador()), context(request, "Aprobar")));
 	}
 
 	private record AprobarRequerimientoPersonalRequestV1(
-			@NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z_]+$") String accion, @Size(max = 500) String comentario,
+			@NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z_]+$") String accion,
+			@Size(max = 500) String comentario,
 			@NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z0-9_.-]+$") String usuarioAprobador) {
 	}
 }

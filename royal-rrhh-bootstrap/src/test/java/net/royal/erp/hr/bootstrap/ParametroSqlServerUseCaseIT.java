@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ParametroSqlServerUseCaseIT {
 	@Test
 	void crearParametroContraSqlServerDejandoRegistro() {
-		SqlServerMantenimientoTablaParametrosV1Adapter repository =
-				new SqlServerMantenimientoTablaParametrosV1Adapter(jdbcTemplate());
-		MantenimientoTablaParametrosV1UseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository, guards(),
-				auditPort());
+		SqlServerMantenimientoTablaParametrosV1Adapter repository = new SqlServerMantenimientoTablaParametrosV1Adapter(
+				jdbcTemplate());
+		MantenimientoTablaParametrosV1UseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository,
+				guards(), auditPort());
 		String compania = System.getProperty("it.sqlserver.compania", "COMP01");
 		String codigo = System.getProperty("it.sqlserver.codigo", "ITVISIBLE");
 		String nombre = System.getProperty("it.sqlserver.nombre", "Parametro visible desde IT");
@@ -43,8 +43,8 @@ class ParametroSqlServerUseCaseIT {
 
 	@Test
 	void crudParametroContraSqlServer() {
-		SqlServerMantenimientoTablaParametrosV1Adapter repository =
-				new SqlServerMantenimientoTablaParametrosV1Adapter(jdbcTemplate());
+		SqlServerMantenimientoTablaParametrosV1Adapter repository = new SqlServerMantenimientoTablaParametrosV1Adapter(
+				jdbcTemplate());
 		UseCaseGuards guards = guards();
 		AuditPort audit = auditPort();
 		String compania = System.getProperty("it.sqlserver.compania", "COMP01");
@@ -52,8 +52,8 @@ class ParametroSqlServerUseCaseIT {
 
 		repository.deleteById(new ParametroId(compania, codigo));
 		try {
-			MantenimientoTablaParametrosV1UseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository, guards,
-					audit);
+			MantenimientoTablaParametrosV1UseCase mantenimiento = new MantenimientoTablaParametrosV1UseCase(repository,
+					guards, audit);
 
 			var creado = mantenimiento.crear(new CrearParametroCommand(compania, codigo, "Parametro IT SQL"),
 					context("Registrar"));
@@ -63,8 +63,8 @@ class ParametroSqlServerUseCaseIT {
 			assertEquals("Parametro IT SQL", obtenido.nombre());
 			assertEquals("admin", obtenido.ultimoUsuario());
 
-			var actualizado = mantenimiento.actualizar(new ActualizarParametroCommand(compania, codigo, "Parametro IT SQL 2"),
-					context("Actualizar"));
+			var actualizado = mantenimiento.actualizar(
+					new ActualizarParametroCommand(compania, codigo, "Parametro IT SQL 2"), context("Actualizar"));
 			assertEquals("ACTUALIZADO", actualizado.estado());
 
 			var inactivo = mantenimiento.cambiarEstado(new CambiarEstadoParametroCommand(compania, codigo, "INACTIVO"),

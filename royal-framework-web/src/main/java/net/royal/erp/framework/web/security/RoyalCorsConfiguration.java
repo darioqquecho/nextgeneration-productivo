@@ -15,7 +15,8 @@ public class RoyalCorsConfiguration implements WebMvcConfigurer {
 
 	public RoyalCorsConfiguration(@Value("${royal.security.cors.allowed-origins:}") String allowedOrigins) {
 		this.allowedOrigins = allowedOrigins == null || allowedOrigins.isBlank() ? List.of()
-				: java.util.Arrays.stream(allowedOrigins.split(",")).map(String::trim).filter(v -> !v.isBlank()).toList();
+				: java.util.Arrays.stream(allowedOrigins.split(",")).map(String::trim).filter(v -> !v.isBlank())
+						.toList();
 	}
 
 	public void addCorsMappings(CorsRegistry registry) {

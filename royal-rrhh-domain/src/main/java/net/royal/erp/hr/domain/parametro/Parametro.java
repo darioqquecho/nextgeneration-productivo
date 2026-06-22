@@ -69,12 +69,13 @@ public class Parametro {
 		actualizarDatos(nombre, precio, cantidad, fechaProceso, usuario, fechaModif);
 	}
 
-	public void actualizarDatos(String nombre, BigDecimal precio, Integer cantidad, String usuario, Instant fechaModif) {
+	public void actualizarDatos(String nombre, BigDecimal precio, Integer cantidad, String usuario,
+			Instant fechaModif) {
 		actualizarDatos(nombre, precio, cantidad, fechaProceso, usuario, fechaModif);
 	}
 
-	public void actualizarDatos(String nombre, BigDecimal precio, Integer cantidad, Instant fechaProceso, String usuario,
-			Instant fechaModif) {
+	public void actualizarDatos(String nombre, BigDecimal precio, Integer cantidad, Instant fechaProceso,
+			String usuario, Instant fechaModif) {
 		validarNombre(nombre);
 		this.nombre = nombre;
 		this.precio = precio;

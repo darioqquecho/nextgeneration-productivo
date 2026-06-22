@@ -38,12 +38,14 @@ public class FunctionalVersionXmlCatalogLoader {
 			var mappings = document.getDocumentElement().getElementsByTagName("mapping");
 			for (int i = 0; i < mappings.getLength(); i++) {
 				Element mapping = (Element) mappings.item(i);
-				resolver.register(required(mapping, "clientId"), required(mapping, "module"), required(mapping, "useCase"),
+				resolver.register(required(mapping, "clientId"), required(mapping, "module"),
+						required(mapping, "useCase"),
 						FunctionalVersion.valueOf(required(mapping, "version").toUpperCase()));
 			}
 			return resolver;
 		} catch (Exception e) {
-			throw new IllegalStateException("No se pudo cargar catalogo de versiones funcionales: " + catalogLocation, e);
+			throw new IllegalStateException("No se pudo cargar catalogo de versiones funcionales: " + catalogLocation,
+					e);
 		}
 	}
 

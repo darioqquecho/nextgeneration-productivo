@@ -9,7 +9,8 @@ import java.util.*;
  * Carga sentencias SQL versionadas desde recursos del classpath.
  *
  * Convencion: sql/{module}/{process}/{useCase}/{resource}.{version}.sql
- * Convencion por adapter: {adapter}/{module}/{process}/{useCase}/{resource}.{version}.sql
+ * Convencion por adapter:
+ * {adapter}/{module}/{process}/{useCase}/{resource}.{version}.sql
  */
 public final class VersionedSqlResourceLoader {
 	private static final String ROOT = "sql/";
@@ -43,8 +44,8 @@ public final class VersionedSqlResourceLoader {
 	}
 
 	private static String path(String module, String process, String useCase, String resource, String version) {
-		return ROOT + segment(module) + "/" + segment(process) + "/" + segment(useCase) + "/" + segment(resource)
-				+ "." + segment(version) + ".sql";
+		return ROOT + segment(module) + "/" + segment(process) + "/" + segment(useCase) + "/" + segment(resource) + "."
+				+ segment(version) + ".sql";
 	}
 
 	private static String path(String module, String adapter, String process, String useCase, String resource,

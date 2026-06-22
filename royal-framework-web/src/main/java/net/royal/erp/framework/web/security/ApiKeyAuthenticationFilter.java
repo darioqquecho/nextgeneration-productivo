@@ -36,7 +36,8 @@ public class ApiKeyAuthenticationFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		if (!enabled || "OPTIONS".equalsIgnoreCase(httpRequest.getMethod()) || publicPath(httpRequest.getRequestURI())) {
+		if (!enabled || "OPTIONS".equalsIgnoreCase(httpRequest.getMethod())
+				|| publicPath(httpRequest.getRequestURI())) {
 			chain.doFilter(request, response);
 			return;
 		}

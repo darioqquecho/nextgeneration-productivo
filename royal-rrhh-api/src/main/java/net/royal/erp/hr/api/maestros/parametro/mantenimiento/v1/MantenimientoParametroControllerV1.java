@@ -2,10 +2,8 @@ package net.royal.erp.hr.api.maestros.parametro.mantenimiento.v1;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import net.royal.erp.framework.web.RoyalBaseController;
 import net.royal.erp.framework.web.FunctionalContextFactory;
-import net.royal.erp.hr.api.maestros.parametro.mantenimiento.v1.dto.*;
+import net.royal.erp.framework.web.RoyalBaseController;
 import net.royal.erp.hr.application.maestros.parametro.mantenimiento.dto.*;
 import net.royal.erp.hr.application.maestros.parametro.mantenimiento.usecase.MantenimientoTablaParametrosV1UseCase;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
@@ -30,54 +28,38 @@ public class MantenimientoParametroControllerV1 extends RoyalBaseController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CrearParametroResponseV1> crear(@Valid @RequestBody CrearParametroRequestV1 request,
+	public ResponseEntity<CrearParametroResult> crear(@Valid @RequestBody CrearParametroCommand command,
 			HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(ParametroMantenimientoApiV1Mapper.toResponse(
-				mantenimiento.crear(ParametroMantenimientoApiV1Mapper.toCommand(request), context(httpRequest, "Registrar"))));
+		return ResponseEntity.ok(mantenimiento.crear(command, context(httpRequest, "Registrar")));
 	}
 
-	@PutMapping("/{compania}/{codigo}")
-	public ResponseEntity<ActualizarParametroResponseV1> actualizar(
-			@PathVariable @NotBlank @Size(max = 10) @Pattern(regexp = "^[A-Za-z0-9_-]+$") String compania,
-			@PathVariable @NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z0-9_.-]+$") String codigo,
-			@Valid @RequestBody ActualizarParametroRequestV1 request,
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ActualizarParametroResult> actualizar(@Valid @RequestBody ActualizarParametroCommand command,
 			HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(ParametroMantenimientoApiV1Mapper.toResponse(mantenimiento.actualizar(
-				ParametroMantenimientoApiV1Mapper.toCommand(compania, codigo, request), context(httpRequest, "Actualizar"))));
+		return ResponseEntity.ok(mantenimiento.actualizar(command, context(httpRequest, "Actualizar")));
 	}
 
-	@GetMapping("/{compania}/{codigo}")
-	public ResponseEntity<ParametroResponseV1> obtener(
-			@PathVariable @NotBlank @Size(max = 10) @Pattern(regexp = "^[A-Za-z0-9_-]+$") String compania,
-			@PathVariable @NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z0-9_.-]+$") String codigo,
+	@PostMapping(value = "/obtener", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ParametroResult> obtener(@Valid @RequestBody ObtenerParametroQuery query,
 			HttpServletRequest request) {
-		return ResponseEntity.ok(ParametroMantenimientoApiV1Mapper
-				.toResponse(mantenimiento.obtener(new ObtenerParametroQuery(compania, codigo), context(request, "Obtener"))));
+		return ResponseEntity.ok(mantenimiento.obtener(query, context(request, "Obtener")));
 	}
 
 	@PostMapping(value = "/listar", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ListarParametrosResponseV1> listar(
-			@Valid @RequestBody(required = false) ListarParametrosRequestV1 request, HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(ParametroMantenimientoApiV1Mapper.toResponse(
-				mantenimiento.listar(ParametroMantenimientoApiV1Mapper.toQuery(request), context(httpRequest, "Listar"))));
+	public ResponseEntity<ListarParametrosResult> listar(
+			@Valid @RequestBody(required = false) ListarParametrosQuery query, HttpServletRequest httpRequest) {
+		return ResponseEntity.ok(mantenimiento.listar(query, context(httpRequest, "Listar")));
 	}
 
-	@PatchMapping("/{compania}/{codigo}/estado")
-	public ResponseEntity<ParametroResponseV1> cambiarEstado(
-			@PathVariable @NotBlank @Size(max = 10) @Pattern(regexp = "^[A-Za-z0-9_-]+$") String compania,
-			@PathVariable @NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z0-9_.-]+$") String codigo,
-			@Valid @RequestBody CambiarEstadoParametroRequestV1 request, HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(ParametroMantenimientoApiV1Mapper.toResponse(mantenimiento.cambiarEstado(
-				ParametroMantenimientoApiV1Mapper.toCommand(compania, codigo, request), context(httpRequest, "Cambiar de Estado"))));
+	@PatchMapping(value = "/estado", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ParametroResult> cambiarEstado(@Valid @RequestBody CambiarEstadoParametroCommand command,
+			HttpServletRequest httpRequest) {
+		return ResponseEntity.ok(mantenimiento.cambiarEstado(command, context(httpRequest, "Cambiar de Estado")));
 	}
 
-	@DeleteMapping("/{compania}/{codigo}")
-	public ResponseEntity<EliminarParametroResponseV1> eliminar(
-			@PathVariable @NotBlank @Size(max = 10) @Pattern(regexp = "^[A-Za-z0-9_-]+$") String compania,
-			@PathVariable @NotBlank @Size(max = 20) @Pattern(regexp = "^[A-Za-z0-9_.-]+$") String codigo,
+	@PostMapping(value = "/eliminar", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EliminarParametroResult> eliminar(@Valid @RequestBody EliminarParametroCommand command,
 			HttpServletRequest request) {
-		return ResponseEntity.ok(ParametroMantenimientoApiV1Mapper
-				.toResponse(mantenimiento.eliminar(new EliminarParametroCommand(compania, codigo), context(request, "Eliminar"))));
+		return ResponseEntity.ok(mantenimiento.eliminar(command, context(request, "Eliminar")));
 	}
-
 }

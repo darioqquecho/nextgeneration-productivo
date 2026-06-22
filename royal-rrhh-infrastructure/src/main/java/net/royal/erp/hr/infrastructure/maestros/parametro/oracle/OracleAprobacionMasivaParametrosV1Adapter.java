@@ -28,8 +28,8 @@ public class OracleAprobacionMasivaParametrosV1Adapter implements AprobacionMasi
 	}
 
 	public Optional<Parametro> findById(ParametroId id) {
-		return jdbc.query(findByIdSql, (rs, rowNum) -> OracleParametroJdbcSupport.map(rs), id.compania(),
-				id.codigo()).stream().findFirst();
+		return jdbc.query(findByIdSql, (rs, rowNum) -> OracleParametroJdbcSupport.map(rs), id.compania(), id.codigo())
+				.stream().findFirst();
 	}
 
 	public boolean approveIfPending(ParametroId id, String usuario, Instant fechaModif) {

@@ -103,9 +103,9 @@ public class RrhhConfiguration {
 			throw new IllegalStateException("spring.datasource.url requerido para adapter " + persistenceAdapter);
 		}
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName(datasourceDriverClassName == null || datasourceDriverClassName.isBlank()
-				? defaultDriverClassName
-				: datasourceDriverClassName);
+		dataSource.setDriverClassName(
+				datasourceDriverClassName == null || datasourceDriverClassName.isBlank() ? defaultDriverClassName
+						: datasourceDriverClassName);
 		dataSource.setUrl(datasourceUrl);
 		dataSource.setUsername(datasourceUsername);
 		dataSource.setPassword(datasourcePassword);
@@ -134,7 +134,8 @@ public class RrhhConfiguration {
 	CapacitacionRepository capacitacionRepository(PersistenceAdapterType adapterType) {
 		return switch (adapterType) {
 		case IN_MEMORY -> new InMemoryCapacitacionRepositoryAdapter();
-		default -> throw new IllegalStateException("CapacitacionRepository no implementado para adapter " + adapterType);
+		default ->
+			throw new IllegalStateException("CapacitacionRepository no implementado para adapter " + adapterType);
 		};
 	}
 
@@ -142,8 +143,8 @@ public class RrhhConfiguration {
 	AuditPort auditPort(PersistenceAdapterType adapterType, ObjectProvider<JdbcTemplate> jdbc) {
 		AuditPort console = new ConsoleAuditAdapter();
 		return switch (adapterType) {
-		case SQL_SERVER -> new CompositeAuditAdapter(console,
-				new JdbcFunctionalAuditAdapter(requiredJdbcTemplate(jdbc, adapterType)));
+		case SQL_SERVER ->
+			new CompositeAuditAdapter(console, new JdbcFunctionalAuditAdapter(requiredJdbcTemplate(jdbc, adapterType)));
 		default -> console;
 		};
 	}
@@ -202,27 +203,28 @@ public class RrhhConfiguration {
 		MantenimientoTablaParametrosV2UseCase v2 = new MantenimientoTablaParametrosV2UseCase(
 				mantenimientoRepository(adapterType, jdbc, inMemory, "v2"), consultaPermiso, g, a);
 		return RoyalFunctionalVersionProxyFactory.builder(MantenimientoTablaParametrosV1UseCase.class, v)
-				.register(FunctionalVersion.V1, v1)
-				.register(FunctionalVersion.V2, v2)
-				.build();
+				.register(FunctionalVersion.V1, v1).register(FunctionalVersion.V2, v2).build();
 	}
 
 	@Bean
 	ReporteParametrosV1UseCase reporteParametrosUseCase(PersistenceAdapterType adapterType,
-			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a) {
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g,
+			AuditPort a) {
 		return new ReporteParametrosV1UseCase(reporteRepository(adapterType, jdbc, inMemory),
 				new JasperReporteParametrosDocumentGenerator(), g, a);
 	}
 
 	@Bean
 	AprobacionMasivaParametrosV1UseCase aprobacionMasivaParametrosUseCase(PersistenceAdapterType adapterType,
-			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a) {
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryParametroRepositoryAdapter inMemory, UseCaseGuards g,
+			AuditPort a) {
 		return new AprobacionMasivaParametrosV1UseCase(aprobacionMasivaRepository(adapterType, jdbc, inMemory), g, a);
 	}
 
 	@Bean
 	MantenimientoTipoSeguroV1UseCase mantenimientoTipoSeguroUseCase(PersistenceAdapterType adapterType,
-			ObjectProvider<JdbcTemplate> jdbc, InMemoryTipoSeguroRepositoryAdapter inMemory, UseCaseGuards g, AuditPort a) {
+			ObjectProvider<JdbcTemplate> jdbc, InMemoryTipoSeguroRepositoryAdapter inMemory, UseCaseGuards g,
+			AuditPort a) {
 		return new MantenimientoTipoSeguroV1UseCase(tipoSeguroRepository(adapterType, jdbc, inMemory), g, a);
 	}
 
@@ -256,7 +258,8 @@ public class RrhhConfiguration {
 		case IN_MEMORY -> inMemory;
 		case SQL_SERVER -> new SqlServerAprobacionMasivaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
 		case ORACLE -> new OracleAprobacionMasivaParametrosV1Adapter(requiredJdbcTemplate(jdbc, adapterType));
-		default -> throw new IllegalStateException("Aprobacion masiva de Parametros no implementado para " + adapterType);
+		default ->
+			throw new IllegalStateException("Aprobacion masiva de Parametros no implementado para " + adapterType);
 		};
 	}
 
@@ -276,9 +279,7 @@ public class RrhhConfiguration {
 		RegistrarCapacitacionV1UseCase v1 = new RegistrarCapacitacionV1UseCase(r, g, a);
 		RegistrarCapacitacionV2UseCase v2 = new RegistrarCapacitacionV2UseCase(r, g, a);
 		return RoyalFunctionalVersionProxyFactory.builder(RegistrarCapacitacionV1UseCase.class, v)
-				.register(FunctionalVersion.V1, v1)
-				.register(FunctionalVersion.V2, v2)
-				.build();
+				.register(FunctionalVersion.V1, v1).register(FunctionalVersion.V2, v2).build();
 	}
 
 	@Bean
@@ -292,8 +293,6 @@ public class RrhhConfiguration {
 		AprobarRequerimientoPersonalV1UseCase v1 = new AprobarRequerimientoPersonalV1UseCase(g, a);
 		AprobarRequerimientoPersonalV2UseCase v2 = new AprobarRequerimientoPersonalV2UseCase(g, a, p);
 		return RoyalFunctionalVersionProxyFactory.builder(AprobarRequerimientoPersonalV1UseCase.class, v)
-				.register(FunctionalVersion.V1, v1)
-				.register(FunctionalVersion.V2, v2)
-				.build();
+				.register(FunctionalVersion.V1, v1).register(FunctionalVersion.V2, v2).build();
 	}
 }

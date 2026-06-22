@@ -28,7 +28,8 @@ class MultiClientConfigurationTest {
 
 		checker.checkModuleEnabled(context("acme", "admin"), "HR");
 
-		assertThrows(BusinessException.class, () -> checker.checkModuleEnabled(context("cliente-no-configurado", "admin"), "HR"));
+		assertThrows(BusinessException.class,
+				() -> checker.checkModuleEnabled(context("cliente-no-configurado", "admin"), "HR"));
 	}
 
 	@Test

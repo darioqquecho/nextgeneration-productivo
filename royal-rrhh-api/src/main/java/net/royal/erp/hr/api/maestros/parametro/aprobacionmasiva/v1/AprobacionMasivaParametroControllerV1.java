@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.framework.web.RoyalBaseController;
-import net.royal.erp.hr.api.maestros.parametro.aprobacionmasiva.v1.dto.*;
+import net.royal.erp.hr.application.maestros.parametro.aprobacionmasiva.dto.*;
 import net.royal.erp.hr.application.maestros.parametro.aprobacionmasiva.usecase.AprobacionMasivaParametrosV1UseCase;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
 import org.springframework.http.*;
@@ -20,16 +20,14 @@ public class AprobacionMasivaParametroControllerV1 extends RoyalBaseController {
 
 	public AprobacionMasivaParametroControllerV1(AprobacionMasivaParametrosV1UseCase aprobacionMasiva,
 			FunctionalContextFactory contextFactory) {
-		super(contextFactory, RrhhProcessCatalog.MODULE,
-				RrhhProcessCatalog.APROBACION_MASIVA_PARAMETROS.processName(),
+		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.APROBACION_MASIVA_PARAMETROS.processName(),
 				RrhhProcessCatalog.APROBACION_MASIVA_PARAMETROS.displayName());
 		this.aprobacionMasiva = aprobacionMasiva;
 	}
 
 	@PostMapping(value = "/aprobacion-masiva", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AprobacionMasivaParametrosResponseV1> aprobacionMasiva(
-			@Valid @RequestBody AprobacionMasivaParametrosRequestV1 request, HttpServletRequest httpRequest) {
-		return ResponseEntity.ok(AprobacionMasivaParametroApiV1Mapper.toResponse(aprobacionMasiva.aprobar(
-				AprobacionMasivaParametroApiV1Mapper.toCommand(request), context(httpRequest, "Aprobar"))));
+	public ResponseEntity<AprobarMasivamenteParametrosResult> aprobacionMasiva(
+			@Valid @RequestBody AprobarMasivamenteParametrosCommand command, HttpServletRequest httpRequest) {
+		return ResponseEntity.ok(aprobacionMasiva.aprobar(command, context(httpRequest, "Aprobar")));
 	}
 }

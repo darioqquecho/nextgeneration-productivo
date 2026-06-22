@@ -63,8 +63,8 @@ public class RestApiClient {
 	}
 
 	private HttpRequest.Builder baseRequest(String path, FunctionalContext context) {
-		HttpRequest.Builder builder = HttpRequest.newBuilder(resolve(path)).timeout(requestTimeout)
-				.header("Accept", "application/json");
+		HttpRequest.Builder builder = HttpRequest.newBuilder(resolve(path)).timeout(requestTimeout).header("Accept",
+				"application/json");
 		header(builder, "X-Api-Key", apiKey);
 		if (context != null) {
 			header(builder, "X-Tenant-Id", context.tenantId());

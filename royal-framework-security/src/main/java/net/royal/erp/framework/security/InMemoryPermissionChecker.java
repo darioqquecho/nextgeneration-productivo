@@ -42,8 +42,8 @@ public class InMemoryPermissionChecker implements PermissionChecker {
 	 * Implementa: - ARCH-006 Seguridad.
 	 */
 	public void check(FunctionalContext context, String permission) {
-		Set<String> clientPermissions = permissionsByClientAndUser.getOrDefault(key(context.clientId(), context.userId()),
-				Set.of());
+		Set<String> clientPermissions = permissionsByClientAndUser
+				.getOrDefault(key(context.clientId(), context.userId()), Set.of());
 		Set<String> globalPermissions = permissionsByUser.getOrDefault(context.userId(), Set.of());
 		if (!clientPermissions.contains(permission) && !globalPermissions.contains(permission)) {
 			throw new BusinessException("SECURITY-DENIED", permission);

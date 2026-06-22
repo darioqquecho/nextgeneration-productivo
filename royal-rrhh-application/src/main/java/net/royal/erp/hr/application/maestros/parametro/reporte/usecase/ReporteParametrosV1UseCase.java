@@ -35,8 +35,8 @@ public class ReporteParametrosV1UseCase extends RoyalBaseUseCase {
 	public ReporteParametrosResult ejecutar(ReporteParametrosQuery query, FunctionalContext context) {
 		checkGuards(context);
 		ReporteParametrosQuery filters = query == null ? new ReporteParametrosQuery(null, null, null) : query;
-		ReporteParametrosDocumentData data = new ReporteParametrosDocumentData("Reporte de Parametros", context.userId(),
-				context.traceId(), filtros(filters), rows(filters));
+		ReporteParametrosDocumentData data = new ReporteParametrosDocumentData("Reporte de Parametros",
+				context.userId(), context.traceId(), filtros(filters), rows(filters));
 		byte[] pdf = documentGenerator.generate(data);
 		auditOk(context, "REPORTE");
 		return new ReporteParametrosResult(pdf, "reporte-parametros.pdf", context.traceId());
@@ -45,16 +45,15 @@ public class ReporteParametrosV1UseCase extends RoyalBaseUseCase {
 	private List<ReporteParametrosDocumentRow> rows(ReporteParametrosQuery query) {
 		return repository.findAll().stream().filter(p -> matches(p.id().compania(), query.compania()))
 				.filter(p -> matches(p.id().codigo(), query.codigo()))
-				.filter(p -> matches(p.estado() == null ? null : p.estado().name(), query.estado()))
-				.map(this::toRow).toList();
+				.filter(p -> matches(p.estado() == null ? null : p.estado().name(), query.estado())).map(this::toRow)
+				.toList();
 	}
 
 	private ReporteParametrosDocumentRow toRow(Parametro parametro) {
 		return new ReporteParametrosDocumentRow(parametro.id().compania(), parametro.id().codigo(), parametro.nombre(),
 				parametro.precio(), parametro.cantidad(),
 				parametro.fechaProceso() == null ? "" : FORMATTER.format(parametro.fechaProceso()),
-				parametro.estado() == null ? "" : parametro.estado().name(),
-				parametro.ultimoUsuario(),
+				parametro.estado() == null ? "" : parametro.estado().name(), parametro.ultimoUsuario(),
 				parametro.ultimaFechaModif() == null ? "" : FORMATTER.format(parametro.ultimaFechaModif()));
 	}
 

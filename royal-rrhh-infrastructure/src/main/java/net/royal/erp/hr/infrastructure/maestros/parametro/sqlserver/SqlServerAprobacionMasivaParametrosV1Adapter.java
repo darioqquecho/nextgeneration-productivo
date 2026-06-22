@@ -28,8 +28,9 @@ public class SqlServerAprobacionMasivaParametrosV1Adapter implements AprobacionM
 	}
 
 	public Optional<Parametro> findById(ParametroId id) {
-		return jdbc.query(findByIdSql, (rs, rowNum) -> SqlServerParametroJdbcSupport.map(rs), id.compania(),
-				id.codigo()).stream().findFirst();
+		return jdbc
+				.query(findByIdSql, (rs, rowNum) -> SqlServerParametroJdbcSupport.map(rs), id.compania(), id.codigo())
+				.stream().findFirst();
 	}
 
 	public boolean approveIfPending(ParametroId id, String usuario, Instant fechaModif) {

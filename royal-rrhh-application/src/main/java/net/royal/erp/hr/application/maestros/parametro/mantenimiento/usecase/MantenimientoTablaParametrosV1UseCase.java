@@ -22,8 +22,8 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	private final MantenimientoTablaParametrosRepository repository;
 	private final ConsultaPermisoPort consultaPermiso;
 
-	public MantenimientoTablaParametrosV1UseCase(MantenimientoTablaParametrosRepository repository, UseCaseGuards guards,
-			AuditPort auditPort) {
+	public MantenimientoTablaParametrosV1UseCase(MantenimientoTablaParametrosRepository repository,
+			UseCaseGuards guards, AuditPort auditPort) {
 		this(repository, ConsultaPermisoPort.permitirSiempre(), guards, auditPort);
 	}
 
@@ -42,11 +42,12 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	public ListarParametrosResult listar(ListarParametrosQuery query, FunctionalContext context) {
 		checkGuards(context);
 		ListarParametrosQuery filters = query == null ? new ListarParametrosQuery(null, null, null) : query;
-		ListarParametrosResult result = new ListarParametrosResult(repository.findAll().stream()
-				.filter(p -> matches(p.id().compania(), filters.compania()))
-				.filter(p -> matches(p.id().codigo(), filters.codigo()))
-				.filter(p -> matches(p.estado() == null ? null : p.estado().name(), filters.estado()))
-				.map(p -> ParametroResultMapper.toResult(p, context.traceId())).toList(), context.traceId());
+		ListarParametrosResult result = new ListarParametrosResult(
+				repository.findAll().stream().filter(p -> matches(p.id().compania(), filters.compania()))
+						.filter(p -> matches(p.id().codigo(), filters.codigo()))
+						.filter(p -> matches(p.estado() == null ? null : p.estado().name(), filters.estado()))
+						.map(p -> ParametroResultMapper.toResult(p, context.traceId())).toList(),
+				context.traceId());
 		registerAudit(context, "LISTAR", "registros=" + result.parametros().size());
 		return result;
 	}
@@ -75,8 +76,7 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	public ActualizarParametroResult actualizar(ActualizarParametroCommand command, FunctionalContext context) {
 		checkGuards(context);
 		ParametroId id = new ParametroId(command.compania(), command.codigo());
-		Parametro parametro = repository.findById(id)
-				.orElseThrow(() -> new BusinessException("HR-PAR-404"));
+		Parametro parametro = repository.findById(id).orElseThrow(() -> new BusinessException("HR-PAR-404"));
 		parametro.actualizarDatos(command.nombre(), command.precio(), command.cantidad(), command.fechaProceso(),
 				context.userId(), context.executedAt());
 		repository.save(parametro);
@@ -87,8 +87,7 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	public ParametroResult cambiarEstado(CambiarEstadoParametroCommand command, FunctionalContext context) {
 		checkGuards(context);
 		ParametroId id = new ParametroId(command.compania(), command.codigo());
-		Parametro parametro = repository.findById(id)
-				.orElseThrow(() -> new BusinessException("HR-PAR-404"));
+		Parametro parametro = repository.findById(id).orElseThrow(() -> new BusinessException("HR-PAR-404"));
 		parametro.cambiarEstado(ParametroEstado.valueOf(command.estado().toUpperCase()), context.userId(),
 				context.executedAt());
 		repository.save(parametro);

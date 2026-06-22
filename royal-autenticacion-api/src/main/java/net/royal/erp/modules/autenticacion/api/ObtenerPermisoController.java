@@ -38,8 +38,8 @@ public class ObtenerPermisoController {
 		return ResponseEntity.ok(useCase.execute(command, context));
 	}
 
-	private record ObtenerPermisoRequest(@NotBlank @Size(max = 20) String usuario, @NotBlank @Size(max = 60) String concepto,
-			@NotBlank @Size(max = 80) String funcionalidad,
+	private record ObtenerPermisoRequest(@NotBlank @Size(max = 20) String usuario,
+			@NotBlank @Size(max = 60) String concepto, @NotBlank @Size(max = 80) String funcionalidad,
 			@NotBlank @Size(max = 120) @Pattern(regexp = "^[A-Z0-9_]+$") String permiso) {
 	}
 }
