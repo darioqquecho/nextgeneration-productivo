@@ -4,6 +4,7 @@ import net.royal.erp.framework.audit.AuditPort;
 import net.royal.erp.framework.kernel.*;
 import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.hr.application.capacitacion.registrar.port.CapacitacionRepository;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 
 /**
  * Implementa: - ARCH-010 Versionamiento Funcional.
@@ -19,7 +20,7 @@ public class RegistrarCapacitacionV2UseCase extends RegistrarCapacitacionV1UseCa
 	@Override
 	public RegistrarCapacitacionResult execute(RegistrarCapacitacionCommand command, FunctionalContext context) {
 		if (command.instructor() == null || command.instructor().isBlank())
-			throw new BusinessException("CAP-V2-001");
+			throw new BusinessException(RrhhBusinessErrorCodes.CAPACITACION_V2_INSTRUCTOR_REQUERIDO);
 		RegistrarCapacitacionResult r = super.execute(command, context);
 		return new RegistrarCapacitacionResult(r.codigo(), r.estado(), "V2", r.traceId());
 	}

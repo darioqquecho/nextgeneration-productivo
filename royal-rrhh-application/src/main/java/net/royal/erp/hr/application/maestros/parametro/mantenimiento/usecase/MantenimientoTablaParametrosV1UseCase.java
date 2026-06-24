@@ -5,18 +5,20 @@ import java.util.Objects;
 import net.royal.erp.framework.application.RoyalBaseUseCase;
 import net.royal.erp.framework.audit.*;
 import net.royal.erp.framework.kernel.*;
+import net.royal.erp.framework.kernel.FrameworkBusinessErrorCodes;
 import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.hr.application.maestros.parametro.mantenimiento.dto.*;
 import net.royal.erp.hr.application.common.security.port.ConsultaPermisoPort;
 import net.royal.erp.hr.application.common.security.port.ConsultaPermisoQuery;
 import net.royal.erp.hr.application.maestros.parametro.mantenimiento.port.MantenimientoTablaParametrosRepository;
+import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 import net.royal.erp.hr.domain.parametro.*;
 
 /**
  * Implementa: - MOD-012 CU-001 Mantenimiento de Tabla Parametros V1.
  */
 public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
-	private static final String MODULE = "HR";
 	private static final String ENTITY = "HR_Parametros";
 
 	private final MantenimientoTablaParametrosRepository repository;
@@ -34,7 +36,7 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 
 	protected MantenimientoTablaParametrosV1UseCase(MantenimientoTablaParametrosRepository repository,
 			ConsultaPermisoPort consultaPermiso, UseCaseGuards guards, AuditPort auditPort, String version) {
-		super(MODULE, ENTITY, version, guards, auditPort);
+		super(RrhhProcessCatalog.MODULE, ENTITY, version, guards, auditPort);
 		this.repository = repository;
 		this.consultaPermiso = consultaPermiso;
 	}
@@ -56,7 +58,7 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 		checkGuards(context);
 		ParametroId id = new ParametroId(command.compania(), command.codigo());
 		if (repository.existsById(id)) {
-			throw new BusinessException("HR-PAR-004");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_DUPLICADO);
 		}
 		Parametro parametro = Parametro.crear(command.compania(), command.codigo(), command.nombre(), command.precio(),
 				command.cantidad(), command.fechaProceso(), context.userId(), context.executedAt());
@@ -68,7 +70,7 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	public ParametroResult obtener(ObtenerParametroQuery query, FunctionalContext context) {
 		checkGuards(context);
 		Parametro parametro = repository.findById(new ParametroId(query.compania(), query.codigo()))
-				.orElseThrow(() -> new BusinessException("HR-PAR-404"));
+				.orElseThrow(() -> new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_NO_ENCONTRADO));
 		registerAudit(context, parametro.id());
 		return ParametroResultMapper.toResult(parametro, context.traceId());
 	}
@@ -76,7 +78,8 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	public ActualizarParametroResult actualizar(ActualizarParametroCommand command, FunctionalContext context) {
 		checkGuards(context);
 		ParametroId id = new ParametroId(command.compania(), command.codigo());
-		Parametro parametro = repository.findById(id).orElseThrow(() -> new BusinessException("HR-PAR-404"));
+		Parametro parametro = repository.findById(id)
+				.orElseThrow(() -> new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_NO_ENCONTRADO));
 		parametro.actualizarDatos(command.nombre(), command.precio(), command.cantidad(), command.fechaProceso(),
 				context.userId(), context.executedAt());
 		repository.save(parametro);
@@ -87,7 +90,8 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	public ParametroResult cambiarEstado(CambiarEstadoParametroCommand command, FunctionalContext context) {
 		checkGuards(context);
 		ParametroId id = new ParametroId(command.compania(), command.codigo());
-		Parametro parametro = repository.findById(id).orElseThrow(() -> new BusinessException("HR-PAR-404"));
+		Parametro parametro = repository.findById(id)
+				.orElseThrow(() -> new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_NO_ENCONTRADO));
 		parametro.cambiarEstado(ParametroEstado.valueOf(command.estado().toUpperCase()), context.userId(),
 				context.executedAt());
 		repository.save(parametro);
@@ -105,10 +109,10 @@ public class MantenimientoTablaParametrosV1UseCase extends RoyalBaseUseCase {
 	}
 
 	private void validarPermisoEliminar(FunctionalContext context) {
-		ConsultaPermisoQuery query = new ConsultaPermisoQuery(context.userId(), MODULE, "Mantenimiento de Parametro",
-				"HR_MANTENIMIENTO_DE_PARAMETRO");
+		ConsultaPermisoQuery query = new ConsultaPermisoQuery(context.userId(), RrhhProcessCatalog.MODULE,
+				"Mantenimiento de Parametro", "HR_MANTENIMIENTO_DE_PARAMETRO");
 		if (!consultaPermiso.autorizado(query, context)) {
-			throw new BusinessException("SECURITY-DENIED", query.permiso());
+			throw new BusinessException(FrameworkBusinessErrorCodes.SECURITY_DENIED, query.permiso());
 		}
 	}
 

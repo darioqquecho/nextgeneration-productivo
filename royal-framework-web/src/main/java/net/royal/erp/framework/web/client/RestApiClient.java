@@ -9,6 +9,7 @@ import java.time.Duration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.framework.kernel.FrameworkBusinessErrorCodes;
 import net.royal.erp.framework.kernel.FunctionalContext;
 
 /**
@@ -23,7 +24,7 @@ public class RestApiClient {
 	private final String apiKey;
 
 	public RestApiClient(String baseUrl) {
-		this(baseUrl, "REST-API-ERROR");
+		this(baseUrl, FrameworkBusinessErrorCodes.REST_API_ERROR);
 	}
 
 	public RestApiClient(String baseUrl, String errorCode) {
@@ -42,7 +43,8 @@ public class RestApiClient {
 		this.objectMapper = objectMapper;
 		this.baseUrl = trimTrailingSlash(baseUrl);
 		this.requestTimeout = requestTimeout;
-		this.errorCode = errorCode == null || errorCode.isBlank() ? "REST-API-ERROR" : errorCode;
+		this.errorCode = errorCode == null || errorCode.isBlank() ? FrameworkBusinessErrorCodes.REST_API_ERROR
+				: errorCode;
 		this.apiKey = apiKey;
 	}
 

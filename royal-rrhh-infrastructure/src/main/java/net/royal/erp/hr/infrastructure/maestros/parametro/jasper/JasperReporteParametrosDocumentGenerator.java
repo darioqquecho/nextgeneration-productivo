@@ -7,6 +7,7 @@ import java.util.Map;
 import net.royal.erp.framework.kernel.BusinessException;
 import net.royal.erp.hr.application.maestros.parametro.reporte.dto.ReporteParametrosDocumentData;
 import net.royal.erp.hr.application.maestros.parametro.reporte.port.ReporteParametrosDocumentGenerator;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
@@ -20,7 +21,7 @@ public class JasperReporteParametrosDocumentGenerator implements ReporteParametr
 	public byte[] generate(ReporteParametrosDocumentData data) {
 		try (InputStream template = getClass().getClassLoader().getResourceAsStream(REPORT_PATH)) {
 			if (template == null) {
-				throw new BusinessException("HR-PAR-REP-001");
+				throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_REPORTE_PLANTILLA_NO_ENCONTRADA);
 			}
 			JasperReport report = JasperCompileManager.compileReport(template);
 			Map<String, Object> parameters = new HashMap<>();
@@ -32,9 +33,9 @@ public class JasperReporteParametrosDocumentGenerator implements ReporteParametr
 					new JRBeanCollectionDataSource(data.rows()));
 			return JasperExportManager.exportReportToPdf(print);
 		} catch (JRException e) {
-			throw new BusinessException("HR-PAR-REP-002");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_REPORTE_ERROR_JASPER);
 		} catch (java.io.IOException e) {
-			throw new BusinessException("HR-PAR-REP-003");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_REPORTE_ERROR_IO);
 		}
 	}
 }

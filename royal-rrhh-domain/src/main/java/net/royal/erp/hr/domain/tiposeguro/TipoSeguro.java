@@ -3,6 +3,7 @@ package net.royal.erp.hr.domain.tiposeguro;
 import java.time.Instant;
 
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 
 /**
  * Dominio del maestro HR_TipoSeguro.
@@ -51,21 +52,21 @@ public class TipoSeguro {
 
 	private static String normalizarDescripcion(String descripcion) {
 		if (descripcion != null && descripcion.length() > 40) {
-			throw new BusinessException("HR-TSG-002");
+			throw new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_DESCRIPCION_MUY_LARGA);
 		}
 		return descripcion == null ? null : descripcion.stripTrailing();
 	}
 
 	private static String validarEstado(String estado) {
 		if (estado != null && estado.length() > 1) {
-			throw new BusinessException("HR-TSG-003");
+			throw new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_ESTADO_MUY_LARGO);
 		}
 		return estado;
 	}
 
 	private static String validarUsuario(String usuario) {
 		if (usuario != null && usuario.length() > 20) {
-			throw new BusinessException("HR-TSG-005");
+			throw new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_USUARIO_MUY_LARGO);
 		}
 		return usuario;
 	}

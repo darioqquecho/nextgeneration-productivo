@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 
 /**
  * Implementa: - ARCH-003 DDD. - MOD-012 CU-001 CRUD HR_Parametros.
@@ -86,7 +87,7 @@ public class Parametro {
 
 	public void cambiarEstado(ParametroEstado estado, String usuario, Instant fechaModif) {
 		if (estado == null) {
-			throw new BusinessException("HR-PAR-003");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_ESTADO_REQUERIDO);
 		}
 		this.estado = estado;
 		marcarModificacion(usuario, fechaModif);
@@ -99,13 +100,13 @@ public class Parametro {
 
 	private static void validarNombre(String nombre) {
 		if (nombre != null && nombre.length() > 100) {
-			throw new BusinessException("HR-PAR-002");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_NOMBRE_MUY_LARGO);
 		}
 	}
 
 	private static String validarUsuario(String usuario) {
 		if (usuario != null && usuario.length() > 20) {
-			throw new BusinessException("HR-PAR-005");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_USUARIO_MUY_LARGO);
 		}
 		return usuario;
 	}

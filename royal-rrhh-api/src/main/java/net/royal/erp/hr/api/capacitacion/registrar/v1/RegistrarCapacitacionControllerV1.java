@@ -9,6 +9,7 @@ import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.framework.web.RoyalBaseController;
 import net.royal.erp.hr.application.capacitacion.registrar.*;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.application.process.RrhhUseCaseCatalog;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,8 @@ public class RegistrarCapacitacionControllerV1 extends RoyalBaseController {
 
 	public RegistrarCapacitacionControllerV1(RegistrarCapacitacionV1UseCase useCase,
 			FunctionalContextFactory contextFactory) {
-		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.REGISTRAR_CAPACITACION.processName(),
-				RrhhProcessCatalog.REGISTRAR_CAPACITACION.displayName());
+		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.CAPACITACION.code(),
+				RrhhUseCaseCatalog.CAPACITACION_REGISTRAR.code());
 		this.useCase = useCase;
 	}
 

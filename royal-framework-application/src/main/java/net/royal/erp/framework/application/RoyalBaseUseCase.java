@@ -3,6 +3,7 @@ package net.royal.erp.framework.application;
 import net.royal.erp.framework.audit.AuditPort;
 import net.royal.erp.framework.audit.FunctionalAuditRecord;
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.framework.kernel.FrameworkBusinessErrorCodes;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.security.UseCaseGuards;
 
@@ -47,7 +48,7 @@ public abstract class RoyalBaseUseCase {
 
 	protected void requireNonBlank(String value, String field) {
 		if (value == null || value.isBlank()) {
-			throw new BusinessException("VALIDATION-REQUIRED", field);
+			throw new BusinessException(FrameworkBusinessErrorCodes.VALIDATION_REQUIRED, field);
 		}
 	}
 

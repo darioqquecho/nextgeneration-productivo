@@ -1,6 +1,7 @@
 package net.royal.erp.framework.security;
 
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.framework.kernel.FrameworkBusinessErrorCodes;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class InMemoryPermissionChecker implements PermissionChecker {
 				.getOrDefault(key(context.clientId(), context.userId()), Set.of());
 		Set<String> globalPermissions = permissionsByUser.getOrDefault(context.userId(), Set.of());
 		if (!clientPermissions.contains(permission) && !globalPermissions.contains(permission)) {
-			throw new BusinessException("SECURITY-DENIED", permission);
+			throw new BusinessException(FrameworkBusinessErrorCodes.SECURITY_DENIED, permission);
 		}
 	}
 

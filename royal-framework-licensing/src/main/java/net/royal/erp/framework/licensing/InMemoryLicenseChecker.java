@@ -1,6 +1,7 @@
 package net.royal.erp.framework.licensing;
 
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.framework.kernel.FrameworkBusinessErrorCodes;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class InMemoryLicenseChecker implements LicenseChecker {
 	 */
 	public void checkModuleEnabled(FunctionalContext context, String moduleCode) {
 		if (!modules.getOrDefault(context.clientId(), Set.of()).contains(moduleCode)) {
-			throw new BusinessException("MODULE-NOT-LICENSED", moduleCode);
+			throw new BusinessException(FrameworkBusinessErrorCodes.MODULE_NOT_LICENSED, moduleCode);
 		}
 	}
 }

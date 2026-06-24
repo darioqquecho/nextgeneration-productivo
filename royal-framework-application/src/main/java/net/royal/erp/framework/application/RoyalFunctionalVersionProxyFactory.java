@@ -9,6 +9,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
 
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.framework.kernel.FrameworkBusinessErrorCodes;
 import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.versioning.FunctionalVersion;
 import net.royal.erp.framework.versioning.FunctionalVersionResolver;
@@ -70,7 +71,7 @@ public final class RoyalFunctionalVersionProxyFactory {
 			FunctionalVersion version = context == null ? FunctionalVersion.V1 : resolver.resolve(context);
 			T useCase = versions.get(version);
 			if (useCase == null) {
-				throw new BusinessException("VERSION-NOT-SUPPORTED", version.name());
+				throw new BusinessException(FrameworkBusinessErrorCodes.VERSION_NOT_SUPPORTED, version.name());
 			}
 			return useCase;
 		}

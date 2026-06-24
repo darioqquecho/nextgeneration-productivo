@@ -20,6 +20,7 @@ import net.royal.erp.hr.application.maestros.parametro.reporte.usecase.*;
 import net.royal.erp.hr.application.requerimiento.aprobar.*;
 import net.royal.erp.hr.application.maestros.tiposeguro.port.MantenimientoTipoSeguroRepository;
 import net.royal.erp.hr.application.maestros.tiposeguro.usecase.*;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 import net.royal.erp.hr.infrastructure.requerimiento.aprobar.InMemoryAprobacionesAdapter;
 import net.royal.erp.hr.infrastructure.capacitacion.registrar.InMemoryCapacitacionRepositoryAdapter;
 import net.royal.erp.hr.infrastructure.maestros.parametro.inmemory.InMemoryParametroRepositoryAdapter;
@@ -184,7 +185,7 @@ public class RrhhConfiguration {
 
 	@Bean
 	RestApiClient autenticacionRestApiClient() {
-		return new RestApiClient(autenticacionBaseUrl, "SECURITY-PERMISSION-SERVICE", apiKey);
+		return new RestApiClient(autenticacionBaseUrl, RrhhBusinessErrorCodes.SEGURIDAD_PERMISOS_SERVICE, apiKey);
 	}
 
 	@Bean

@@ -1,6 +1,7 @@
 package net.royal.erp.hr.domain.capacitacion;
 
 import net.royal.erp.framework.kernel.BusinessException;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 import java.time.LocalDate;
 
 /**
@@ -29,11 +30,11 @@ public class Capacitacion {
 	public static Capacitacion registrar(String codigo, String nombre, LocalDate fechaInicio, LocalDate fechaFin,
 			String instructor) {
 		if (codigo == null || codigo.isBlank())
-			throw new BusinessException("CAP-001");
+			throw new BusinessException(RrhhBusinessErrorCodes.CAPACITACION_CODIGO_REQUERIDO);
 		if (nombre == null || nombre.isBlank())
-			throw new BusinessException("CAP-002");
+			throw new BusinessException(RrhhBusinessErrorCodes.CAPACITACION_NOMBRE_REQUERIDO);
 		if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin))
-			throw new BusinessException("CAP-003");
+			throw new BusinessException(RrhhBusinessErrorCodes.CAPACITACION_FECHAS_INVALIDAS);
 		return new Capacitacion(codigo, nombre, fechaInicio, fechaFin, instructor);
 	}
 

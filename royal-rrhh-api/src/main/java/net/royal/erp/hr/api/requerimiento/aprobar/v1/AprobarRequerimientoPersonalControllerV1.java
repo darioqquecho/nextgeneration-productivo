@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import net.royal.erp.framework.web.FunctionalContextFactory;
 import net.royal.erp.framework.web.RoyalBaseController;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.application.process.RrhhUseCaseCatalog;
 import net.royal.erp.hr.application.requerimiento.aprobar.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +24,8 @@ public class AprobarRequerimientoPersonalControllerV1 extends RoyalBaseControlle
 	public AprobarRequerimientoPersonalControllerV1(AprobarRequerimientoPersonalV1UseCase useCase,
 			FunctionalContextFactory contextFactory) {
 		super(contextFactory, RrhhProcessCatalog.MODULE,
-				RrhhProcessCatalog.APROBAR_REQUERIMIENTO_PERSONAL.processName(),
-				RrhhProcessCatalog.APROBAR_REQUERIMIENTO_PERSONAL.displayName());
+				RrhhProcessCatalog.REQUERIMIENTO.code() ,
+				RrhhUseCaseCatalog.REQUERIMIENTO_APROBAR.code());
 		this.useCase = useCase;
 	}
 

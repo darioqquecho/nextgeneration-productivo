@@ -7,6 +7,7 @@ import net.royal.erp.framework.web.RoyalBaseController;
 import net.royal.erp.hr.application.maestros.parametro.mantenimiento.dto.*;
 import net.royal.erp.hr.application.maestros.parametro.mantenimiento.usecase.MantenimientoTablaParametrosV1UseCase;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.application.process.RrhhUseCaseCatalog;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class MantenimientoParametroControllerV1 extends RoyalBaseController {
 
 	public MantenimientoParametroControllerV1(MantenimientoTablaParametrosV1UseCase mantenimiento,
 			FunctionalContextFactory contextFactory) {
-		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.MANTENIMIENTO_PARAMETRO.processName(),
-				RrhhProcessCatalog.MANTENIMIENTO_PARAMETRO.displayName());
+		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.MAESTROS.code(),
+				RrhhUseCaseCatalog.PARAMETRO_MANTENIMIENTO.code());
 		this.mantenimiento = mantenimiento;
 	}
 

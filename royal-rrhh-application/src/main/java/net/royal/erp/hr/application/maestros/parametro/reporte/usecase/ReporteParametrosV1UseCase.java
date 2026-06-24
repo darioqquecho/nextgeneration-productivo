@@ -10,6 +10,7 @@ import net.royal.erp.framework.kernel.FunctionalContext;
 import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.hr.application.maestros.parametro.reporte.dto.*;
 import net.royal.erp.hr.application.maestros.parametro.reporte.port.*;
+import net.royal.erp.hr.application.process.RrhhProcessCatalog;
 import net.royal.erp.hr.domain.parametro.Parametro;
 
 /**
@@ -17,7 +18,6 @@ import net.royal.erp.hr.domain.parametro.Parametro;
  * renderizado del documento.
  */
 public class ReporteParametrosV1UseCase extends RoyalBaseUseCase {
-	private static final String MODULE = "HR";
 	private static final String ENTITY = "HR_Parametros";
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 			.withZone(ZoneId.systemDefault());
@@ -27,7 +27,7 @@ public class ReporteParametrosV1UseCase extends RoyalBaseUseCase {
 
 	public ReporteParametrosV1UseCase(ReporteParametrosRepository repository,
 			ReporteParametrosDocumentGenerator documentGenerator, UseCaseGuards guards, AuditPort auditPort) {
-		super(MODULE, ENTITY, "V1", guards, auditPort);
+		super(RrhhProcessCatalog.MODULE, ENTITY, "V1", guards, auditPort);
 		this.repository = repository;
 		this.documentGenerator = documentGenerator;
 	}

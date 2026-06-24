@@ -9,20 +9,21 @@ import net.royal.erp.framework.kernel.*;
 import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.hr.application.maestros.parametro.aprobacionmasiva.dto.*;
 import net.royal.erp.hr.application.maestros.parametro.aprobacionmasiva.port.AprobacionMasivaParametrosRepository;
+import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 import net.royal.erp.hr.domain.parametro.*;
 
 /**
  * Implementa: - MOD-012 CU-008 Aprobacion masiva de Parametros.
  */
 public class AprobacionMasivaParametrosV1UseCase extends RoyalBaseUseCase {
-	private static final String MODULE = "HR";
 	private static final String ENTITY = "HR_Parametros";
 
 	private final AprobacionMasivaParametrosRepository repository;
 
 	public AprobacionMasivaParametrosV1UseCase(AprobacionMasivaParametrosRepository repository, UseCaseGuards guards,
 			AuditPort auditPort) {
-		super(MODULE, ENTITY, "V1", guards, auditPort);
+		super(RrhhProcessCatalog.MODULE, ENTITY, "V1", guards, auditPort);
 		this.repository = repository;
 	}
 
@@ -30,7 +31,7 @@ public class AprobacionMasivaParametrosV1UseCase extends RoyalBaseUseCase {
 			FunctionalContext context) {
 		checkGuards(context);
 		if (command == null || command.parametros() == null || command.parametros().isEmpty()) {
-			throw new BusinessException("HR-PAR-APR-001");
+			throw new BusinessException(RrhhBusinessErrorCodes.PARAMETRO_APROBACION_MASIVA_VACIA);
 		}
 		List<AprobarParametroItemResult> results = new ArrayList<>();
 		int aprobados = 0;

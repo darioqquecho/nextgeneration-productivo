@@ -1,298 +1,166 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1100" viewBox="0 0 2000 1100" role="img" aria-labelledby="title desc">
-  <title id="title">Capas y dependencias del modulo RRHH</title>
-  <desc id="desc">Diagrama de arquitectura RRHH con API, Application, Domain, Infrastructure, Bootstrap, framework compartido, adapters SQL Server Oracle InMemory, recursos SQL separados, seguridad OWASP, multicliente y llamadas REST entre modulos.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1280" viewBox="0 0 2100 1280" role="img" aria-labelledby="title desc">
+  <title id="title">Capas y dependencias actuales</title>
+  <desc id="desc">Arquitectura actual de RRHH y Autenticacion: modulos Maven, framework compartido, puertos, adapters, SQL Server, Oracle e integracion REST.</desc>
   <defs>
     <style>
-      .bg { fill: #f8fbff; }
-      .title { fill: #09285c; font: 700 48px Arial, sans-serif; }
-      .subtitle { fill: #4a4f57; font: 400 24px Arial, sans-serif; }
-      .box { fill: #ffffff; stroke: #0b65c2; stroke-width: 2.2; rx: 12; }
-      .box-soft { fill: #f3f8ff; stroke: #0b65c2; stroke-width: 2.2; rx: 12; }
-      .box-green { fill: #f1fff8; stroke: #087a57; stroke-width: 2.2; rx: 10; }
-      .box-orange { fill: #fff8ed; stroke: #c46a00; stroke-width: 2.2; rx: 10; }
-      .box-dark { fill: #082f6f; stroke: #082f6f; stroke-width: 2.2; rx: 10; }
-      .box-db { fill: #f7f9ff; stroke: #082f6f; stroke-width: 2.2; rx: 10; }
-      .label { fill: #09285c; font: 700 27px Arial, sans-serif; }
-      .label-sm { fill: #09285c; font: 700 18px Arial, sans-serif; }
-      .label-green { fill: #065f46; font: 700 16px Arial, sans-serif; }
-      .text { fill: #111827; font: 400 18px Arial, sans-serif; }
-      .small { fill: #111827; font: 400 15px Arial, sans-serif; }
-      .tiny { fill: #374151; font: 400 13px Arial, sans-serif; }
-      .white { fill: #ffffff; font: 700 21px Arial, sans-serif; }
-      .rule-title { fill: #ffffff; font: 700 20px Arial, sans-serif; }
-      .num { fill: #ffffff; font: 700 15px Arial, sans-serif; }
-      .arrow { stroke: #082f6f; stroke-width: 4; fill: none; marker-end: url(#arrow); }
-      .arrow-thin { stroke: #082f6f; stroke-width: 3; fill: none; marker-end: url(#arrow); }
-      .arrow-dash { stroke: #0074cc; stroke-width: 3; fill: none; stroke-dasharray: 7 8; marker-end: url(#arrow-blue); }
-      .arrow-green { stroke: #087a57; stroke-width: 4; fill: none; marker-end: url(#arrow-green); }
-      .arrow-gray { stroke: #5d6b7c; stroke-width: 2.4; fill: none; stroke-dasharray: 4 6; marker-end: url(#arrow-gray); }
-      .shadow { }
-      .divider { stroke: #72a8dc; stroke-width: 2; }
-      .line { stroke: #b7c7d8; stroke-width: 2; }
-      .dash-outline { fill: #ffffff; stroke: #087a57; stroke-width: 2; stroke-dasharray: 6 6; rx: 10; }
+      .bg { fill: #f7fafc; }
+      .title { fill: #0b2b5c; font: 700 44px Arial, sans-serif; }
+      .subtitle { fill: #486171; font: 400 22px Arial, sans-serif; }
+      .band-title { fill: #0b2b5c; font: 700 21px Arial, sans-serif; }
+      .box-title { fill: #0b2b5c; font: 700 19px Arial, sans-serif; }
+      .text { fill: #243746; font: 400 16px Arial, sans-serif; }
+      .small { fill: #486171; font: 400 14px Arial, sans-serif; }
+      .tiny { fill: #486171; font: 400 12px Arial, sans-serif; }
+      .layer { fill: #ffffff; stroke: #b7cad8; stroke-width: 2; rx: 16; }
+      .box { fill: #ffffff; stroke: #2364aa; stroke-width: 2.2; rx: 10; }
+      .box-blue { fill: #eef6ff; stroke: #2364aa; stroke-width: 2.2; rx: 10; }
+      .box-green { fill: #effaf4; stroke: #248a50; stroke-width: 2.2; rx: 10; }
+      .box-yellow { fill: #fff8e6; stroke: #c98116; stroke-width: 2.2; rx: 10; }
+      .box-purple { fill: #f2f0ff; stroke: #6d4aff; stroke-width: 2.2; rx: 10; }
+      .box-red { fill: #fff1f1; stroke: #b42318; stroke-width: 2.2; rx: 10; }
+      .shadow { filter: drop-shadow(0 8px 18px rgba(11, 43, 92, 0.12)); }
+      .arrow { stroke: #0b4d8b; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .arrow-soft { stroke: #6c8798; stroke-width: 3; fill: none; stroke-dasharray: 8 7; marker-end: url(#arrow-soft); }
+      .return { stroke: #248a50; stroke-width: 4; fill: none; marker-end: url(#arrow-green); }
+      .pill { fill: #0b2b5c; }
+      .pill-text { fill: #ffffff; font: 700 15px Arial, sans-serif; }
     </style>
     <marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
-      <polygon points="0 0, 12 5, 0 10" fill="#082f6f"/>
+      <polygon points="0 0, 12 5, 0 10" fill="#0b4d8b"/>
     </marker>
-    <marker id="arrow-blue" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
-      <polygon points="0 0, 12 5, 0 10" fill="#0074cc"/>
+    <marker id="arrow-soft" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#6c8798"/>
     </marker>
     <marker id="arrow-green" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
-      <polygon points="0 0, 12 5, 0 10" fill="#087a57"/>
-    </marker>
-    <marker id="arrow-gray" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
-      <polygon points="0 0, 12 5, 0 10" fill="#5d6b7c"/>
+      <polygon points="0 0, 12 5, 0 10" fill="#248a50"/>
     </marker>
   </defs>
 
-  <rect class="bg" x="0" y="0" width="2000" height="1100"/>
-  <text class="title" x="430" y="58">Capas y dependencias del modulo RRHH</text>
-  <text class="subtitle" x="545" y="92">Clean Architecture pragmatica + Arquitectura Hexagonal + Maven Modules</text>
-
-  <!-- Clientes -->
-  <rect class="box shadow" x="390" y="115" width="640" height="78"/>
-  <g transform="translate(430 137)" stroke="#082f6f" stroke-width="3" fill="none">
-    <circle cx="18" cy="18" r="10"/>
-    <circle cx="48" cy="18" r="10"/>
-    <circle cx="78" cy="18" r="10"/>
-    <path d="M5 52 C8 36, 28 36, 31 52"/>
-    <path d="M35 52 C38 36, 58 36, 61 52"/>
-    <path d="M65 52 C68 36, 88 36, 91 52"/>
-    <circle cx="48" cy="48" r="15"/>
-    <path d="M33 48 H63 M48 33 V63"/>
-  </g>
-  <text class="label" x="545" y="162">Clientes / Frontend / Sistemas externos</text>
-
-  <!-- Bootstrap -->
-  <rect class="box shadow" x="20" y="335" width="240" height="320"/>
-  <g transform="translate(48 368)" stroke="#0074cc" stroke-width="3" fill="none">
-    <path d="M35 0 h28 v20 h18 v28 h-18 v20 h-28 v-20 h-18 v-28 h18 z"/>
-    <circle cx="49" cy="34" r="10"/>
-  </g>
-  <text class="label" x="116" y="405">Bootstrap</text>
-  <text class="text" x="42" y="465">&#8226; Spring Boot wiring</text>
-  <text class="text" x="42" y="500">&#8226; Profiles y propiedades</text>
-  <text class="text" x="42" y="535">&#8226; persistence.adapter</text>
-  <text class="text" x="42" y="570">&#8226; client-catalog.xml</text>
-  <text class="text" x="42" y="605">&#8226; JAR / WAR Tomcat</text>
-  <text class="text" x="42" y="640">&#8226; Docker / Kubernetes</text>
-
-  <!-- API -->
-  <rect class="box-soft shadow" x="390" y="230" width="640" height="158"/>
-  <g transform="translate(425 277)" stroke="#082f6f" stroke-width="3" fill="none">
-    <path d="M15 45 C0 42,-2 15,22 17 C27 2,52 0,60 20 C80 14,98 29,91 52 H18"/>
-    <circle cx="55" cy="58" r="19"/>
-    <path d="M36 58 H74 M55 39 V77 M43 46 C52 53,58 53,67 46 M43 70 C52 63,58 63,67 70"/>
-  </g>
-  <line class="divider" x1="522" y1="262" x2="522" y2="356"/>
-  <text class="label" x="555" y="320">API</text>
-  <text class="text" x="700" y="255">&#8226; Controllers REST V1</text>
-  <text class="text" x="700" y="283">&#8226; DTOs HTTP con @Valid</text>
-  <text class="text" x="700" y="311">&#8226; Manejo estandar de errores</text>
-  <text class="text" x="700" y="339">&#8226; OpenAPI</text>
-  <text class="text" x="700" y="367">&#8226; /api/v1/hr/maestros/*</text>
-
-  <!-- Seguridad web -->
-  <rect class="box-orange shadow" x="1080" y="238" width="315" height="142"/>
-  <text class="label-sm" x="1110" y="270">Filtros Web / OWASP</text>
-  <text class="small" x="1110" y="300">&#8226; ApiKeyAuthenticationFilter</text>
-  <text class="small" x="1110" y="326">&#8226; SecurityHeadersFilter</text>
-  <text class="small" x="1110" y="352">&#8226; RateLimitFilter + CORS</text>
-
-  <!-- Application -->
-  <rect class="box-soft shadow" x="390" y="430" width="640" height="170"/>
-  <g transform="translate(430 466)" stroke="#082f6f" stroke-width="3" fill="none">
-    <circle cx="43" cy="42" r="22"/>
-    <path d="M43 8 V0 M43 84 V76 M9 42 H0 M86 42 H77 M19 18 L12 11 M68 66 L75 73 M67 18 L74 11 M19 66 L12 73"/>
-    <path d="M25 94 H61 M43 64 V94 M19 112 H67 M19 112 V94 M67 112 V94"/>
-  </g>
-  <line class="divider" x1="522" y1="462" x2="522" y2="565"/>
-  <text class="label" x="555" y="518">Application</text>
-  <text class="text" x="720" y="455">&#8226; Use cases V1 / V2</text>
-  <text class="text" x="720" y="483">&#8226; Funcionalidades por caso de uso</text>
-  <text class="text" x="720" y="511">&#8226; Commands / Queries / Results</text>
-  <text class="text" x="720" y="539">&#8226; Ports por caso de uso</text>
-  <text class="text" x="720" y="567">&#8226; FunctionalContext y permisos</text>
-  <text class="small" x="720" y="592">Ej: MantenimientoTipoSeguroV1UseCase</text>
-
-  <!-- Base classes -->
-  <rect class="dash-outline shadow" x="1080" y="423" width="335" height="184"/>
-  <text class="label-green" x="1110" y="454">Base comun de casos de uso</text>
-  <text class="small" x="1110" y="482">&#8226; RoyalBaseUseCase</text>
-  <text class="small" x="1110" y="508">&#8226; RoyalFunctionalVersionProxyFactory</text>
-  <text class="small" x="1110" y="534">&#8226; RoyalUseCaseObservabilityPostProcessor</text>
-  <text class="small" x="1110" y="560">&#8226; FunctionalVersionResolver</text>
-  <text class="small" x="1110" y="586">&#8226; Audit, license, guards, logs</text>
-
-  <!-- Port -->
-  <rect class="box-green shadow" x="1090" y="640" width="310" height="120"/>
-  <g transform="translate(1120 660)" stroke="#087a57" stroke-width="3" fill="none">
-    <path d="M25 50 C0 38,3 12,25 7 C47 12,50 38,25 50 Z"/>
-    <path d="M25 7 V0 M10 17 L0 8 M40 17 L50 8 M25 50 V70 M10 70 H40"/>
-  </g>
-  <text class="label-green" x="1190" y="678">Port / Repository</text>
-  <text class="label-green" x="1190" y="704">Interface</text>
-  <text class="small" x="1120" y="735">El use case usa puertos;</text>
-  <text class="small" x="1120" y="758">no conoce el motor de BD.</text>
-
-  <!-- Domain -->
-  <rect class="box-soft shadow" x="390" y="640" width="640" height="170"/>
-  <g transform="translate(430 678)" stroke="#082f6f" stroke-width="3" fill="none">
-    <path d="M42 0 L82 23 L82 69 L42 92 L2 69 L2 23 Z"/>
-    <path d="M2 23 L42 46 L82 23 M42 46 V92"/>
-    <path d="M22 12 L62 35"/>
-  </g>
-  <line class="divider" x1="522" y1="672" x2="522" y2="775"/>
-  <text class="label" x="555" y="728">Domain</text>
-  <text class="text" x="720" y="665">&#8226; Entidades y Value Objects</text>
-  <text class="text" x="720" y="693">&#8226; Reglas de negocio</text>
-  <text class="text" x="720" y="721">&#8226; Parametro / TipoSeguro</text>
-  <text class="text" x="720" y="749">&#8226; Capacitacion / Requerimiento</text>
-  <text class="text" x="720" y="777">&#8226; Sin Spring ni JDBC</text>
-
-  <!-- Infrastructure -->
-  <rect class="box-soft shadow" x="1460" y="347" width="295" height="280"/>
-  <g transform="translate(1490 377)" stroke="#082f6f" stroke-width="3" fill="none">
-    <rect x="0" y="0" width="56" height="24" rx="4"/>
-    <rect x="0" y="34" width="56" height="24" rx="4"/>
-    <rect x="0" y="68" width="56" height="24" rx="4"/>
-    <circle cx="12" cy="12" r="2"/><circle cx="12" cy="46" r="2"/><circle cx="12" cy="80" r="2"/>
-  </g>
-  <text class="label" x="1567" y="409">Infrastructure</text>
-  <text class="text" x="1493" y="455">&#8226; Adapters</text>
-  <text class="text" x="1493" y="483">&#8226; Repositorios JDBC</text>
-  <text class="text" x="1493" y="511">&#8226; JdbcTemplate</text>
-  <text class="text" x="1493" y="539">&#8226; SQL Server Adapter</text>
-  <text class="text" x="1493" y="567">&#8226; Oracle Adapter</text>
-  <text class="text" x="1493" y="595">&#8226; InMemory solo demo/test</text>
-  <text class="text" x="1493" y="623">&#8226; RestApiClient</text>
-
-  <!-- SQL resources -->
-  <rect class="box-db shadow" x="1430" y="682" width="180" height="105"/>
-  <g transform="translate(1450 702)" stroke="#082f6f" stroke-width="2.5" fill="none">
-    <path d="M12 0 H34 L50 16 V62 H12 Z"/>
-    <path d="M34 0 V16 H50"/>
-    <path d="M20 30 H42 M20 42 H42 M20 54 H36"/>
-  </g>
-  <text class="label-sm" x="1512" y="716">SQL Server</text>
-  <text class="small" x="1450" y="756">sql/hr/maestros/*</text>
-
-  <rect class="box-db shadow" x="1630" y="682" width="180" height="105"/>
-  <g transform="translate(1650 702)" stroke="#082f6f" stroke-width="2.5" fill="none">
-    <path d="M12 0 H34 L50 16 V62 H12 Z"/>
-    <path d="M34 0 V16 H50"/>
-    <path d="M20 30 H42 M20 42 H42 M20 54 H36"/>
-  </g>
-  <text class="label-sm" x="1713" y="716">Oracle</text>
-  <text class="small" x="1650" y="756">oracle/hr/maestros/*</text>
-
-  <!-- Databases -->
-  <rect class="box-db shadow" x="1440" y="825" width="160" height="65"/>
-  <g transform="translate(1460 840)" stroke="#082f6f" stroke-width="2.5" fill="none">
-    <ellipse cx="18" cy="8" rx="18" ry="8"/>
-    <path d="M0 8 V36 C0 46,36 46,36 36 V8"/>
-    <path d="M0 22 C0 32,36 32,36 22"/>
-  </g>
-  <text class="label-sm" x="1512" y="865">SQL Server</text>
-
-  <rect class="box-db shadow" x="1640" y="825" width="160" height="65"/>
-  <g transform="translate(1660 840)" stroke="#082f6f" stroke-width="2.5" fill="none">
-    <ellipse cx="18" cy="8" rx="18" ry="8"/>
-    <path d="M0 8 V36 C0 46,36 46,36 36 V8"/>
-    <path d="M0 22 C0 32,36 32,36 22"/>
-  </g>
-  <text class="label-sm" x="1722" y="865">Oracle</text>
-
-  <!-- External auth API -->
-  <rect class="box-orange shadow" x="1090" y="790" width="310" height="105"/>
-  <text class="label-sm" x="1120" y="823">API Autenticacion</text>
-  <text class="small" x="1120" y="851">&#8226; obtenerpermiso</text>
-  <text class="small" x="1120" y="877">&#8226; X-Api-Key entre APIs</text>
-
-  <!-- Rules -->
-  <rect class="box shadow" x="1835" y="105" width="140" height="427"/>
-  <rect class="box-dark" x="1835" y="105" width="140" height="60"/>
-  <text class="rule-title" x="1858" y="142">Reglas</text>
-  <g>
-    <circle cx="1860" cy="200" r="15" fill="#082f6f"/><text class="num" x="1855" y="205">1</text>
-    <text class="small" x="1884" y="196">API -&gt;</text><text class="small" x="1884" y="216">Application</text>
-    <circle cx="1860" cy="257" r="15" fill="#082f6f"/><text class="num" x="1855" y="262">2</text>
-    <text class="small" x="1884" y="253">Application</text><text class="small" x="1884" y="273">-&gt; Domain</text>
-    <circle cx="1860" cy="314" r="15" fill="#082f6f"/><text class="num" x="1855" y="319">3</text>
-    <text class="small" x="1884" y="309">Infrastructure</text><text class="small" x="1884" y="329">implementa ports</text>
-    <circle cx="1860" cy="382" r="15" fill="#082f6f"/><text class="num" x="1855" y="387">4</text>
-    <text class="small" x="1884" y="378">Bootstrap</text><text class="small" x="1884" y="398">wiring global</text>
-    <circle cx="1860" cy="449" r="15" fill="#082f6f"/><text class="num" x="1855" y="454">5</text>
-    <text class="small" x="1884" y="445">SQL y Oracle</text><text class="small" x="1884" y="465">SQL separados</text>
-    <circle cx="1860" cy="501" r="15" fill="#082f6f"/><text class="num" x="1855" y="506">6</text>
-    <text class="small" x="1884" y="497">Domain sin</text><text class="small" x="1884" y="517">Spring/JDBC</text>
-  </g>
-
-  <!-- Maven modules -->
-  <rect class="box shadow" x="1835" y="560" width="140" height="360"/>
-  <rect class="box-dark" x="1835" y="560" width="140" height="60"/>
-  <text class="rule-title" x="1852" y="590">RRHH</text>
-  <text class="rule-title" x="1852" y="612">Maven</text>
-  <text class="tiny" x="1855" y="652">royal-rrhh</text>
-  <text class="tiny" x="1855" y="676">-domain</text>
-  <text class="tiny" x="1855" y="720">royal-rrhh</text>
-  <text class="tiny" x="1855" y="744">-application</text>
-  <text class="tiny" x="1855" y="788">royal-rrhh</text>
-  <text class="tiny" x="1855" y="812">-infrastructure</text>
-  <text class="tiny" x="1855" y="856">royal-rrhh-api</text>
-  <text class="tiny" x="1855" y="900">royal-rrhh</text>
-  <text class="tiny" x="1855" y="916">-bootstrap/war</text>
-  <g stroke="#082f6f" stroke-width="2" fill="#082f6f">
-    <rect x="1854" y="635" width="18" height="14" rx="2"/>
-    <rect x="1854" y="703" width="18" height="14" rx="2"/>
-    <rect x="1854" y="771" width="18" height="14" rx="2"/>
-    <rect x="1854" y="839" width="18" height="14" rx="2"/>
-    <rect x="1854" y="883" width="18" height="14" rx="2"/>
-  </g>
-
-  <!-- Shared framework -->
-  <rect class="box shadow" x="140" y="930" width="1280" height="125"/>
-  <rect class="box-dark shadow" x="515" y="913" width="420" height="48"/>
-  <text class="white" x="578" y="944">Framework tecnico compartido</text>
-  <g>
-    <rect class="box-soft" x="165" y="970" width="150" height="60"/>
-    <text class="label-sm" x="220" y="1006">Kernel</text>
-    <rect class="box-soft" x="335" y="970" width="150" height="60"/>
-    <text class="label-sm" x="388" y="1006">Security</text>
-    <rect class="box-soft" x="505" y="970" width="150" height="60"/>
-    <text class="label-sm" x="560" y="1006">Audit</text>
-    <rect class="box-soft" x="675" y="970" width="150" height="60"/>
-    <text class="label-sm" x="724" y="1006">Versioning</text>
-    <rect class="box-soft" x="845" y="970" width="150" height="60"/>
-    <text class="label-sm" x="888" y="1006">Licensing</text>
-    <rect class="box-soft" x="1015" y="970" width="175" height="60"/>
-    <text class="label-sm" x="1050" y="1006">Observability</text>
-    <rect class="box-soft" x="1210" y="970" width="170" height="60"/>
-    <text class="label-sm" x="1263" y="1006">Database</text>
-  </g>
-
-  <!-- Arrows -->
-  <path class="arrow" d="M710 193 V226"/>
-  <path class="arrow" d="M710 388 V426"/>
-  <path class="arrow" d="M710 600 V636"/>
-  <path class="arrow-green" d="M1030 515 H1076"/>
-  <path class="arrow-green" d="M1245 640 V608"/>
-  <path class="arrow-thin" d="M1400 700 H1430 C1430 610,1440 535,1460 500"/>
-  <path class="arrow-thin" d="M1415 500 H1457"/>
-  <path class="arrow-thin" d="M1545 627 V678"/>
-  <path class="arrow-thin" d="M1685 627 V678"/>
-  <path class="arrow" d="M1520 787 V821"/>
-  <path class="arrow" d="M1715 787 V821"/>
-  <path class="arrow-dash" d="M1030 292 H1430 C1440 292,1445 310,1460 352"/>
-  <path class="arrow-dash" d="M260 415 H386"/>
-  <path class="arrow-dash" d="M260 525 H330 C350 525,350 515,386 515"/>
-  <path class="arrow-dash" d="M260 625 H325 C350 625,350 724,386 724"/>
-  <path class="arrow-dash" d="M390 154 H160 C132 154,132 312,130 332"/>
-  <path class="arrow-gray" d="M450 930 V815"/>
-  <path class="arrow-gray" d="M585 930 V815"/>
-  <path class="arrow-gray" d="M745 930 V815"/>
-  <path class="arrow-gray" d="M900 930 V815"/>
-  <path class="arrow-dash" d="M1090 785 C1045 755,1030 705,1085 692"/>
-  <path class="arrow-dash" d="M1245 790 V760"/>
-  <path class="arrow-dash" d="M1395 309 C1450 310,1440 380,1460 420"/>
+  <rect class="bg" x="0" y="0" width="2100" height="1280"/>
+  <text class="title" x="70" y="70">Capas y dependencias actuales</text>
+  <text class="subtitle" x="70" y="106">Clean Architecture pragmatica + puertos/adapters + Maven multimodulo</text>
+  <rect class="layer shadow" x="55" y="150" width="1990" height="155"/>
+  <text class="band-title" x="85" y="190">Canales de entrada</text>
+  <rect class="box shadow" x="110" y="215" width="330" height="65"/>
+  <text class="box-title" x="132" y="247">Frontend / sistemas externos</text>
+  <text class="text" x="132" y="275">HTTP REST + headers funcionales</text>
+  <rect class="box-yellow shadow" x="520" y="205" width="395" height="85"/>
+  <text class="box-title" x="542" y="237">Filtros web compartidos</text>
+  <text class="text" x="542" y="265">ApiKeyAuthenticationFilter</text>
+  <text class="text" x="542" y="290">RateLimitFilter, CORS, security headers</text>
+  <rect class="box-blue shadow" x="995" y="205" width="415" height="85"/>
+  <text class="box-title" x="1017" y="237">royal-framework-web</text>
+  <text class="text" x="1017" y="265">RoyalResponse, errores estandar</text>
+  <text class="text" x="1017" y="290">FunctionalContextFactory, RestApiClient</text>
+  <path class="arrow" d="M440 248 H510"/>
+  <path class="arrow" d="M915 248 H985"/>
+  <rect class="layer shadow" x="55" y="335" width="960" height="620"/>
+  <text class="band-title" x="85" y="375">Modulo RRHH</text>
+  <rect class="box-blue shadow" x="95" y="415" width="370" height="120"/>
+  <text class="box-title" x="117" y="447">royal-rrhh-api</text>
+  <text class="text" x="117" y="475">Controllers REST V1</text>
+  <text class="text" x="117" y="500">MantenimientoParametro, TipoSeguro</text>
+  <text class="text" x="117" y="525">Reporte, aprobacion masiva, capacitacion</text>
+  <rect class="box-green shadow" x="95" y="575" width="370" height="140"/>
+  <text class="box-title" x="117" y="607">royal-rrhh-application</text>
+  <text class="text" x="117" y="635">Use cases V1/V2 + commands/results</text>
+  <text class="text" x="117" y="660">Ports por caso de uso</text>
+  <text class="text" x="117" y="685">Functional version proxy + guards</text>
+  <rect class="box shadow" x="95" y="755" width="370" height="110"/>
+  <text class="box-title" x="117" y="787">royal-rrhh-domain</text>
+  <text class="text" x="117" y="815">Parametro, TipoSeguro</text>
+  <text class="text" x="117" y="840">Capacitacion, Requerimiento</text>
+  <text class="text" x="117" y="865">Sin Spring ni JDBC</text>
+  <rect class="box-purple shadow" x="575" y="515" width="365" height="185"/>
+  <text class="box-title" x="597" y="547">royal-rrhh-infrastructure</text>
+  <text class="text" x="597" y="575">Adapters SQL Server y Oracle</text>
+  <text class="text" x="597" y="600">Adapters InMemory demo/test</text>
+  <text class="text" x="597" y="625">RestConsultaPermisoAdapter</text>
+  <text class="text" x="597" y="650">JasperReporteParametrosDocumentGenerator</text>
+  <rect class="box-yellow shadow" x="575" y="755" width="365" height="145"/>
+  <text class="box-title" x="597" y="787">royal-rrhh-bootstrap / war</text>
+  <text class="text" x="597" y="815">Spring Boot wiring</text>
+  <text class="text" x="597" y="840">royal.persistence.adapter</text>
+  <text class="text" x="597" y="865">client-catalog.xml, functional-version-catalog.xml</text>
+  <text class="text" x="597" y="890">JAR, WAR, Docker, Kubernetes</text>
+  <path class="arrow" d="M280 535 V565"/>
+  <path class="arrow" d="M280 715 V745"/>
+  <path class="arrow" d="M465 635 H565"/>
+  <path class="arrow-soft" d="M760 755 V710"/>
+  <path class="arrow-soft" d="M575 820 H475"/>
+  <rect class="layer shadow" x="1085" y="335" width="460" height="620"/>
+  <text class="band-title" x="1115" y="375">Modulo Autenticacion</text>
+  <rect class="box-blue shadow" x="1125" y="415" width="380" height="100"/>
+  <text class="box-title" x="1147" y="447">royal-autenticacion-api</text>
+  <text class="text" x="1147" y="475">LoginController</text>
+  <text class="text" x="1147" y="500">ObtenerPermisoController</text>
+  <rect class="box-green shadow" x="1125" y="555" width="380" height="115"/>
+  <text class="box-title" x="1147" y="587">royal-autenticacion-application</text>
+  <text class="text" x="1147" y="615">LoginSimpleUseCase</text>
+  <text class="text" x="1147" y="640">ObtenerPermisoSimpleUseCase</text>
+  <text class="text" x="1147" y="665">PermissionChecker</text>
+  <rect class="box shadow" x="1125" y="710" width="380" height="90"/>
+  <text class="box-title" x="1147" y="742">royal-autenticacion-domain</text>
+  <text class="text" x="1147" y="770">Modelo de autenticacion</text>
+  <text class="text" x="1147" y="795">Sin dependencias web</text>
+  <rect class="box-yellow shadow" x="1125" y="835" width="380" height="80"/>
+  <text class="box-title" x="1147" y="867">royal-autenticacion-bootstrap</text>
+  <text class="text" x="1147" y="895">Spring Boot + framework-security</text>
+  <path class="arrow" d="M1315 515 V545"/>
+  <path class="arrow" d="M1315 670 V700"/>
+  <path class="arrow-soft" d="M940 610 C1020 570, 1055 470, 1115 470"/>
+  <text class="small" x="960" y="575">REST permisos / X-Api-Key</text>
+  <rect class="layer shadow" x="1615" y="335" width="430" height="620"/>
+  <text class="band-title" x="1645" y="375">Persistencia e integraciones</text>
+  <rect class="box-purple shadow" x="1655" y="415" width="350" height="100"/>
+  <text class="box-title" x="1677" y="447">Adapter configurable</text>
+  <text class="text" x="1677" y="475">IN_MEMORY, SQL_SERVER, ORACLE</text>
+  <text class="text" x="1677" y="500">Resuelto en bootstrap por propiedad</text>
+  <rect class="box-blue shadow" x="1655" y="555" width="350" height="115"/>
+  <text class="box-title" x="1677" y="587">SQL resources</text>
+  <text class="text" x="1677" y="615">sql/hr/maestros/*</text>
+  <text class="text" x="1677" y="640">oracle/hr/maestros/*</text>
+  <text class="text" x="1677" y="665">JDBC support por motor</text>
+  <rect class="box shadow" x="1655" y="710" width="350" height="100"/>
+  <text class="box-title" x="1677" y="742">Bases de datos</text>
+  <text class="text" x="1677" y="770">SQL Server / Oracle</text>
+  <text class="text" x="1677" y="795">HR_Parametros, HR_TipoSeguro</text>
+  <rect class="box-green shadow" x="1655" y="850" width="350" height="80"/>
+  <text class="box-title" x="1677" y="882">Observabilidad / auditoria</text>
+  <text class="text" x="1677" y="910">Actuator + Prometheus</text>
+  <text class="text" x="1677" y="935">Console/JDBC audit</text>
+  <path class="arrow" d="M940 570 C1180 330, 1560 340, 1650 465"/>
+  <path class="arrow" d="M1830 515 V545"/>
+  <path class="arrow" d="M1830 670 V700"/>
+  <rect class="layer shadow" x="55" y="995" width="1990" height="210"/>
+  <text class="band-title" x="85" y="1035">Framework tecnico compartido</text>
+  <rect class="box-blue shadow" x="95" y="1070" width="200" height="85"/>
+  <text class="box-title" x="117" y="1102">Kernel</text>
+  <text class="text" x="117" y="1130">ClientCatalog, BusinessException</text>
+  <rect class="box-blue shadow" x="310" y="1070" width="200" height="85"/>
+  <text class="box-title" x="332" y="1102">Web</text>
+  <text class="text" x="332" y="1130">Response, filtros, REST client</text>
+  <rect class="box-blue shadow" x="525" y="1070" width="200" height="85"/>
+  <text class="box-title" x="547" y="1102">Security</text>
+  <text class="text" x="547" y="1130">UseCaseGuards, PermissionChecker</text>
+  <rect class="box-blue shadow" x="740" y="1070" width="200" height="85"/>
+  <text class="box-title" x="762" y="1102">Application</text>
+  <text class="text" x="762" y="1130">RoyalBaseUseCase, version proxy</text>
+  <rect class="box-blue shadow" x="955" y="1070" width="200" height="85"/>
+  <text class="box-title" x="977" y="1102">Audit</text>
+  <text class="text" x="977" y="1130">Console/JDBC/Composite</text>
+  <rect class="box-blue shadow" x="1170" y="1070" width="200" height="85"/>
+  <text class="box-title" x="1192" y="1102">Versioning</text>
+  <text class="text" x="1192" y="1130">FunctionalVersionResolver</text>
+  <rect class="box-blue shadow" x="1385" y="1070" width="200" height="85"/>
+  <text class="box-title" x="1407" y="1102">Licensing</text>
+  <text class="text" x="1407" y="1130">ClientCatalogLicenseChecker</text>
+  <rect class="box-blue shadow" x="1600" y="1070" width="200" height="85"/>
+  <text class="box-title" x="1622" y="1102">Observability</text>
+  <text class="text" x="1622" y="1130">Micrometer, timers</text>
+  <rect class="box-blue shadow" x="1815" y="1070" width="200" height="85"/>
+  <text class="box-title" x="1837" y="1102">Database</text>
+  <text class="text" x="1837" y="1130">PersistenceAdapterResolver</text>
+  <rect class="box-red shadow" x="55" y="1220" width="1990" height="40"/>
+  <text class="text" x="85" y="1246">Regla de dependencia: API e Infrastructure apuntan hacia Application/Domain. Application usa ports; Domain no conoce Spring, JDBC, REST ni framework web.</text>
 </svg>

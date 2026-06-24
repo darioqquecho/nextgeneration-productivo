@@ -8,17 +8,18 @@ import net.royal.erp.framework.kernel.*;
 import net.royal.erp.framework.security.UseCaseGuards;
 import net.royal.erp.hr.application.maestros.tiposeguro.dto.*;
 import net.royal.erp.hr.application.maestros.tiposeguro.port.MantenimientoTipoSeguroRepository;
+import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.domain.RrhhBusinessErrorCodes;
 import net.royal.erp.hr.domain.tiposeguro.*;
 
 public class MantenimientoTipoSeguroV1UseCase extends RoyalBaseUseCase {
-	private static final String MODULE = "HR";
 	private static final String ENTITY = "HR_TipoSeguro";
 
 	private final MantenimientoTipoSeguroRepository repository;
 
 	public MantenimientoTipoSeguroV1UseCase(MantenimientoTipoSeguroRepository repository, UseCaseGuards guards,
 			AuditPort auditPort) {
-		super(MODULE, ENTITY, "V1", guards, auditPort);
+		super(RrhhProcessCatalog.MODULE, ENTITY, "V1", guards, auditPort);
 		this.repository = repository;
 	}
 
@@ -37,7 +38,7 @@ public class MantenimientoTipoSeguroV1UseCase extends RoyalBaseUseCase {
 		checkGuards(context);
 		TipoSeguroId id = new TipoSeguroId(command.tipoSeguro());
 		if (repository.existsById(id)) {
-			throw new BusinessException("HR-TSG-004");
+			throw new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_DUPLICADO);
 		}
 		TipoSeguro tipoSeguro = TipoSeguro.crear(command.tipoSeguro(), command.descripcion(), command.estado(),
 				context.userId(), context.executedAt());
@@ -49,7 +50,7 @@ public class MantenimientoTipoSeguroV1UseCase extends RoyalBaseUseCase {
 	public TipoSeguroResult obtener(ObtenerTipoSeguroQuery query, FunctionalContext context) {
 		checkGuards(context);
 		TipoSeguro tipoSeguro = repository.findById(new TipoSeguroId(query.tipoSeguro()))
-				.orElseThrow(() -> new BusinessException("HR-TSG-404"));
+				.orElseThrow(() -> new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_NO_ENCONTRADO));
 		registerAudit(context, tipoSeguro.id());
 		return TipoSeguroResultMapper.toResult(tipoSeguro, context.traceId());
 	}
@@ -57,7 +58,8 @@ public class MantenimientoTipoSeguroV1UseCase extends RoyalBaseUseCase {
 	public ActualizarTipoSeguroResult actualizar(ActualizarTipoSeguroCommand command, FunctionalContext context) {
 		checkGuards(context);
 		TipoSeguroId id = new TipoSeguroId(command.tipoSeguro());
-		TipoSeguro tipoSeguro = repository.findById(id).orElseThrow(() -> new BusinessException("HR-TSG-404"));
+		TipoSeguro tipoSeguro = repository.findById(id)
+				.orElseThrow(() -> new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_NO_ENCONTRADO));
 		tipoSeguro.actualizar(command.descripcion(), command.estado(), context.userId(), context.executedAt());
 		repository.save(tipoSeguro);
 		registerAudit(context, id);
@@ -67,7 +69,8 @@ public class MantenimientoTipoSeguroV1UseCase extends RoyalBaseUseCase {
 	public TipoSeguroResult cambiarEstado(CambiarEstadoTipoSeguroCommand command, FunctionalContext context) {
 		checkGuards(context);
 		TipoSeguroId id = new TipoSeguroId(command.tipoSeguro());
-		TipoSeguro tipoSeguro = repository.findById(id).orElseThrow(() -> new BusinessException("HR-TSG-404"));
+		TipoSeguro tipoSeguro = repository.findById(id)
+				.orElseThrow(() -> new BusinessException(RrhhBusinessErrorCodes.TIPO_SEGURO_NO_ENCONTRADO));
 		tipoSeguro.cambiarEstado(command.estado(), context.userId(), context.executedAt());
 		repository.save(tipoSeguro);
 		registerAudit(context, id);

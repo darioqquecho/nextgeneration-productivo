@@ -1,36 +1,36 @@
 package net.royal.erp.hr.application.process;
 
 /**
- * Catalogo funcional del modulo RRHH. Mantiene nombres de procesos y casos de
- * uso en un solo lugar para evitar paquetes planos y literales repetidos.
+ * Catalogo de modulo y procesos funcionales de RRHH.
  */
 public final class RrhhProcessCatalog {
-	public static final String MODULE = "HR";
+	public static final String MODULE = Module.CODE;
 
-	public static final Process MAESTROS = new Process("maestros", "Maestros");
-	public static final Process CAPACITACION = new Process("capacitacion", "Capacitacion");
-	public static final Process REQUERIMIENTO = new Process("requerimiento", "Requerimiento");
-
-	public static final UseCase MANTENIMIENTO_PARAMETRO = useCase(MAESTROS, "parametro", "Mantenimiento de Parametro");
-	public static final UseCase REPORTE_PARAMETRO = useCase(MAESTROS, "reporte-parametro", "Reporte de Parametro");
-	public static final UseCase APROBACION_MASIVA_PARAMETROS = useCase(MAESTROS, "aprobacion-masiva-parametros",
-			"Aprobacion masiva de Parametros");
-	public static final UseCase MANTENIMIENTO_TIPO_SEGURO = useCase(MAESTROS, "tiposeguro",
-			"Mantenimiento de Tipo Seguro");
-	public static final UseCase REGISTRAR_CAPACITACION = useCase(CAPACITACION, "registrar", "Registrar Capacitacion");
-	public static final UseCase APROBAR_REQUERIMIENTO_PERSONAL = useCase(REQUERIMIENTO, "aprobar",
-			"Aprobar Requerimiento Personal");
+	public static final Process MAESTROS = new Process(MODULE, ProcessCode.MAESTROS, "Maestros");
+	public static final Process CAPACITACION = new Process(MODULE, ProcessCode.CAPACITACION, "Capacitacion");
+	public static final Process REQUERIMIENTO = new Process(MODULE, ProcessCode.REQUERIMIENTO, "Requerimiento");
 
 	private RrhhProcessCatalog() {
 	}
 
-	private static UseCase useCase(Process process, String code, String displayName) {
-		return new UseCase(process.code(), process.displayName(), code, displayName);
+	public record Process(String module, String code, String displayName) {
 	}
 
-	public record Process(String code, String displayName) {
+	public static final class Module {
+		public static final String CODE = "HR";
+		public static final String NAME = "Recursos Humanos";
+		public static final String DESCRIPTION = "Modulo de gestion de recursos humanos";
+
+		private Module() {
+		}
 	}
 
-	public record UseCase(String processCode, String processName, String code, String displayName) {
+	public static final class ProcessCode {
+		public static final String MAESTROS = Module.CODE + ".MAESTROS";
+		public static final String CAPACITACION = Module.CODE + ".CAPACITACION";
+		public static final String REQUERIMIENTO = Module.CODE + ".REQUERIMIENTO";
+
+		private ProcessCode() {
+		}
 	}
 }

@@ -7,6 +7,7 @@ import net.royal.erp.framework.web.RoyalBaseController;
 import net.royal.erp.hr.application.maestros.parametro.reporte.dto.*;
 import net.royal.erp.hr.application.maestros.parametro.reporte.usecase.ReporteParametrosV1UseCase;
 import net.royal.erp.hr.application.process.RrhhProcessCatalog;
+import net.royal.erp.hr.application.process.RrhhUseCaseCatalog;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,8 @@ public class ReporteParametroControllerV1 extends RoyalBaseController {
 	private final ReporteParametrosV1UseCase reporte;
 
 	public ReporteParametroControllerV1(ReporteParametrosV1UseCase reporte, FunctionalContextFactory contextFactory) {
-		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.REPORTE_PARAMETRO.processName(),
-				RrhhProcessCatalog.REPORTE_PARAMETRO.displayName());
+		super(contextFactory, RrhhProcessCatalog.MODULE, RrhhProcessCatalog.MAESTROS.code(),
+				RrhhUseCaseCatalog.PARAMETRO_REPORTE.code());
 		this.reporte = reporte;
 	}
 
